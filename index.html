@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PromptHub - The Ultimate Prompt Marketplace</title>
     <style>
-        /* --- VARIABLES & RESET --- */
         :root {
             --bg-primary: #0B1120;
             --bg-secondary: #151E32;
@@ -35,7 +34,6 @@
             background-position: center top;
         }
 
-        /* --- ANIMATED BACKGROUND ORBS --- */
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1; overflow: hidden; pointer-events: none;
@@ -47,14 +45,13 @@
         .orb-1 { width: 500px; height: 500px; background: var(--accent-lavender); top: -150px; left: -150px; }
         .orb-2 { width: 600px; height: 600px; background: var(--accent-turquoise); bottom: -200px; right: -200px; animation-delay: -7s; }
         
-        @keyframes float {            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(80px, 80px) scale(1.15); }
-        }
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(80px, 80px) scale(1.15); }        }
 
         a { text-decoration: none; color: inherit; transition: color 0.3s; }
         ul { list-style: none; }
 
-        /* --- NAVBAR --- */
         .navbar {
             background: rgba(11, 17, 32, 0.8);
             backdrop-filter: blur(16px);
@@ -76,7 +73,7 @@
             display: flex; align-items: center; gap: 0.5rem;
         }
 
-        .nav-links { display: flex; gap: 2rem; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
         .nav-links a { 
             color: var(--text-secondary); font-size: 0.95rem; font-weight: 500; 
             position: relative; padding: 0.5rem 0;
@@ -96,10 +93,10 @@
             white-space: nowrap; display: inline-block; text-align: center;
         }
 
-        .btn-ghost {             background: transparent; color: var(--text-primary); 
+        .btn-ghost { 
+            background: transparent; color: var(--text-primary); 
             border: 1px solid var(--border-color);
-        }
-        .btn-ghost:hover { 
+        }        .btn-ghost:hover { 
             border-color: var(--accent-lavender); color: var(--accent-lavender);
             background: rgba(167, 139, 250, 0.05);
         }
@@ -120,7 +117,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* --- HERO SECTION --- */
         .hero {
             text-align: center; padding: 8rem 2rem 4rem; max-width: 900px; margin: 0 auto;
         }
@@ -145,10 +141,10 @@
             to { background-position: 200% center; }
         }
 
-        .hero p {            font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2.5rem;
+        .hero p {
+            font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2.5rem;
             max-width: 650px; margin-left: auto; margin-right: auto;
         }
-
         .hero-buttons { display: flex; gap: 1rem; justify-content: center; margin-bottom: 5rem; }
         .btn-large { padding: 0.9rem 2rem; font-size: 1rem; }
         .btn-outline {
@@ -160,12 +156,10 @@
             transform: translateY(-2px);
         }
 
-        /* --- STATS --- */
         .stats {
             display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap;
             padding: 2.5rem; background: var(--bg-card); backdrop-filter: blur(10px);
             border-radius: 20px; border: 1px solid var(--border-color);
-            transition: transform 0.3s ease;
         }
         .stat-item { text-align: center; }
         .stat-value {
@@ -175,13 +169,11 @@
         }
         .stat-label { color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; display: block;}
 
-        /* --- SECTIONS COMMON --- */
         .section { max-width: 1200px; margin: 0 auto; padding: 6rem 2rem; }
         .section-header { text-align: center; margin-bottom: 4rem; }
         .section-header h2 { font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 700; }
         .section-header p { color: var(--text-secondary); font-size: 1.1rem; }
 
-        /* --- CATEGORIES --- */
         .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; }
         .category-card {
             background: var(--bg-card); padding: 2rem 1.5rem; border-radius: 16px; text-align: center;
@@ -194,15 +186,14 @@
             transition: left 0.5s;
         }
         .category-card:hover::before { left: 100%; }
-        .category-card:hover {            transform: translateY(-8px); border-color: var(--accent-lavender);
+        .category-card:hover {
+            transform: translateY(-8px); border-color: var(--accent-lavender);
             box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(167, 139, 250, 0.1);
         }
         .category-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; transition: transform 0.3s; }
         .category-card:hover .category-icon { transform: scale(1.2) rotate(5deg); }
         .category-name { font-weight: 600; margin-bottom: 0.3rem; display: block; font-size: 1.1rem; }
         .category-count { color: var(--text-secondary); font-size: 0.85rem; }
-
-        /* --- TRENDING PROMPTS --- */
         .prompts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
         .prompt-card {
             background: var(--bg-card); border-radius: 20px; padding: 2rem;
@@ -242,8 +233,8 @@
         }
         .explore-all a:hover { color: var(--accent-turquoise); transform: translateX(5px); }
 
-        /* --- FEATURES --- */
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }        .feature-card {
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+        .feature-card {
             text-align: center; padding: 2.5rem 2rem; background: var(--bg-card); border-radius: 20px;
             border: 1px solid var(--border-color); transition: all 0.4s ease; backdrop-filter: blur(10px);
         }
@@ -252,9 +243,7 @@
         .feature-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
         .feature-desc { color: var(--text-secondary); font-size: 0.95rem; }
 
-        /* --- CREATOR CTA --- */
-        .creator-cta {
-            background: linear-gradient(135deg, rgba(167, 139, 250, 0.05), rgba(45, 212, 191, 0.05));
+        .creator-cta {            background: linear-gradient(135deg, rgba(167, 139, 250, 0.05), rgba(45, 212, 191, 0.05));
             border: 1px solid var(--border-color); border-radius: 24px; padding: 5rem 2rem;
             text-align: center; margin: 2rem; position: relative; overflow: hidden;
         }
@@ -265,7 +254,6 @@
         .creator-stat .val { font-size: 1.8rem; font-weight: 800; color: var(--accent-turquoise); }
         .creator-stat .lbl { color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.3rem; }
 
-        /* --- FOOTER --- */
         .footer {
             background: rgba(11, 17, 32, 0.9); border-top: 1px solid var(--border-color);
             padding: 4rem 2rem 2rem; margin-top: 4rem; backdrop-filter: blur(10px);
@@ -277,7 +265,6 @@
         .footer-col ul li a:hover { color: var(--accent-lavender); transform: translateX(3px); display: inline-block;}
         .footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid var(--border-color); color: var(--text-secondary); font-size: 0.9rem; }
 
-        /* --- SCROLL REVEAL ANIMATIONS --- */
         .reveal {
             opacity: 0; transform: translateY(50px);
             transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
@@ -287,30 +274,25 @@
         .delay-2 { transition-delay: 0.2s; }
         .delay-3 { transition-delay: 0.3s; }
 
-        /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 768px) {
             .navbar { padding: 0.8rem 1rem; }
             .nav-links { display: none; }
-            
-            .nav-actions { gap: 0.5rem; }            .btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; border-radius: 6px; }
+            .nav-actions { gap: 0.5rem; }
+            .btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; border-radius: 6px; }
             .btn-ghost { padding: 0.5rem 0.6rem; }
-
             .hero { padding: 5rem 1.5rem 3rem; }
             .hero h1 { font-size: 2.5rem; }
             .hero p { font-size: 1.1rem; }
             .hero-buttons { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto 3rem; }
             .btn-large { width: 100%; }
-            
             .stats { gap: 1.5rem; padding: 1.5rem; }
             .stat-value { font-size: 1.5rem; }
-            
             .section { padding: 4rem 1rem; }
             .section-header h2 { font-size: 1.8rem; }
             .creator-cta { padding: 3rem 1rem; margin: 1rem; }
             .creator-cta h2 { font-size: 1.8rem; }
             .creator-stats { gap: 2rem; }
         }
-
         @media (max-width: 380px) {
             .btn { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
             .logo { font-size: 1.3rem; }
@@ -319,30 +301,30 @@
 </head>
 <body>
 
-    <!-- ANIMATED BACKGROUND -->
     <div class="bg-glow">
         <div class="glow-orb orb-1"></div>
         <div class="glow-orb orb-2"></div>
     </div>
 
-    <!-- NAVBAR -->
+    <!-- NAVBAR DYNAMIQUE -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="logo">⚡ PromptHub</a>
             <ul class="nav-links">
-                <li><a href="#">Explorer</a></li>
-                <li><a href="#">Créer</a></li>
+                <li><a href="index.html">Explorer</a></li>
                 <li><a href="#">Guide</a></li>
                 <li><a href="#">Tarifs</a></li>
+                <li id="sellerLink" style="display: none;">
+                    <a href="vendeur.html" style="color: var(--accent-turquoise);">💼 Devenir Vendeur</a>
+                </li>
             </ul>
-            <div class="nav-actions">
-                <!-- ✅ BOUTONS MODIFIÉS POUR LIER VERS AUTH.HTML -->
+            <div class="nav-actions" id="navActions">
                 <a href="auth.html" class="btn btn-ghost">Connexion</a>
                 <a href="auth.html" class="btn btn-primary">S'inscrire</a>
             </div>
         </div>
     </nav>
-    <!-- HERO SECTION -->
+
     <section class="hero reveal">
         <div class="hero-badge">✨ Nouveau : Intégration GPT-4o disponible</div>
         <h1>Unlock the Power of Elite Prompts</h1>
@@ -359,8 +341,7 @@
             </div>
             <div class="stat-item">
                 <span class="stat-value" data-target="12">0</span>
-                <span class="stat-label">K+ Expert Creators</span>
-            </div>
+                <span class="stat-label">K+ Expert Creators</span>            </div>
             <div class="stat-item">
                 <span class="stat-value" data-target="200">0</span>
                 <span class="stat-label">K+ Active Users</span>
@@ -372,7 +353,6 @@
         </div>
     </section>
 
-    <!-- CATEGORIES -->
     <section class="section">
         <div class="section-header reveal">
             <h2>Explore Categories</h2>
@@ -380,17 +360,17 @@
         </div>
         <div class="categories-grid">
             <div class="category-card reveal delay-1"><span class="category-icon">📝</span><span class="category-name">Marketing</span><span class="category-count">5.2K prompts</span></div>
-            <div class="category-card reveal delay-2"><span class="category-icon"></span><span class="category-name">Development</span><span class="category-count">7.1K prompts</span></div>
+            <div class="category-card reveal delay-2"><span class="category-icon">💻</span><span class="category-name">Development</span><span class="category-count">7.1K prompts</span></div>
             <div class="category-card reveal delay-3"><span class="category-icon">🎨</span><span class="category-name">Design</span><span class="category-count">4.3K prompts</span></div>
             <div class="category-card reveal delay-1"><span class="category-icon">✍️</span><span class="category-name">Copywriting</span><span class="category-count">5.8K prompts</span></div>
             <div class="category-card reveal delay-2"><span class="category-icon">📊</span><span class="category-name">Analytics</span><span class="category-count">3.2K prompts</span></div>
-            <div class="category-card reveal delay-3"><span class="category-icon"></span><span class="category-name">Business</span><span class="category-count">4.9K prompts</span></div>
+            <div class="category-card reveal delay-3"><span class="category-icon">🚀</span><span class="category-name">Business</span><span class="category-count">4.9K prompts</span></div>
         </div>
     </section>
 
-    <!-- TRENDING PROMPTS -->
     <section class="section">
-        <div class="section-header reveal">            <h2>Trending Prompts</h2>
+        <div class="section-header reveal">
+            <h2>Trending Prompts</h2>
             <p>Handpicked by our community</p>
         </div>
         <div class="prompts-grid" id="prompts-container">
@@ -401,7 +381,6 @@
         </div>
     </section>
 
-    <!-- FEATURES -->
     <section class="section">
         <div class="section-header reveal">
             <h2>Why PromptHub</h2>
@@ -409,13 +388,11 @@
         </div>
         <div class="features-grid">
             <div class="feature-card reveal delay-1"><span class="feature-icon">✓</span><h3 class="feature-title">Verified Quality</h3><p class="feature-desc">Every prompt is tested by experts and guaranteed to deliver results.</p></div>
-            <div class="feature-card reveal delay-2"><span class="feature-icon">🔒</span><h3 class="feature-title">Bank-Level Security</h3><p class="feature-desc">Encrypted transactions and protected data with Stripe integration.</p></div>
-            <div class="feature-card reveal delay-3"><span class="feature-icon">🎯</span><h3 class="feature-title">Expert Support</h3><p class="feature-desc">24/7 support from our team of AI prompt specialists.</p></div>
-            <div class="feature-card reveal delay-1"><span class="feature-icon">💰</span><h3 class="feature-title">Maximum Earnings</h3><p class="feature-desc">Keep 80% of your sales. Industry-leading commission rates.</p></div>
-        </div>
+            <div class="feature-card reveal delay-2"><span class="feature-icon"></span><h3 class="feature-title">Bank-Level Security</h3><p class="feature-desc">Encrypted transactions and protected data with Stripe integration.</p></div>
+            <div class="feature-card reveal delay-3"><span class="feature-icon"></span><h3 class="feature-title">Expert Support</h3><p class="feature-desc">24/7 support from our team of AI prompt specialists.</p></div>
+            <div class="feature-card reveal delay-1"><span class="feature-icon"></span><h3 class="feature-title">Maximum Earnings</h3><p class="feature-desc">Keep 80% of your sales. Industry-leading commission rates.</p></div>        </div>
     </section>
 
-    <!-- CREATOR CTA -->
     <section class="section">
         <div class="creator-cta reveal">
             <h2>Start Your Creator Journey Today</h2>
@@ -426,25 +403,29 @@
             </div>
             <div class="creator-stats">
                 <div class="creator-stat"><span class="val">2 min</span><span class="lbl">to sign up</span></div>
-                <div class="creator-stat"><span class="val">∞</span><span class="lbl">prompts you can create</span></div>
+                <div class="creator-stat"><span class="val"></span><span class="lbl">prompts you can create</span></div>
                 <div class="creator-stat"><span class="val">80%</span><span class="lbl">commission earned</span></div>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="footer">
         <div class="footer-grid">
             <div class="footer-col"><h4>Product</h4><ul><li><a href="#">Explore</a></li><li><a href="#">Create</a></li><li><a href="#">Sell</a></li><li><a href="#">Pricing</a></li></ul></div>
             <div class="footer-col"><h4>Resources</h4><ul><li><a href="#">Blog</a></li><li><a href="#">Guides</a></li><li><a href="#">API</a></li><li><a href="#">FAQ</a></li></ul></div>
             <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms</a></li><li><a href="#">Privacy</a></li><li><a href="#">Cookies</a></li><li><a href="#">License</a></li></ul></div>
             <div class="footer-col"><h4>Social</h4><ul><li><a href="#">Twitter</a></li><li><a href="#">LinkedIn</a></li><li><a href="#">Discord</a></li><li><a href="#">GitHub</a></li></ul></div>
-        </div>        <div class="footer-bottom"><p>© 2024 PromptHub. Empowering creators worldwide. ⚡</p></div>
+        </div>
+        <div class="footer-bottom"><p>© 2024 PromptHub. Empowering creators worldwide. </p></div>
     </footer>
 
-    <!-- JAVASCRIPT AVANCÉ (Animations) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // 1. Scroll Reveal
+        const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Scroll Reveal
         const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -454,19 +435,16 @@
                 }
             });
         }, observerOptions);
-
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // 2. Animation des compteurs
+        // Compteurs
         const counters = document.querySelectorAll('.stat-value');
-        const counterObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
+        const counterObserver = new IntersectionObserver((entries) => {            entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const counter = entry.target;
                     const target = +counter.getAttribute('data-target');
                     const duration = 2000;
                     const increment = target / (duration / 16);
-                    
                     let current = 0;
                     const updateCounter = () => {
                         current += increment;
@@ -482,28 +460,21 @@
                 }
             });
         }, { threshold: 0.5 });
-
         counters.forEach(counter => counterObserver.observe(counter));
 
-        // 3. Parallaxe souris
+        // Parallaxe
         document.addEventListener('mousemove', (e) => {
             const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;            const orb1 = document.querySelector('.orb-1');
+            const y = e.clientY / window.innerHeight;
+            const orb1 = document.querySelector('.orb-1');
             const orb2 = document.querySelector('.orb-2');
             if(orb1 && orb2) {
                 orb1.style.transform = `translate(${x * 30}px, ${y * 30}px)`;
                 orb2.style.transform = `translate(${-x * 30}px, ${-y * 30}px)`;
             }
         });
-    </script>
 
-    <!-- SUPABASE CONNECTION -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+        // Charger les prompts
         async function chargerPrompts() {
             const container = document.getElementById('prompts-container');
             const { data, error } = await supabaseClient.from('prompts').select('*').order('id', { ascending: true });
@@ -517,8 +488,7 @@
             container.innerHTML = '';
             data.forEach((prompt, index) => {
                 const delay = (index % 3) + 1;
-                const carteHTML = `
-                    <div class="prompt-card reveal visible delay-${delay}">
+                const carteHTML = `                    <div class="prompt-card reveal visible delay-${delay}">
                         <div class="badge badge-trending">🔥 TRENDING</div>
                         <h3 class="prompt-title">${prompt.title}</h3>
                         <p class="prompt-desc">${prompt.description}</p>
@@ -533,7 +503,37 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', chargerPrompts);
+        // Navbar dynamique (Méthode 1)
+        async function updateNavbar() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            const navActions = document.getElementById('navActions');
+            const sellerLink = document.getElementById('sellerLink');
+            
+            if (session) {
+                const userName = session.user.user_metadata.full_name || 'Utilisateur';
+                navActions.innerHTML = `
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">👋 ${userName}</span>
+                    <button class="btn btn-ghost" onclick="deconnexion()">Déconnexion</button>
+                `;
+                if (sellerLink) sellerLink.style.display = 'block';
+            } else {
+                navActions.innerHTML = `
+                    <a href="auth.html" class="btn btn-ghost">Connexion</a>
+                    <a href="auth.html" class="btn btn-primary">S'inscrire</a>
+                `;
+                if (sellerLink) sellerLink.style.display = 'none';
+            }
+        }
+        
+        async function deconnexion() {
+            await supabaseClient.auth.signOut();
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            chargerPrompts();
+            updateNavbar();
+        });
     </script>
 </body>
 </html>
