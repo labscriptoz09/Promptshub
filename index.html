@@ -93,7 +93,7 @@
         .btn {
             padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
             cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: none;
-            white-space: nowrap;
+            white-space: nowrap; display: inline-block; text-align: center;
         }
 
         .btn-ghost {             background: transparent; color: var(--text-primary); 
@@ -328,7 +328,7 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">⚡ PromptHub</a>
+            <a href="index.html" class="logo">⚡ PromptHub</a>
             <ul class="nav-links">
                 <li><a href="#">Explorer</a></li>
                 <li><a href="#">Créer</a></li>
@@ -336,8 +336,9 @@
                 <li><a href="#">Tarifs</a></li>
             </ul>
             <div class="nav-actions">
-                <button class="btn btn-ghost">Connexion</button>
-                <button class="btn btn-primary">S'inscrire</button>
+                <!-- ✅ BOUTONS MODIFIÉS POUR LIER VERS AUTH.HTML -->
+                <a href="auth.html" class="btn btn-ghost">Connexion</a>
+                <a href="auth.html" class="btn btn-primary">S'inscrire</a>
             </div>
         </div>
     </nav>
@@ -379,22 +380,21 @@
         </div>
         <div class="categories-grid">
             <div class="category-card reveal delay-1"><span class="category-icon">📝</span><span class="category-name">Marketing</span><span class="category-count">5.2K prompts</span></div>
-            <div class="category-card reveal delay-2"><span class="category-icon">💻</span><span class="category-name">Development</span><span class="category-count">7.1K prompts</span></div>
+            <div class="category-card reveal delay-2"><span class="category-icon"></span><span class="category-name">Development</span><span class="category-count">7.1K prompts</span></div>
             <div class="category-card reveal delay-3"><span class="category-icon">🎨</span><span class="category-name">Design</span><span class="category-count">4.3K prompts</span></div>
             <div class="category-card reveal delay-1"><span class="category-icon">✍️</span><span class="category-name">Copywriting</span><span class="category-count">5.8K prompts</span></div>
             <div class="category-card reveal delay-2"><span class="category-icon">📊</span><span class="category-name">Analytics</span><span class="category-count">3.2K prompts</span></div>
-            <div class="category-card reveal delay-3"><span class="category-icon">🚀</span><span class="category-name">Business</span><span class="category-count">4.9K prompts</span></div>
+            <div class="category-card reveal delay-3"><span class="category-icon"></span><span class="category-name">Business</span><span class="category-count">4.9K prompts</span></div>
         </div>
     </section>
 
     <!-- TRENDING PROMPTS -->
     <section class="section">
-        <div class="section-header reveal">
-            <h2>Trending Prompts</h2>            <p>Handpicked by our community</p>
+        <div class="section-header reveal">            <h2>Trending Prompts</h2>
+            <p>Handpicked by our community</p>
         </div>
         <div class="prompts-grid" id="prompts-container">
-            <!-- Les prompts seront chargés dynamiquement depuis Supabase -->
-            <p style="text-align: center; color: var(--text-secondary);">Chargement des prompts...</p>
+            <p style="text-align: center; color: var(--text-secondary); grid-column: 1/-1;">Chargement des prompts...</p>
         </div>
         <div class="explore-all reveal">
             <a href="#">Explore All Prompts →</a>
@@ -442,9 +442,9 @@
         </div>        <div class="footer-bottom"><p>© 2024 PromptHub. Empowering creators worldwide. ⚡</p></div>
     </footer>
 
-    <!-- JAVASCRIPT AVANCÉ -->
+    <!-- JAVASCRIPT AVANCÉ (Animations) -->
     <script>
-        // 1. Scroll Reveal avec IntersectionObserver
+        // 1. Scroll Reveal
         const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -457,7 +457,7 @@
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // 2. Animation des compteurs (Stats)
+        // 2. Animation des compteurs
         const counters = document.querySelectorAll('.stat-value');
         const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -485,13 +485,11 @@
 
         counters.forEach(counter => counterObserver.observe(counter));
 
-        // 3. Effet de parallaxe léger sur les Orbs
+        // 3. Parallaxe souris
         document.addEventListener('mousemove', (e) => {
             const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;            
-            const orb1 = document.querySelector('.orb-1');
+            const y = e.clientY / window.innerHeight;            const orb1 = document.querySelector('.orb-1');
             const orb2 = document.querySelector('.orb-2');
-            
             if(orb1 && orb2) {
                 orb1.style.transform = `translate(${x * 30}px, ${y * 30}px)`;
                 orb2.style.transform = `translate(${-x * 30}px, ${-y * 30}px)`;
@@ -502,34 +500,25 @@
     <!-- SUPABASE CONNECTION -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Configuration Supabase
         const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
-        
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Fonction pour charger les prompts
         async function chargerPrompts() {
             const container = document.getElementById('prompts-container');
-            
-            const { data, error } = await supabaseClient
-                .from('prompts')
-                .select('*')
-                .order('id', { ascending: true });
+            const { data, error } = await supabaseClient.from('prompts').select('*').order('id', { ascending: true });
 
             if (error) {
                 console.error('Erreur Supabase:', error);
-                container.innerHTML = '<p style="text-align: center; color: red;">Erreur de chargement des prompts.</p>';
+                container.innerHTML = '<p style="text-align: center; color: red; grid-column: 1/-1;">Erreur de chargement.</p>';
                 return;
             }
 
             container.innerHTML = '';
-
             data.forEach((prompt, index) => {
                 const delay = (index % 3) + 1;
-                
                 const carteHTML = `
-                    <div class="prompt-card reveal delay-${delay}">
+                    <div class="prompt-card reveal visible delay-${delay}">
                         <div class="badge badge-trending">🔥 TRENDING</div>
                         <h3 class="prompt-title">${prompt.title}</h3>
                         <p class="prompt-desc">${prompt.description}</p>
@@ -537,18 +526,13 @@
                             <span class="rating">★★★★★ (892)</span>
                             <span class="price">$${prompt.price}</span>
                         </div>
-                        <button class="btn-buy">Buy Now</button>                    </div>
+                        <button class="btn-buy" onclick="alert('Système de paiement en cours de développement !')">Buy Now</button>
+                    </div>
                 `;
                 container.innerHTML += carteHTML;
             });
-            
-            // Relancer les animations
-            document.querySelectorAll('.reveal').forEach(el => {
-                observer.observe(el);
-            });
         }
 
-        // Charger les prompts au démarrage
         document.addEventListener('DOMContentLoaded', chargerPrompts);
     </script>
 </body>
