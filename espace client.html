@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptHub - The Ultimate Prompt Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* ===== BACKGROUND EFFECTS ===== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 0%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== ADVANCED ANIMATIONS ===== */
+        @keyframes heroGlow {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(168, 85, 247, 0.2);
+            }
+            50% {
+                text-shadow: 0 0 40px rgba(59, 130, 246, 0.5), 0 0 80px rgba(168, 85, 247, 0.3);
+            }
+        }
+
+        @keyframes liquidGradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes liquidSwipe {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes orbitRotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleUpBounce {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            70% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes particleFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes codeFlicker {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes shimmerMove {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        @keyframes magneticPull {
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(10px, -10px);
+            }
+        }
+
+        @keyframes glassmorphism {
+            0% {
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            50% {
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            100% {
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        .animate-hero-glow {
+            animation: heroGlow 3s ease-in-out infinite;
+        }
+
+        .animate-liquid-gradient {
+            animation: liquidGradient 8s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        .animate-float-up {
+            animation: floatUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .animate-scale-bounce {
+            animation: scaleUpBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .animate-liquid-swipe {
+            animation: liquidSwipe 2.5s ease-in-out infinite;
+        }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-600 { animation-delay: 0.6s; }
+
+        /* ===== GLASS MORPHISM ===== */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 12px 48px rgba(59, 130, 246, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        /* ===== GRADIENT BUTTONS ===== */
+        .btn-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 50%, #ec4899 100%);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            padding: 16px 42px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+            font-family: 'Space Grotesk';
+            letter-spacing: 0.5px;
+        }
+
+        .btn-gradient::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: liquidSwipe 3s ease-in-out infinite;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 25px 60px rgba(59, 130, 246, 0.4);
+            background-position: 100% 100%;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 14px 40px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            font-family: 'Space Grotesk';
+            letter-spacing: 0.5px;
+        }
+
+        .btn-outline:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.2);
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: rgba(15, 15, 30, 0.8);
+            backdrop-filter: blur(30px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-logo {
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -1px;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #a855f7);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover {
+            color: #fff;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .nav-link:hover::after {
+            width: 30px;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            position: relative;
+            padding: 120px 20px 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-title {
+            font-size: 72px;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            color: #fff;
+            letter-spacing: -2px;
+            animation: heroGlow 3s ease-in-out infinite;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        /* ===== SEARCH BOX ===== */
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 50px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            font-size: 16px;
+            color: #fff;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(20px);
+            font-family: 'Space Grotesk';
+            font-weight: 500;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+            transform: scale(1.02);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            border: none;
+            border-radius: 12px;
+            width: 46px;
+            height: 46px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+        }
+
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4);
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .card:hover {
+            background: rgba(26, 26, 46, 0.8);
+            border-color: rgba(59, 130, 246, 0.3);
+            transform: translateY(-16px);
+            box-shadow: 0 25px 60px rgba(59, 130, 246, 0.15);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        /* ===== PROMPT CARD ===== */
+        .prompt-card {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.7) 0%, rgba(30, 30, 50, 0.7) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
+        }
+
+        .prompt-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: liquidSwipe 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .prompt-card:hover {
+            transform: translateY(-24px) scale(1.02);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 32px 80px rgba(59, 130, 246, 0.25);
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(35, 35, 60, 0.9) 100%);
+        }
+
+        .prompt-header {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+            padding: 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        .prompt-content {
+            padding: 28px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 2;
+        }
+
+        .prompt-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .prompt-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .prompt-rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .star { color: #fbbf24; font-size: 16px; }
+        .rating-count { color: rgba(255, 255, 255, 0.5); font-size: 12px; }
+
+        .prompt-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .prompt-price {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== BADGE ===== */
+        .badge {
+            display: inline-block;
+            padding: 10px 18px;
+            border-radius: 24px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .badge-trending {
+            background: linear-gradient(135deg, #ec4899 0%, #f97316 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+            animation: codeFlicker 2s ease-in-out infinite;
+        }
+
+        .badge-new {
+            background: rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.5);
+        }
+
+        /* ===== CATEGORIES ===== */
+        .category-card {
+            text-align: center;
+            padding: 40px 28px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .category-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .category-card:hover .category-icon {
+            transform: scale(1.4) rotateZ(-15deg);
+        }
+
+        .category-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .category-count {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            position: relative;
+            z-index: 10;
+            padding: 100px 20px;
+        }
+
+        .section-title {
+            font-size: 56px;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 24px;
+            color: #fff;
+            letter-spacing: -1px;
+            animation: floatUp 0.8s ease-out forwards;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+            animation: floatUp 0.8s ease-out forwards;
+            animation-delay: 0.1s;
+            opacity: 0;
+        }
+
+        /* ===== STATS ===== */
+        .stat {
+            text-align: center;
+            animation: scaleUpBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            opacity: 0;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: rgba(15, 15, 30, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 80px 20px 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-title {
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: block;
+            font-weight: 400;
+        }
+
+        .footer-link:hover {
+            color: rgba(59, 130, 246, 0.8);
+            transform: translateX(4px);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 42px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .nav-link {
+                display: none;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="nav-logo animate-scale-bounce">
+                    <span style="font-size: 32px;">⚡</span>
+                    <span>PromptHub</span>
+                </div>
+                
+                <div class="hidden md:flex gap-8">
+                    <a href="#" class="nav-link animate-float-up delay-100">Explorer</a>
+                    <a href="#" class="nav-link animate-float-up delay-200">Créer</a>
+                    <a href="#" class="nav-link animate-float-up delay-300">Guide</a>
+                    <a href="#" class="nav-link animate-float-up delay-400">Tarifs</a>
+                </div>
+
+                <div class="flex gap-3">
+                    <button class="btn-outline animate-float-up delay-500">Connexion</button>
+                    <button class="btn-gradient animate-float-up delay-600">S'inscrire</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title animate-float-up">
+                Unlock the Power of <span style="background: linear-gradient(135deg, #3b82f6, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Elite Prompts</span>
+            </h1>
+            
+            <p class="hero-subtitle animate-float-up delay-100">
+                Discover a curated marketplace of premium AI prompts crafted by industry experts. Elevate your productivity and unlock unlimited possibilities.
+            </p>
+
+            <div class="search-box animate-float-up delay-200">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    placeholder="Search prompts, creators, or categories..."
+                >
+                <button class="search-btn">🔍</button>
+            </div>
+
+            <div class="flex gap-4 justify-center flex-wrap animate-float-up delay-300">
+                <button class="btn-gradient">Discover Prompts</button>
+                <button class="btn-outline">Launch as Creator</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS SECTION -->
+    <section class="section">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="stat delay-100">
+                    <div class="stat-number">25K+</div>
+                    <div class="stat-label">Premium Prompts</div>
+                </div>
+                <div class="stat delay-200">
+                    <div class="stat-number">12K+</div>
+                    <div class="stat-label">Expert Creators</div>
+                </div>
+                <div class="stat delay-300">
+                    <div class="stat-number">200K+</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat delay-400">
+                    <div class="stat-number">$15M+</div>
+                    <div class="stat-label">Revenue Generated</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORIES SECTION -->
+    <section class="section">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="section-title animate-float-up">Explore Categories</h2>
+            <p class="section-subtitle">Find the perfect prompt for your needs</p>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                <div class="card category-card animate-float-up delay-100">
+                    <span class="category-icon">📝</span>
+                    <div class="category-name">Marketing</div>
+                    <div class="category-count">5.2K prompts</div>
+                </div>
+
+                <div class="card category-card animate-float-up delay-200">
+                    <span class="category-icon">💻</span>
+                    <div class="category-name">Development</div>
+                    <div class="category-count">7.1K prompts</div>
+                </div>
+
+                <div class="card category-card animate-float-up delay-300">
+                    <span class="category-icon">🎨</span>
+                    <div class="category-name">Design</div>
+                    <div class="category-count">4.3K prompts</div>
+                </div>
+
+                <div class="card category-card animate-float-up delay-400">
+                    <span class="category-icon">✍️</span>
+                    <div class="category-name">Copywriting</div>
+                    <div class="category-count">5.8K prompts</div>
+                </div>
+
+                <div class="card category-card animate-float-up delay-500">
+                    <span class="category-icon">📊</span>
+                    <div class="category-name">Analytics</div>
+                    <div class="category-count">3.2K prompts</div>
+                </div>
+
+                <div class="card category-card animate-float-up delay-600">
+                    <span class="category-icon">🚀</span>
+                    <div class="category-name">Business</div>
+                    <div class="category-count">4.9K prompts</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRENDING PROMPTS -->
+    <section class="section">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="section-title animate-float-up">Trending Prompts</h2>
+            <p class="section-subtitle">Handpicked by our community</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- CARD 1 -->
+                <div class="prompt-card animate-float-up delay-100">
+                    <div class="prompt-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="badge badge-trending">🔥 TRENDING</span>
+                            <span style="font-size: 24px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.3)'" onmouseout="this.style.transform='scale(1)'">❤️</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">Elite Email Marketing Pro</h3>
+                        <p class="prompt-desc">Transform your email campaigns with conversion-optimized prompts. 10x your ROI with proven frameworks.</p>
+                        <div class="prompt-rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="rating-count">(892 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="prompt-footer">
+                        <div class="prompt-price">$19.99</div>
+                        <button class="btn-gradient" style="padding: 11px 22px; font-size: 14px;">Buy Now</button>
+                    </div>
+                </div>
+
+                <!-- CARD 2 -->
+                <div class="prompt-card animate-float-up delay-200">
+                    <div class="prompt-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="badge badge-new">✨ NEW</span>
+                            <span style="font-size: 24px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.3)'" onmouseout="this.style.transform='scale(1)'">🤍</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">Advanced Code Architect</h3>
+                        <p class="prompt-desc">Generate production-grade code instantly. Supports 20+ languages with enterprise-level patterns.</p>
+                        <div class="prompt-rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="rating-count">(634 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="prompt-footer">
+                        <div class="prompt-price">$16.99</div>
+                        <button class="btn-gradient" style="padding: 11px 22px; font-size: 14px;">Buy Now</button>
+                    </div>
+                </div>
+
+                <!-- CARD 3 -->
+                <div class="prompt-card animate-float-up delay-300">
+                    <div class="prompt-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="badge badge-trending">🔥 TRENDING</span>
+                            <span style="font-size: 24px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.3)'" onmouseout="this.style.transform='scale(1)'">❤️</span>
+                        </div>
+                    </div>
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">LinkedIn Viral Engine</h3>
+                        <p class="prompt-desc">Create viral LinkedIn content that builds your personal brand. Proven engagement strategies included.</p>
+                        <div class="prompt-rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="rating-count">(1,247 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="prompt-footer">
+                        <div class="prompt-price">$12.99</div>
+                        <button class="btn-gradient" style="padding: 11px 22px; font-size: 14px;">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-16 animate-float-up delay-400">
+                <button class="btn-outline" style="padding: 16px 44px; font-size: 16px;">Explore All Prompts →</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY PROMPTHUB -->
+    <section class="section">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="section-title animate-float-up">Why PromptHub</h2>
+            <p class="section-subtitle">The most advanced prompt marketplace</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card animate-float-up delay-100">
+                    <div style="font-size: 32px; margin-bottom: 16px;">✓</div>
+                    <h3 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 8px;">Verified Quality</h3>
+                    <p style="color: rgba(255, 255, 255, 0.6); line-height: 1.6;">Every prompt is tested by experts and guaranteed to deliver results.</p>
+                </div>
+
+                <div class="card animate-float-up delay-200">
+                    <div style="font-size: 32px; margin-bottom: 16px;">🔒</div>
+                    <h3 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 8px;">Bank-Level Security</h3>
+                    <p style="color: rgba(255, 255, 255, 0.6); line-height: 1.6;">Encrypted transactions and protected data with Stripe integration.</p>
+                </div>
+
+                <div class="card animate-float-up delay-300">
+                    <div style="font-size: 32px; margin-bottom: 16px;">🎯</div>
+                    <h3 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 8px;">Expert Support</h3>
+                    <p style="color: rgba(255, 255, 255, 0.6); line-height: 1.6;">24/7 support from our team of AI prompt specialists.</p>
+                </div>
+
+                <div class="card animate-float-up delay-400">
+                    <div style="font-size: 32px; margin-bottom: 16px;">💰</div>
+                    <h3 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 8px;">Maximum Earnings</h3>
+                    <p style="color: rgba(255, 255, 255, 0.6); line-height: 1.6;">Keep 80% of your sales. Industry-leading commission rates.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="section">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="section-title animate-float-up">Start Your Creator Journey Today</h2>
+            
+            <p class="section-subtitle" style="opacity: 0; animation: floatUp 0.8s ease-out 0.1s forwards;">
+                Join thousands of creators earning passive income by sharing their expertise
+            </p>
+
+            <div class="flex gap-4 justify-center flex-wrap animate-float-up delay-200">
+                <button class="btn-gradient" style="padding: 18px 50px; font-size: 17px;">Start Creating Free</button>
+                <button class="btn-outline" style="padding: 18px 50px; font-size: 17px;">View Documentation</button>
+            </div>
+
+            <div class="mt-24 grid grid-cols-3 gap-8 pt-24 border-t border-gray-700">
+                <div class="animate-float-up delay-300">
+                    <div style="font-size: 44px; font-weight: 900; background: linear-gradient(135deg, #3b82f6, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">2 min</div>
+                    <p style="color: rgba(255, 255, 255, 0.6); margin-top: 12px; font-weight: 500;">to sign up</p>
+                </div>
+                <div class="animate-float-up delay-400">
+                    <div style="font-size: 44px; font-weight: 900; background: linear-gradient(135deg, #3b82f6, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">∞</div>
+                    <p style="color: rgba(255, 255, 255, 0.6); margin-top: 12px; font-weight: 500;">prompts you can create</p>
+                </div>
+                <div class="animate-float-up delay-500">
+                    <div style="font-size: 44px; font-weight: 900; background: linear-gradient(135deg, #3b82f6, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">80%</div>
+                    <p style="color: rgba(255, 255, 255, 0.6); margin-top: 12px; font-weight: 500;">commission earned</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
+                <div>
+                    <div class="footer-title">Product</div>
+                    <a href="#" class="footer-link">Explore</a>
+                    <a href="#" class="footer-link">Create</a>
+                    <a href="#" class="footer-link">Sell</a>
+                    <a href="#" class="footer-link">Pricing</a>
+                </div>
+                <div>
+                    <div class="footer-title">Resources</div>
+                    <a href="#" class="footer-link">Blog</a>
+                    <a href="#" class="footer-link">Guides</a>
+                    <a href="#" class="footer-link">API</a>
+                    <a href="#" class="footer-link">FAQ</a>
+                </div>
+                <div>
+                    <div class="footer-title">Legal</div>
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Cookies</a>
+                    <a href="#" class="footer-link">License</a>
+                </div>
+                <div>
+                    <div class="footer-title">Social</div>
+                    <a href="#" class="footer-link">Twitter</a>
+                    <a href="#" class="footer-link">LinkedIn</a>
+                    <a href="#" class="footer-link">Discord</a>
+                    <a href="#" class="footer-link">GitHub</a>
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 32px; text-align: center;">
+                <p style="color: rgba(255, 255, 255, 0.5); font-weight: 300;">© 2024 PromptHub. Empowering creators worldwide. ⚡</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Search focus effect
+        const searchInput = document.querySelector('.search-input');
+        if (searchInput) {
+            searchInput.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.03)';
+            });
+            searchInput.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        }
+
+        // Parallax
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero) hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+        });
+    </script>
+</body>
+</html>
