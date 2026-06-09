@@ -4,1079 +4,519 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PromptHub - The Ultimate Prompt Marketplace</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --bg-primary: #0B1120;
+            --bg-secondary: #151E32;
+            --bg-card: rgba(30, 41, 59, 0.4);
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --accent-lavender: #A78BFA;
+            --accent-turquoise: #2DD4BF;
+            --accent-rose: #F472B6;
+            --accent-orange: #FDBA74;
+            --border-color: rgba(167, 139, 250, 0.1);
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
-            color: #ffffff;
-            overflow-x: hidden;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        /* ===== BACKGROUND EFFECTS ===== */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 40% 0%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ===== ADVANCED ANIMATIONS ===== */
-        @keyframes heroGlow {
-            0%, 100% {
-                text-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(168, 85, 247, 0.2);
-            }
-            50% {
-                text-shadow: 0 0 40px rgba(59, 130, 246, 0.5), 0 0 80px rgba(168, 85, 247, 0.3);
-            }
-        }
-
-        @keyframes liquidGradient {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        @keyframes liquidSwipe {
-            0% {
-                transform: translateX(-100%);
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-        }
-
-        @keyframes orbitRotate {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes floatUp {
-            0% {
-                opacity: 0;
-                transform: translateY(100px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes scaleUpBounce {
-            0% {
-                opacity: 0;
-                transform: scale(0.3);
-            }
-            70% {
-                opacity: 1;
-                transform: scale(1.05);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes particleFloat {
-            0%, 100% {
-                transform: translateY(0px) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        @keyframes codeFlicker {
-            0%, 100% {
-                opacity: 0.5;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes shimmerMove {
-            0% {
-                background-position: -1000px 0;
-            }
-            100% {
-                background-position: 1000px 0;
-            }
-        }
-
-        @keyframes magneticPull {
-            0%, 100% {
-                transform: translate(0, 0);
-            }
-            50% {
-                transform: translate(10px, -10px);
-            }
-        }
-
-        @keyframes glassmorphism {
-            0% {
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-            }
-            50% {
-                backdrop-filter: blur(20px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-            }
-            100% {
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-            }
-        }
-
-        .animate-hero-glow {
-            animation: heroGlow 3s ease-in-out infinite;
-        }
-
-        .animate-liquid-gradient {
-            animation: liquidGradient 8s ease infinite;
-            background-size: 200% 200%;
-        }
-
-        .animate-float-up {
-            animation: floatUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        .animate-scale-bounce {
-            animation: scaleUpBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        .animate-liquid-swipe {
-            animation: liquidSwipe 2.5s ease-in-out infinite;
-        }
-
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-        .delay-400 { animation-delay: 0.4s; }
-        .delay-500 { animation-delay: 0.5s; }
-        .delay-600 { animation-delay: 0.6s; }
-
-        /* ===== GLASS MORPHISM ===== */
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .glass:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 12px 48px rgba(59, 130, 246, 0.2);
-            transition: all 0.4s ease;
-        }
-
-        /* ===== GRADIENT BUTTONS ===== */
-        .btn-gradient {
-            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 50%, #ec4899 100%);
-            background-size: 200% 200%;
-            color: white;
-            border: none;
-            padding: 16px 42px;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.3);
-            position: relative;
-            overflow: hidden;
-            font-family: 'Space Grotesk';
-            letter-spacing: 0.5px;
-        }
-
-        .btn-gradient::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: liquidSwipe 3s ease-in-out infinite;
-        }
-
-        .btn-gradient:hover {
-            transform: translateY(-6px) scale(1.05);
-            box-shadow: 0 25px 60px rgba(59, 130, 246, 0.4);
-            background-position: 100% 100%;
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: #fff;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 14px 40px;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.5s ease;
-            font-family: 'Space Grotesk';
-            letter-spacing: 0.5px;
-        }
-
-        .btn-outline:hover {
-            background: rgba(59, 130, 246, 0.2);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-6px);
-            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.2);
-        }
-
-        /* ===== NAVBAR ===== */
-        .navbar {
-            background: rgba(15, 15, 30, 0.8);
-            backdrop-filter: blur(30px);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
-            padding: 20px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .nav-logo {
-            font-size: 28px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            letter-spacing: -1px;
-        }
-
-        .nav-link {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 8px 16px;
-            border-radius: 8px;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #3b82f6, #a855f7);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .nav-link:hover {
-            color: #fff;
-            background: rgba(59, 130, 246, 0.1);
-        }
-
-        .nav-link:hover::after {
-            width: 30px;
-        }
-
-        /* ===== HERO SECTION ===== */
-        .hero {
-            position: relative;
-            padding: 120px 20px 80px;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.2) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .hero-content {
-            max-width: 1000px;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        .hero-title {
-            font-size: 72px;
-            font-weight: 900;
-            line-height: 1.15;
-            margin-bottom: 24px;
-            color: #fff;
-            letter-spacing: -2px;
-            animation: heroGlow 3s ease-in-out infinite;
-        }
-
-        .hero-subtitle {
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 50px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.8;
-            font-weight: 400;
-        }
-
-        /* ===== SEARCH BOX ===== */
-        .search-box {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto 50px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 20px 24px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            font-size: 16px;
-            color: #fff;
-            transition: all 0.4s ease;
-            backdrop-filter: blur(20px);
-            font-family: 'Space Grotesk';
-            font-weight: 500;
-        }
-
-        .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .search-input:focus {
-            outline: none;
-            background: rgba(59, 130, 246, 0.15);
-            border-color: rgba(59, 130, 246, 0.5);
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
-            transform: scale(1.02);
-        }
-
-        .search-btn {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: linear-gradient(135deg, #3b82f6, #a855f7);
-            border: none;
-            border-radius: 12px;
-            width: 46px;
-            height: 46px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
-        }
-
-        .search-btn:hover {
-            transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4);
-        }
-
-        /* ===== CARDS ===== */
-        .card {
-            background: rgba(26, 26, 46, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 32px;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-            opacity: 0;
-            transition: all 0.5s ease;
-        }
-
-        .card:hover {
-            background: rgba(26, 26, 46, 0.8);
-            border-color: rgba(59, 130, 246, 0.3);
-            transform: translateY(-16px);
-            box-shadow: 0 25px 60px rgba(59, 130, 246, 0.15);
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        /* ===== PROMPT CARD ===== */
-        .prompt-card {
-            background: linear-gradient(135deg, rgba(26, 26, 46, 0.7) 0%, rgba(30, 30, 50, 0.7) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
-        }
-
-        .prompt-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: liquidSwipe 3s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        .prompt-card:hover {
-            transform: translateY(-24px) scale(1.02);
-            border-color: rgba(59, 130, 246, 0.4);
-            box-shadow: 0 32px 80px rgba(59, 130, 246, 0.25);
-            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(35, 35, 60, 0.9) 100%);
-        }
-
-        .prompt-header {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
-            padding: 28px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            z-index: 2;
-        }
-
-        .prompt-content {
-            padding: 28px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            z-index: 2;
-        }
-
-        .prompt-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 12px;
-            line-height: 1.4;
-        }
-
-        .prompt-desc {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 20px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.6;
-            flex: 1;
-        }
-
-        .prompt-rating {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 16px;
-        }
-
-        .star { color: #fbbf24; font-size: 16px; }
-        .rating-count { color: rgba(255, 255, 255, 0.5); font-size: 12px; }
-
-        .prompt-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 28px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.2);
+            overflow-x: hidden;
             position: relative;
-            z-index: 2;
+            /* Grille subtile en arrière-plan */
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center top;
         }
 
-        .prompt-price {
-            font-size: 32px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        /* --- ANIMATED BACKGROUND ORBS --- */
+        .bg-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden; pointer-events: none;
+        }
+        .glow-orb {
+            position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.3;
+            animation: float 15s infinite alternate ease-in-out;
+        }
+        .orb-1 { width: 500px; height: 500px; background: var(--accent-lavender); top: -150px; left: -150px; }
+        .orb-2 { width: 600px; height: 600px; background: var(--accent-turquoise); bottom: -200px; right: -200px; animation-delay: -7s; }
+                @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(80px, 80px) scale(1.15); }
         }
 
-        /* ===== BADGE ===== */
-        .badge {
-            display: inline-block;
-            padding: 10px 18px;
-            border-radius: 24px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: relative;
-            z-index: 10;
+        a { text-decoration: none; color: inherit; transition: color 0.3s; }
+        ul { list-style: none; }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            background: rgba(11, 17, 32, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            position: sticky; top: 0; z-index: 1000;
         }
 
-        .badge-trending {
-            background: linear-gradient(135deg, #ec4899 0%, #f97316 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
-            animation: codeFlicker 2s ease-in-out infinite;
+        .nav-container {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
-        .badge-new {
-            background: rgba(59, 130, 246, 0.3);
-            color: #60a5fa;
-            border: 1px solid rgba(59, 130, 246, 0.5);
+        .logo {
+            font-size: 1.5rem; font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-lavender), var(--accent-turquoise));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: flex; align-items: center; gap: 0.5rem;
         }
 
-        /* ===== CATEGORIES ===== */
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { 
+            color: var(--text-secondary); font-size: 0.95rem; font-weight: 500; 
+            position: relative; padding: 0.5rem 0;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 0;
+            background: var(--accent-lavender); transition: width 0.3s ease;
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-actions { display: flex; gap: 0.75rem; align-items: center; }
+        
+        .btn {
+            padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: none;
+            white-space: nowrap;
+        }
+        .btn-ghost { 
+            background: transparent; color: var(--text-primary); 
+            border: 1px solid var(--border-color);
+        }
+        .btn-ghost:hover { 
+            border-color: var(--accent-lavender); color: var(--accent-lavender);
+            background: rgba(167, 139, 250, 0.05);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-lavender), var(--accent-turquoise));
+            color: #0B1120; background-size: 200% 200%;
+            animation: gradientShift 4s ease infinite;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(167, 139, 250, 0.4);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            text-align: center; padding: 8rem 2rem 4rem; max-width: 900px; margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: rgba(167, 139, 250, 0.1); border: 1px solid rgba(167, 139, 250, 0.2);
+            padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; color: var(--accent-lavender);
+            margin-bottom: 1.5rem; font-weight: 500;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #FFFFFF, #A78BFA, #2DD4BF);
+            background-size: 200% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shimmer 5s linear infinite;
+        }
+
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+        .hero p {
+            font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2.5rem;
+            max-width: 650px; margin-left: auto; margin-right: auto;
+        }
+
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; margin-bottom: 5rem; }
+        .btn-large { padding: 0.9rem 2rem; font-size: 1rem; }
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color);
+            color: var(--text-primary); backdrop-filter: blur(5px);
+        }
+        .btn-outline:hover {
+            background: rgba(167, 139, 250, 0.1); border-color: var(--accent-lavender);
+            transform: translateY(-2px);
+        }
+
+        /* --- STATS --- */
+        .stats {
+            display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap;
+            padding: 2.5rem; background: var(--bg-card); backdrop-filter: blur(10px);
+            border-radius: 20px; border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+        .stat-item { text-align: center; }
+        .stat-value {
+            font-size: 2.2rem; font-weight: 800; color: var(--text-primary); display: block;
+            background: linear-gradient(135deg, var(--accent-lavender), var(--accent-turquoise));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .stat-label { color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; display: block;}
+
+        /* --- SECTIONS COMMON --- */
+        .section { max-width: 1200px; margin: 0 auto; padding: 6rem 2rem; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 { font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 700; }
+        .section-header p { color: var(--text-secondary); font-size: 1.1rem; }
+
+        /* --- CATEGORIES --- */
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; }
         .category-card {
-            text-align: center;
-            padding: 40px 28px;
-            cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: var(--bg-card); padding: 2rem 1.5rem; border-radius: 16px; text-align: center;
+            border: 1px solid var(--border-color); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer; backdrop-filter: blur(10px); position: relative; overflow: hidden;
         }
-
-        .category-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            display: block;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        .category-card::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: left 0.5s;
         }
-
-        .category-card:hover .category-icon {
-            transform: scale(1.4) rotateZ(-15deg);
+        .category-card:hover::before { left: 100%; }        .category-card:hover {
+            transform: translateY(-8px); border-color: var(--accent-lavender);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(167, 139, 250, 0.1);
         }
+        .category-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; transition: transform 0.3s; }
+        .category-card:hover .category-icon { transform: scale(1.2) rotate(5deg); }
+        .category-name { font-weight: 600; margin-bottom: 0.3rem; display: block; font-size: 1.1rem; }
+        .category-count { color: var(--text-secondary); font-size: 0.85rem; }
 
-        .category-name {
-            font-size: 17px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 8px;
+        /* --- TRENDING PROMPTS --- */
+        .prompts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+        .prompt-card {
+            background: var(--bg-card); border-radius: 20px; padding: 2rem;
+            border: 1px solid var(--border-color); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; display: flex; flex-direction: column; backdrop-filter: blur(10px);
+            overflow: hidden;
         }
-
-        .category-count {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.6);
-            font-weight: 500;
+        .prompt-card:hover {
+            transform: translateY(-10px); border-color: rgba(167, 139, 250, 0.4);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
-
-        /* ===== SECTIONS ===== */
-        .section {
-            position: relative;
-            z-index: 10;
-            padding: 100px 20px;
+        .badge {
+            position: absolute; top: 1.5rem; right: 1.5rem; padding: 0.3rem 0.8rem; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 0.3rem;
         }
+        .badge-trending { background: rgba(253, 186, 116, 0.15); color: var(--accent-orange); border: 1px solid rgba(253, 186, 116, 0.3); }
+        .badge-new { background: rgba(45, 212, 191, 0.15); color: var(--accent-turquoise); border: 1px solid rgba(45, 212, 191, 0.3); }
 
-        .section-title {
-            font-size: 56px;
-            font-weight: 900;
-            text-align: center;
-            margin-bottom: 24px;
-            color: #fff;
-            letter-spacing: -1px;
-            animation: floatUp 0.8s ease-out forwards;
+        .prompt-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; margin-top: 1rem; }
+        .prompt-desc { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.5rem; flex-grow: 1; }
+        .prompt-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .rating { color: var(--accent-orange); font-size: 0.9rem; }
+        .price { font-size: 1.6rem; font-weight: 800; color: var(--text-primary); }
+
+        .btn-buy {
+            width: 100%; padding: 0.9rem;
+            background: linear-gradient(135deg, var(--accent-lavender), var(--accent-turquoise));
+            color: #0B1120; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;
+            transition: all 0.3s; font-size: 1rem;
         }
+        .btn-buy:hover { box-shadow: 0 5px 20px rgba(167, 139, 250, 0.5); transform: translateY(-2px); }
 
-        .section-subtitle {
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.6);
-            text-align: center;
-            margin-bottom: 60px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            font-weight: 400;
-            animation: floatUp 0.8s ease-out forwards;
-            animation-delay: 0.1s;
-            opacity: 0;
+        .explore-all { text-align: center; margin-top: 4rem; }
+        .explore-all a {
+            color: var(--accent-lavender); font-weight: 600; font-size: 1.1rem;
+            transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;
         }
+        .explore-all a:hover { color: var(--accent-turquoise); transform: translateX(5px); }
 
-        /* ===== STATS ===== */
-        .stat {
-            text-align: center;
-            animation: scaleUpBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-            opacity: 0;
+        /* --- FEATURES --- */        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+        .feature-card {
+            text-align: center; padding: 2.5rem 2rem; background: var(--bg-card); border-radius: 20px;
+            border: 1px solid var(--border-color); transition: all 0.4s ease; backdrop-filter: blur(10px);
         }
+        .feature-card:hover { transform: translateY(-5px); border-color: rgba(45, 212, 191, 0.3); }
+        .feature-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+        .feature-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .feature-desc { color: var(--text-secondary); font-size: 0.95rem; }
 
-        .stat-number {
-            font-size: 48px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 12px;
-            letter-spacing: -1px;
+        /* --- CREATOR CTA --- */
+        .creator-cta {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.05), rgba(45, 212, 191, 0.05));
+            border: 1px solid var(--border-color); border-radius: 24px; padding: 5rem 2rem;
+            text-align: center; margin: 2rem; position: relative; overflow: hidden;
         }
+        .creator-cta h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .creator-cta p { color: var(--text-secondary); margin-bottom: 2.5rem; font-size: 1.1rem; }
+        .creator-stats { display: flex; justify-content: center; gap: 4rem; margin-top: 3rem; flex-wrap: wrap; }
+        .creator-stat span { display: block; }
+        .creator-stat .val { font-size: 1.8rem; font-weight: 800; color: var(--accent-turquoise); }
+        .creator-stat .lbl { color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.3rem; }
 
-        .stat-label {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.6);
-            font-weight: 500;
-        }
-
-        /* ===== FOOTER ===== */
+        /* --- FOOTER --- */
         .footer {
-            background: rgba(15, 15, 30, 0.95);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 80px 20px 30px;
-            position: relative;
-            z-index: 10;
+            background: rgba(11, 17, 32, 0.9); border-top: 1px solid var(--border-color);
+            padding: 4rem 2rem 2rem; margin-top: 4rem; backdrop-filter: blur(10px);
         }
+        .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
+        .footer-col h4 { margin-bottom: 1.5rem; color: var(--text-primary); font-size: 1.1rem; }
+        .footer-col ul li { margin-bottom: 0.8rem; }
+        .footer-col ul li a { color: var(--text-secondary); font-size: 0.9rem; transition: all 0.3s; }
+        .footer-col ul li a:hover { color: var(--accent-lavender); transform: translateX(3px); display: inline-block;}
+        .footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid var(--border-color); color: var(--text-secondary); font-size: 0.9rem; }
 
-        .footer-title {
-            color: #fff;
-            font-weight: 700;
-            margin-bottom: 20px;
-            font-size: 15px;
-            letter-spacing: 0.5px;
+        /* --- SCROLL REVEAL ANIMATIONS --- */
+        .reveal {
+            opacity: 0; transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
         }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
 
-        .footer-link {
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            margin-bottom: 12px;
-            display: block;
-            font-weight: 400;
-        }
-
-        .footer-link:hover {
-            color: rgba(59, 130, 246, 0.8);
-            transform: translateX(4px);
-        }
-
-        /* ===== RESPONSIVE ===== */
+        /* --- RESPONSIVE MOBILE (CORRIGÉ) --- */
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 42px;
-            }
+            .navbar { padding: 0.8rem 1rem; }
+            .nav-links { display: none; } /* On garde les liens cachés pour l'espace, mais les boutons restent */
+                        .nav-actions { gap: 0.5rem; }
+            /* Adaptation parfaite des deux boutons sur mobile */
+            .btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; border-radius: 6px; }
+            .btn-ghost { padding: 0.5rem 0.6rem; } /* Connexion un peu plus compact */
 
-            .section-title {
-                font-size: 36px;
-            }
-
-            .nav-link {
-                display: none;
-            }
+            .hero { padding: 5rem 1.5rem 3rem; }
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .hero-buttons { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto 3rem; }
+            .btn-large { width: 100%; }
+            
+            .stats { gap: 1.5rem; padding: 1.5rem; }
+            .stat-value { font-size: 1.5rem; }
+            
+            .section { padding: 4rem 1rem; }
+            .section-header h2 { font-size: 1.8rem; }
+            .creator-cta { padding: 3rem 1rem; margin: 1rem; }
+            .creator-cta h2 { font-size: 1.8rem; }
+            .creator-stats { gap: 2rem; }
         }
 
+        @media (max-width: 380px) {
+            .btn { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
+            .logo { font-size: 1.3rem; }
+        }
     </style>
 </head>
 <body>
+
+    <!-- ANIMATED BACKGROUND -->
+    <div class="bg-glow">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
     <!-- NAVBAR -->
     <nav class="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="nav-logo animate-scale-bounce">
-                    <span style="font-size: 32px;">⚡</span>
-                    <span>PromptHub</span>
-                </div>
-                
-                <div class="hidden md:flex gap-8">
-                    <a href="#" class="nav-link animate-float-up delay-100">Explorer</a>
-                    <a href="#" class="nav-link animate-float-up delay-200">Créer</a>
-                    <a href="#" class="nav-link animate-float-up delay-300">Guide</a>
-                    <a href="#" class="nav-link animate-float-up delay-400">Tarifs</a>
-                </div>
-
-                <div class="flex gap-3">
-                    <button class="btn-outline animate-float-up delay-500">Connexion</button>
-                    <button class="btn-gradient animate-float-up delay-600">S'inscrire</button>
-                </div>
+        <div class="nav-container">
+            <a href="#" class="logo">⚡ PromptHub</a>
+            <ul class="nav-links">
+                <li><a href="#">Explorer</a></li>
+                <li><a href="#">Créer</a></li>
+                <li><a href="#">Guide</a></li>
+                <li><a href="#">Tarifs</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn btn-ghost">Connexion</button>
+                <button class="btn btn-primary">S'inscrire</button>
             </div>
-        </div>
-    </nav>
+        </div>    </nav>
 
     <!-- HERO SECTION -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title animate-float-up">
-                Unlock the Power of <span style="background: linear-gradient(135deg, #3b82f6, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Elite Prompts</span>
-            </h1>
-            
-            <p class="hero-subtitle animate-float-up delay-100">
-                Discover a curated marketplace of premium AI prompts crafted by industry experts. Elevate your productivity and unlock unlimited possibilities.
-            </p>
+    <section class="hero reveal">
+        <div class="hero-badge">✨ Nouveau : Intégration GPT-4o disponible</div>
+        <h1>Unlock the Power of Elite Prompts</h1>
+        <p>Discover a curated marketplace of premium AI prompts crafted by industry experts. Elevate your productivity and unlock unlimited possibilities.</p>
+        <div class="hero-buttons">
+            <button class="btn btn-primary btn-large">🔍 Discover Prompts</button>
+            <button class="btn btn-outline btn-large">🚀 Launch as Creator</button>
+        </div>
 
-            <div class="search-box animate-float-up delay-200">
-                <input 
-                    type="text" 
-                    class="search-input" 
-                    placeholder="Search prompts, creators, or categories..."
-                >
-                <button class="search-btn">🔍</button>
+        <div class="stats reveal delay-1">
+            <div class="stat-item">
+                <span class="stat-value" data-target="25">0</span>
+                <span class="stat-label">K+ Premium Prompts</span>
             </div>
-
-            <div class="flex gap-4 justify-center flex-wrap animate-float-up delay-300">
-                <button class="btn-gradient">Discover Prompts</button>
-                <button class="btn-outline">Launch as Creator</button>
+            <div class="stat-item">
+                <span class="stat-value" data-target="12">0</span>
+                <span class="stat-label">K+ Expert Creators</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" data-target="200">0</span>
+                <span class="stat-label">K+ Active Users</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" data-target="15">0</span>
+                <span class="stat-label">M$+ Revenue Generated</span>
             </div>
         </div>
     </section>
 
-    <!-- STATS SECTION -->
+    <!-- CATEGORIES -->
     <section class="section">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div class="stat delay-100">
-                    <div class="stat-number">25K+</div>
-                    <div class="stat-label">Premium Prompts</div>
-                </div>
-                <div class="stat delay-200">
-                    <div class="stat-number">12K+</div>
-                    <div class="stat-label">Expert Creators</div>
-                </div>
-                <div class="stat delay-300">
-                    <div class="stat-number">200K+</div>
-                    <div class="stat-label">Active Users</div>
-                </div>
-                <div class="stat delay-400">
-                    <div class="stat-number">$15M+</div>
-                    <div class="stat-label">Revenue Generated</div>
-                </div>
-            </div>
+        <div class="section-header reveal">
+            <h2>Explore Categories</h2>
+            <p>Find the perfect prompt for your needs</p>
         </div>
-    </section>
-
-    <!-- CATEGORIES SECTION -->
-    <section class="section">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="section-title animate-float-up">Explore Categories</h2>
-            <p class="section-subtitle">Find the perfect prompt for your needs</p>
-
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                <div class="card category-card animate-float-up delay-100">
-                    <span class="category-icon">📝</span>
-                    <div class="category-name">Marketing</div>
-                    <div class="category-count">5.2K prompts</div>
-                </div>
-
-                <div class="card category-card animate-float-up delay-200">
-                    <span class="category-icon">💻</span>
-                    <div class="category-name">Development</div>
-                    <div class="category-count">7.1K prompts</div>
-                </div>
-
-                <div class="card category-card animate-float-up delay-300">
-                    <span class="category-icon">🎨</span>
-                    <div class="category-name">Design</div>
-                    <div class="category-count">4.3K prompts</div>
-                </div>
-
-                <div class="card category-card animate-float-up delay-400">
-                    <span class="category-icon">✍️</span>
-                    <div class="category-name">Copywriting</div>
-                    <div class="category-count">5.8K prompts</div>
-                </div>
-
-                <div class="card category-card animate-float-up delay-500">
-                    <span class="category-icon">📊</span>
-                    <div class="category-name">Analytics</div>
-                    <div class="category-count">3.2K prompts</div>
-                </div>
-
-                <div class="card category-card animate-float-up delay-600">
-                    <span class="category-icon">🚀</span>
-                    <div class="category-name">Business</div>
-                    <div class="category-count">4.9K prompts</div>
-                </div>
-            </div>
+        <div class="categories-grid">
+            <div class="category-card reveal delay-1"><span class="category-icon">📝</span><span class="category-name">Marketing</span><span class="category-count">5.2K prompts</span></div>
+            <div class="category-card reveal delay-2"><span class="category-icon">💻</span><span class="category-name">Development</span><span class="category-count">7.1K prompts</span></div>
+            <div class="category-card reveal delay-3"><span class="category-icon">🎨</span><span class="category-name">Design</span><span class="category-count">4.3K prompts</span></div>
+            <div class="category-card reveal delay-1"><span class="category-icon">✍️</span><span class="category-name">Copywriting</span><span class="category-count">5.8K prompts</span></div>
+            <div class="category-card reveal delay-2"><span class="category-icon">📊</span><span class="category-name">Analytics</span><span class="category-count">3.2K prompts</span></div>
+            <div class="category-card reveal delay-3"><span class="category-icon">🚀</span><span class="category-name">Business</span><span class="category-count">4.9K prompts</span></div>
         </div>
     </section>
 
     <!-- TRENDING PROMPTS -->
-    <section class="section">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="section-title animate-float-up">Trending Prompts</h2>
-            <p class="section-subtitle">Handpicked by our community</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- CARD 1 -->
-                <div class="prompt-card animate-float-up delay-100">
-                    <div class="prompt-header">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span class="badge badge-trending">🔥 TRENDING</span>
-                            <span style="font-size: 24px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.3)'" onmouseout="this.style.transform='scale(1)'">❤️</span>
-                        </div>
-                    </div>
-                    <div class="prompt-content">
-                        <h3 class="prompt-title">Elite Email Marketing Pro</h3>
-                        <p class="prompt-desc">Transform your email campaigns with conversion-optimized prompts. 10x your ROI with proven frameworks.</p>
-                        <div class="prompt-rating">
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="rating-count">(892 reviews)</span>
-                        </div>
-                    </div>
-                    <div class="prompt-footer">
-                        <div class="prompt-price">$19.99</div>
-                        <button class="btn-gradient" style="padding: 11px 22px; font-size: 14px;">Buy Now</button>
-                    </div>
-                </div>
-
-                <!-- CARD 2 -->
-                <div class="prompt-card animate-float-up delay-200">
-                    <div class="prompt-header">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span class="badge badge-new">✨ NEW</span>
-                            <span style="font-size: 24px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.3)'" onmouseout="this.style.transform='scale(1)'">🤍</span>
-                        </div>
-                    </div>
-                    <div class="prompt-content">
-                        <h3 class="prompt-title">Advanced Code Architect</h3>
-                        <p class="prompt-desc">Generate production-grade code instantly. Supports 20+ languages with enterprise-level patterns.</p>
-                        <div class="prompt-rating">
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="rating-count">(634 reviews)</span>
-                        </div>
-                    </div>
-                    <div class="prompt-footer">
-                        <div class="prompt-price">$16.99</div>
-                        <button class="btn-gradient" style="padding: 11px 22px; font-size: 14px;">Buy Now</button>
-                    </div>
-                </div>
-
-                <!-- CARD 3 -->
-                <div class="prompt-card animate-float-up delay-300">
-                    <div class="prompt-header">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span class="badge badge-trending">🔥 TRENDING</span>
-                            <span style="font-size: 24px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.3)'" onmouseout="this.style.transform='scale(1)'">❤️</span>
-                        </div>
-                    </div>
-                    <div class="prompt-content">
-                        <h3 class="prompt-title">LinkedIn Viral Engine</h3>
-                        <p class="prompt-desc">Create viral LinkedIn content that builds your personal brand. Proven engagement strategies included.</p>
-                        <div class="prompt-rating">
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="rating-count">(1,247 reviews)</span>
-                        </div>
-                    </div>
-                    <div class="prompt-footer">
-                        <div class="prompt-price">$12.99</div>
-                        <button class="btn-gradient" style="padding: 11px 22px; font-size: 14px;">Buy Now</button>
-                    </div>
-                </div>
+    <section class="section">        <div class="section-header reveal">
+            <h2>Trending Prompts</h2>
+            <p>Handpicked by our community</p>
+        </div>
+        <div class="prompts-grid">
+            <div class="prompt-card reveal delay-1">
+                <div class="badge badge-trending">🔥 TRENDING</div>
+                <h3 class="prompt-title">Elite Email Marketing Pro</h3>
+                <p class="prompt-desc">Transform your email campaigns with conversion-optimized prompts. 10x your ROI with proven frameworks.</p>
+                <div class="prompt-meta"><span class="rating">★★★★★ (892)</span><span class="price">$19.99</span></div>
+                <button class="btn-buy">Buy Now</button>
             </div>
-
-            <div class="text-center mt-16 animate-float-up delay-400">
-                <button class="btn-outline" style="padding: 16px 44px; font-size: 16px;">Explore All Prompts →</button>
+            <div class="prompt-card reveal delay-2">
+                <div class="badge badge-new">✨ NEW</div>
+                <h3 class="prompt-title">Advanced Code Architect</h3>
+                <p class="prompt-desc">Generate production-grade code instantly. Supports 20+ languages with enterprise-level patterns.</p>
+                <div class="prompt-meta"><span class="rating">★★★★★ (634)</span><span class="price">$16.99</span></div>
+                <button class="btn-buy">Buy Now</button>
             </div>
+            <div class="prompt-card reveal delay-3">
+                <div class="badge badge-trending"> TRENDING</div>
+                <h3 class="prompt-title">LinkedIn Viral Engine</h3>
+                <p class="prompt-desc">Create viral LinkedIn content that builds your personal brand. Proven engagement strategies included.</p>
+                <div class="prompt-meta"><span class="rating">★★★★★ (1.2K)</span><span class="price">$12.99</span></div>
+                <button class="btn-buy">Buy Now</button>
+            </div>
+        </div>
+        <div class="explore-all reveal">
+            <a href="#">Explore All Prompts →</a>
         </div>
     </section>
 
-    <!-- WHY PROMPTHUB -->
+    <!-- FEATURES -->
     <section class="section">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="section-title animate-float-up">Why PromptHub</h2>
-            <p class="section-subtitle">The most advanced prompt marketplace</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="card animate-float-up delay-100">
-                    <div style="font-size: 32px; margin-bottom: 16px;">✓</div>
-                    <h3 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 8px;">Verified Quality</h3>
-                    <p style="color: rgba(255, 255, 255, 0.6); line-height: 1.6;">Every prompt is tested by experts and guaranteed to deliver results.</p>
-                </div>
-
-                <div class="card animate-float-up delay-200">
-                    <div style="font-size: 32px; margin-bottom: 16px;">🔒</div>
-                    <h3 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 8px;">Bank-Level Security</h3>
-                    <p style="color: rgba(255, 255, 255, 0.6); line-height: 1.6;">Encrypted transactions and protected data with Stripe integration.</p>
-                </div>
-
-                <div class="card animate-float-up delay-300">
-                    <div style="font-size: 32px; margin-bottom: 16px;">🎯</div>
-                    <h3 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 8px;">Expert Support</h3>
-                    <p style="color: rgba(255, 255, 255, 0.6); line-height: 1.6;">24/7 support from our team of AI prompt specialists.</p>
-                </div>
-
-                <div class="card animate-float-up delay-400">
-                    <div style="font-size: 32px; margin-bottom: 16px;">💰</div>
-                    <h3 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 8px;">Maximum Earnings</h3>
-                    <p style="color: rgba(255, 255, 255, 0.6); line-height: 1.6;">Keep 80% of your sales. Industry-leading commission rates.</p>
-                </div>
-            </div>
+        <div class="section-header reveal">
+            <h2>Why PromptHub</h2>
+            <p>The most advanced prompt marketplace</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card reveal delay-1"><span class="feature-icon">✓</span><h3 class="feature-title">Verified Quality</h3><p class="feature-desc">Every prompt is tested by experts and guaranteed to deliver results.</p></div>
+            <div class="feature-card reveal delay-2"><span class="feature-icon">🔒</span><h3 class="feature-title">Bank-Level Security</h3><p class="feature-desc">Encrypted transactions and protected data with Stripe integration.</p></div>
+            <div class="feature-card reveal delay-3"><span class="feature-icon">🎯</span><h3 class="feature-title">Expert Support</h3><p class="feature-desc">24/7 support from our team of AI prompt specialists.</p></div>
+            <div class="feature-card reveal delay-1"><span class="feature-icon">💰</span><h3 class="feature-title">Maximum Earnings</h3><p class="feature-desc">Keep 80% of your sales. Industry-leading commission rates.</p></div>
         </div>
     </section>
 
-    <!-- CTA FINAL -->
+    <!-- CREATOR CTA -->
     <section class="section">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="section-title animate-float-up">Start Your Creator Journey Today</h2>
-            
-            <p class="section-subtitle" style="opacity: 0; animation: floatUp 0.8s ease-out 0.1s forwards;">
-                Join thousands of creators earning passive income by sharing their expertise
-            </p>
-
-            <div class="flex gap-4 justify-center flex-wrap animate-float-up delay-200">
-                <button class="btn-gradient" style="padding: 18px 50px; font-size: 17px;">Start Creating Free</button>
-                <button class="btn-outline" style="padding: 18px 50px; font-size: 17px;">View Documentation</button>
+        <div class="creator-cta reveal">
+            <h2>Start Your Creator Journey Today</h2>            <p>Join thousands of creators earning passive income by sharing their expertise</p>
+            <div class="hero-buttons" style="margin-bottom: 0; max-width: 400px;">
+                <button class="btn btn-primary btn-large">Start Creating Free</button>
+                <button class="btn btn-outline btn-large">View Documentation</button>
             </div>
-
-            <div class="mt-24 grid grid-cols-3 gap-8 pt-24 border-t border-gray-700">
-                <div class="animate-float-up delay-300">
-                    <div style="font-size: 44px; font-weight: 900; background: linear-gradient(135deg, #3b82f6, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">2 min</div>
-                    <p style="color: rgba(255, 255, 255, 0.6); margin-top: 12px; font-weight: 500;">to sign up</p>
-                </div>
-                <div class="animate-float-up delay-400">
-                    <div style="font-size: 44px; font-weight: 900; background: linear-gradient(135deg, #3b82f6, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">∞</div>
-                    <p style="color: rgba(255, 255, 255, 0.6); margin-top: 12px; font-weight: 500;">prompts you can create</p>
-                </div>
-                <div class="animate-float-up delay-500">
-                    <div style="font-size: 44px; font-weight: 900; background: linear-gradient(135deg, #3b82f6, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">80%</div>
-                    <p style="color: rgba(255, 255, 255, 0.6); margin-top: 12px; font-weight: 500;">commission earned</p>
-                </div>
+            <div class="creator-stats">
+                <div class="creator-stat"><span class="val">2 min</span><span class="lbl">to sign up</span></div>
+                <div class="creator-stat"><span class="val"></span><span class="lbl">prompts you can create</span></div>
+                <div class="creator-stat"><span class="val">80%</span><span class="lbl">commission earned</span></div>
             </div>
         </div>
     </section>
 
     <!-- FOOTER -->
     <footer class="footer">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
-                <div>
-                    <div class="footer-title">Product</div>
-                    <a href="#" class="footer-link">Explore</a>
-                    <a href="#" class="footer-link">Create</a>
-                    <a href="#" class="footer-link">Sell</a>
-                    <a href="#" class="footer-link">Pricing</a>
-                </div>
-                <div>
-                    <div class="footer-title">Resources</div>
-                    <a href="#" class="footer-link">Blog</a>
-                    <a href="#" class="footer-link">Guides</a>
-                    <a href="#" class="footer-link">API</a>
-                    <a href="#" class="footer-link">FAQ</a>
-                </div>
-                <div>
-                    <div class="footer-title">Legal</div>
-                    <a href="#" class="footer-link">Terms</a>
-                    <a href="#" class="footer-link">Privacy</a>
-                    <a href="#" class="footer-link">Cookies</a>
-                    <a href="#" class="footer-link">License</a>
-                </div>
-                <div>
-                    <div class="footer-title">Social</div>
-                    <a href="#" class="footer-link">Twitter</a>
-                    <a href="#" class="footer-link">LinkedIn</a>
-                    <a href="#" class="footer-link">Discord</a>
-                    <a href="#" class="footer-link">GitHub</a>
-                </div>
-            </div>
-
-            <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 32px; text-align: center;">
-                <p style="color: rgba(255, 255, 255, 0.5); font-weight: 300;">© 2024 PromptHub. Empowering creators worldwide. ⚡</p>
-            </div>
+        <div class="footer-grid">
+            <div class="footer-col"><h4>Product</h4><ul><li><a href="#">Explore</a></li><li><a href="#">Create</a></li><li><a href="#">Sell</a></li><li><a href="#">Pricing</a></li></ul></div>
+            <div class="footer-col"><h4>Resources</h4><ul><li><a href="#">Blog</a></li><li><a href="#">Guides</a></li><li><a href="#">API</a></li><li><a href="#">FAQ</a></li></ul></div>
+            <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms</a></li><li><a href="#">Privacy</a></li><li><a href="#">Cookies</a></li><li><a href="#">License</a></li></ul></div>
+            <div class="footer-col"><h4>Social</h4><ul><li><a href="#">Twitter</a></li><li><a href="#">LinkedIn</a></li><li><a href="#">Discord</a></li><li><a href="#">GitHub</a></li></ul></div>
         </div>
+        <div class="footer-bottom"><p>© 2024 PromptHub. Empowering creators worldwide. ⚡</p></div>
     </footer>
 
+    <!-- JAVASCRIPT AVANCÉ -->
     <script>
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) target.scrollIntoView({ behavior: 'smooth' });
+        // 1. Scroll Reveal avec IntersectionObserver (Plus performant)
+        const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // Ne joue l'animation qu'une fois
+                }
             });
-        });
+        }, observerOptions);
 
-        // Search focus effect
-        const searchInput = document.querySelector('.search-input');
-        if (searchInput) {
-            searchInput.addEventListener('focus', function() {
-                this.parentElement.style.transform = 'scale(1.03)';
-            });
-            searchInput.addEventListener('blur', function() {
-                this.parentElement.style.transform = 'scale(1)';
-            });
-        }
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Parallax
-        window.addEventListener('scroll', function() {
-            const scrolled = window.pageYOffset;
-            const hero = document.querySelector('.hero');
-            if (hero) hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+        // 2. Animation des compteurs (Stats)
+        const counters = document.querySelectorAll('.stat-value');
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = +counter.getAttribute('data-target');
+                    const duration = 2000; // 2 secondes
+                    const increment = target / (duration / 16); // 60fps
+                    
+                    let current = 0;                    const updateCounter = () => {
+                        current += increment;
+                        if (current < target) {
+                            counter.innerText = Math.ceil(current);
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
+                    updateCounter();
+                    counterObserver.unobserve(counter);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => counterObserver.observe(counter));
+
+        // 3. Effet de parallaxe léger sur les Orbs du fond
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            const orb1 = document.querySelector('.orb-1');
+            const orb2 = document.querySelector('.orb-2');
+            
+            if(orb1 && orb2) {
+                orb1.style.transform = `translate(${x * 30}px, ${y * 30}px)`;
+                orb2.style.transform = `translate(${-x * 30}px, ${-y * 30}px)`;
+            }
         });
     </script>
 </body>
