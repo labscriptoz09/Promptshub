@@ -56,9 +56,7 @@
             background: linear-gradient(135deg, #A78BFA, #2DD4BF);
             color: #0B1120;
         }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+        .form-group { margin-bottom: 1.5rem; }
         label {
             display: block;
             margin-bottom: 0.5rem;
@@ -89,14 +87,20 @@
             font-size: 1rem;
             cursor: pointer;
             margin-top: 1rem;
+            transition: all 0.3s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(167, 139, 250, 0.4);
         }
         .message {
             padding: 1rem;
             border-radius: 10px;
-            margin-bottom: 1.5rem;
-            display: none;
+            margin-bottom: 1.5rem;            display: none;
+            text-align: center;
         }
-        .message.success {            background: rgba(45, 212, 191, 0.1);
+        .message.success {
+            background: rgba(45, 212, 191, 0.1);
             border: 1px solid rgba(45, 212, 191, 0.3);
             color: #2DD4BF;
             display: block;
@@ -121,7 +125,7 @@
 </head>
 <body>
     <div class="auth-container">
-        <div class="logo">⚡ PromptHub</div>
+        <div class="logo"> PromptHub</div>
 
         <div class="tabs">
             <button class="tab active" onclick="switchTab('login')">Connexion</button>
@@ -142,10 +146,10 @@
             </div>
             <button type="submit" class="btn-submit">Se connecter</button>
         </form>
-
-        <!-- Formulaire d'Inscription -->
+        <!-- Formulaire d'Inscription (Simplifié - Méthode 1) -->
         <form id="signupForm" class="form-section" onsubmit="handleSignup(event)">
-            <div class="form-group">                <label for="signupName">Nom complet</label>
+            <div class="form-group">
+                <label for="signupName">Nom complet</label>
                 <input type="text" id="signupName" required placeholder="John Doe">
             </div>
             <div class="form-group">
@@ -156,6 +160,7 @@
                 <label for="signupPassword">Mot de passe</label>
                 <input type="password" id="signupPassword" required placeholder="••••••••" minlength="6">
             </div>
+            <!-- ✅ PLUS DE CHOIX DE RÔLE ! -->
             <button type="submit" class="btn-submit">Créer mon compte</button>
         </form>
 
@@ -189,12 +194,13 @@
             messageEl.textContent = text;
             messageEl.className = `message ${type}`;
         }
-
+        // ✅ INSCRIPTION SIMPLIFIÉE (Méthode 1)
         async function handleSignup(event) {
             event.preventDefault();
             const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;            
+            const password = document.getElementById('signupPassword').value;
+            
             const btn = event.target.querySelector('.btn-submit');
             btn.disabled = true;
             btn.textContent = 'Création...';
@@ -203,7 +209,9 @@
                 const { data, error } = await supabaseClient.auth.signUp({
                     email: email,
                     password: password,
-                    options: { data: { full_name: name } }
+                    options: {
+                        data: { full_name: name }
+                    }
                 });
                 
                 if (error) throw error;
@@ -217,6 +225,7 @@
             }
         }
 
+        // ✅ CONNEXION → TOUJOURS VERS L'ACCUEIL
         async function handleLogin(event) {
             event.preventDefault();
             const email = document.getElementById('loginEmail').value;
@@ -234,7 +243,11 @@
                 
                 if (error) throw error;
                 showMessage('✅ Connexion réussie !', 'success');
-                setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+                                //  TOUJOURS rediriger vers l'accueil (Méthode 1)
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+                
             } catch (error) {
                 showMessage('❌ ' + error.message, 'error');
             } finally {
@@ -243,4 +256,5 @@
             }
         }
     </script>
-</body></html>
+</body>
+</html>
