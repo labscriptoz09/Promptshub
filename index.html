@@ -28,7 +28,6 @@
             line-height: 1.6;
             overflow-x: hidden;
             position: relative;
-            /* Grille subtile en arrière-plan */
             background-image: 
                 linear-gradient(var(--border-color) 1px, transparent 1px),
                 linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
@@ -47,8 +46,8 @@
         }
         .orb-1 { width: 500px; height: 500px; background: var(--accent-lavender); top: -150px; left: -150px; }
         .orb-2 { width: 600px; height: 600px; background: var(--accent-turquoise); bottom: -200px; right: -200px; animation-delay: -7s; }
-                @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
+        
+        @keyframes float {            0% { transform: translate(0, 0) scale(1); }
             100% { transform: translate(80px, 80px) scale(1.15); }
         }
 
@@ -96,8 +95,8 @@
             cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: none;
             white-space: nowrap;
         }
-        .btn-ghost { 
-            background: transparent; color: var(--text-primary); 
+
+        .btn-ghost {             background: transparent; color: var(--text-primary); 
             border: 1px solid var(--border-color);
         }
         .btn-ghost:hover { 
@@ -145,8 +144,8 @@
         @keyframes shimmer {
             to { background-position: 200% center; }
         }
-        .hero p {
-            font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2.5rem;
+
+        .hero p {            font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2.5rem;
             max-width: 650px; margin-left: auto; margin-right: auto;
         }
 
@@ -194,8 +193,8 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
             transition: left 0.5s;
         }
-        .category-card:hover::before { left: 100%; }        .category-card:hover {
-            transform: translateY(-8px); border-color: var(--accent-lavender);
+        .category-card:hover::before { left: 100%; }
+        .category-card:hover {            transform: translateY(-8px); border-color: var(--accent-lavender);
             box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(167, 139, 250, 0.1);
         }
         .category-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; transition: transform 0.3s; }
@@ -243,8 +242,8 @@
         }
         .explore-all a:hover { color: var(--accent-turquoise); transform: translateX(5px); }
 
-        /* --- FEATURES --- */        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
-        .feature-card {
+        /* --- FEATURES --- */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }        .feature-card {
             text-align: center; padding: 2.5rem 2rem; background: var(--bg-card); border-radius: 20px;
             border: 1px solid var(--border-color); transition: all 0.4s ease; backdrop-filter: blur(10px);
         }
@@ -288,14 +287,13 @@
         .delay-2 { transition-delay: 0.2s; }
         .delay-3 { transition-delay: 0.3s; }
 
-        /* --- RESPONSIVE MOBILE (CORRIGÉ) --- */
+        /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 768px) {
             .navbar { padding: 0.8rem 1rem; }
-            .nav-links { display: none; } /* On garde les liens cachés pour l'espace, mais les boutons restent */
-                        .nav-actions { gap: 0.5rem; }
-            /* Adaptation parfaite des deux boutons sur mobile */
-            .btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; border-radius: 6px; }
-            .btn-ghost { padding: 0.5rem 0.6rem; } /* Connexion un peu plus compact */
+            .nav-links { display: none; }
+            
+            .nav-actions { gap: 0.5rem; }            .btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; border-radius: 6px; }
+            .btn-ghost { padding: 0.5rem 0.6rem; }
 
             .hero { padding: 5rem 1.5rem 3rem; }
             .hero h1 { font-size: 2.5rem; }
@@ -341,8 +339,8 @@
                 <button class="btn btn-ghost">Connexion</button>
                 <button class="btn btn-primary">S'inscrire</button>
             </div>
-        </div>    </nav>
-
+        </div>
+    </nav>
     <!-- HERO SECTION -->
     <section class="hero reveal">
         <div class="hero-badge">✨ Nouveau : Intégration GPT-4o disponible</div>
@@ -390,32 +388,13 @@
     </section>
 
     <!-- TRENDING PROMPTS -->
-    <section class="section">        <div class="section-header reveal">
-            <h2>Trending Prompts</h2>
-            <p>Handpicked by our community</p>
+    <section class="section">
+        <div class="section-header reveal">
+            <h2>Trending Prompts</h2>            <p>Handpicked by our community</p>
         </div>
-        <div class="prompts-grid">
-            <div class="prompt-card reveal delay-1">
-                <div class="badge badge-trending">🔥 TRENDING</div>
-                <h3 class="prompt-title">Elite Email Marketing Pro</h3>
-                <p class="prompt-desc">Transform your email campaigns with conversion-optimized prompts. 10x your ROI with proven frameworks.</p>
-                <div class="prompt-meta"><span class="rating">★★★★★ (892)</span><span class="price">$19.99</span></div>
-                <button class="btn-buy">Buy Now</button>
-            </div>
-            <div class="prompt-card reveal delay-2">
-                <div class="badge badge-new">✨ NEW</div>
-                <h3 class="prompt-title">Advanced Code Architect</h3>
-                <p class="prompt-desc">Generate production-grade code instantly. Supports 20+ languages with enterprise-level patterns.</p>
-                <div class="prompt-meta"><span class="rating">★★★★★ (634)</span><span class="price">$16.99</span></div>
-                <button class="btn-buy">Buy Now</button>
-            </div>
-            <div class="prompt-card reveal delay-3">
-                <div class="badge badge-trending"> TRENDING</div>
-                <h3 class="prompt-title">LinkedIn Viral Engine</h3>
-                <p class="prompt-desc">Create viral LinkedIn content that builds your personal brand. Proven engagement strategies included.</p>
-                <div class="prompt-meta"><span class="rating">★★★★★ (1.2K)</span><span class="price">$12.99</span></div>
-                <button class="btn-buy">Buy Now</button>
-            </div>
+        <div class="prompts-grid" id="prompts-container">
+            <!-- Les prompts seront chargés dynamiquement depuis Supabase -->
+            <p style="text-align: center; color: var(--text-secondary);">Chargement des prompts...</p>
         </div>
         <div class="explore-all reveal">
             <a href="#">Explore All Prompts →</a>
@@ -439,14 +418,15 @@
     <!-- CREATOR CTA -->
     <section class="section">
         <div class="creator-cta reveal">
-            <h2>Start Your Creator Journey Today</h2>            <p>Join thousands of creators earning passive income by sharing their expertise</p>
+            <h2>Start Your Creator Journey Today</h2>
+            <p>Join thousands of creators earning passive income by sharing their expertise</p>
             <div class="hero-buttons" style="margin-bottom: 0; max-width: 400px;">
                 <button class="btn btn-primary btn-large">Start Creating Free</button>
                 <button class="btn btn-outline btn-large">View Documentation</button>
             </div>
             <div class="creator-stats">
                 <div class="creator-stat"><span class="val">2 min</span><span class="lbl">to sign up</span></div>
-                <div class="creator-stat"><span class="val"></span><span class="lbl">prompts you can create</span></div>
+                <div class="creator-stat"><span class="val">∞</span><span class="lbl">prompts you can create</span></div>
                 <div class="creator-stat"><span class="val">80%</span><span class="lbl">commission earned</span></div>
             </div>
         </div>
@@ -459,19 +439,18 @@
             <div class="footer-col"><h4>Resources</h4><ul><li><a href="#">Blog</a></li><li><a href="#">Guides</a></li><li><a href="#">API</a></li><li><a href="#">FAQ</a></li></ul></div>
             <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terms</a></li><li><a href="#">Privacy</a></li><li><a href="#">Cookies</a></li><li><a href="#">License</a></li></ul></div>
             <div class="footer-col"><h4>Social</h4><ul><li><a href="#">Twitter</a></li><li><a href="#">LinkedIn</a></li><li><a href="#">Discord</a></li><li><a href="#">GitHub</a></li></ul></div>
-        </div>
-        <div class="footer-bottom"><p>© 2024 PromptHub. Empowering creators worldwide. ⚡</p></div>
+        </div>        <div class="footer-bottom"><p>© 2024 PromptHub. Empowering creators worldwide. ⚡</p></div>
     </footer>
 
     <!-- JAVASCRIPT AVANCÉ -->
     <script>
-        // 1. Scroll Reveal avec IntersectionObserver (Plus performant)
+        // 1. Scroll Reveal avec IntersectionObserver
         const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target); // Ne joue l'animation qu'une fois
+                    observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
@@ -485,10 +464,11 @@
                 if (entry.isIntersecting) {
                     const counter = entry.target;
                     const target = +counter.getAttribute('data-target');
-                    const duration = 2000; // 2 secondes
-                    const increment = target / (duration / 16); // 60fps
+                    const duration = 2000;
+                    const increment = target / (duration / 16);
                     
-                    let current = 0;                    const updateCounter = () => {
+                    let current = 0;
+                    const updateCounter = () => {
                         current += increment;
                         if (current < target) {
                             counter.innerText = Math.ceil(current);
@@ -505,11 +485,10 @@
 
         counters.forEach(counter => counterObserver.observe(counter));
 
-        // 3. Effet de parallaxe léger sur les Orbs du fond
+        // 3. Effet de parallaxe léger sur les Orbs
         document.addEventListener('mousemove', (e) => {
             const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;
-            
+            const y = e.clientY / window.innerHeight;            
             const orb1 = document.querySelector('.orb-1');
             const orb2 = document.querySelector('.orb-2');
             
@@ -518,6 +497,59 @@
                 orb2.style.transform = `translate(${-x * 30}px, ${-y * 30}px)`;
             }
         });
+    </script>
+
+    <!-- SUPABASE CONNECTION -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Configuration Supabase
+        const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
+        
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Fonction pour charger les prompts
+        async function chargerPrompts() {
+            const container = document.getElementById('prompts-container');
+            
+            const { data, error } = await supabaseClient
+                .from('prompts')
+                .select('*')
+                .order('id', { ascending: true });
+
+            if (error) {
+                console.error('Erreur Supabase:', error);
+                container.innerHTML = '<p style="text-align: center; color: red;">Erreur de chargement des prompts.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+
+            data.forEach((prompt, index) => {
+                const delay = (index % 3) + 1;
+                
+                const carteHTML = `
+                    <div class="prompt-card reveal delay-${delay}">
+                        <div class="badge badge-trending">🔥 TRENDING</div>
+                        <h3 class="prompt-title">${prompt.title}</h3>
+                        <p class="prompt-desc">${prompt.description}</p>
+                        <div class="prompt-meta">
+                            <span class="rating">★★★★★ (892)</span>
+                            <span class="price">$${prompt.price}</span>
+                        </div>
+                        <button class="btn-buy">Buy Now</button>                    </div>
+                `;
+                container.innerHTML += carteHTML;
+            });
+            
+            // Relancer les animations
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Charger les prompts au démarrage
+        document.addEventListener('DOMContentLoaded', chargerPrompts);
     </script>
 </body>
 </html>
