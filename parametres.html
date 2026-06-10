@@ -311,6 +311,62 @@
             background: rgba(239, 68, 68, 0.05);
         }
         
+        /* Menu déroulant utilisateur */
+        .user-menu-container { position: relative; }
+        .user-menu-btn { 
+            background: rgba(17, 24, 39, 0.7); 
+            border: 1px solid var(--border-color); 
+            color: var(--text-primary); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 0.5rem; 
+            padding: 0.4rem 0.8rem; 
+            border-radius: 8px; 
+            font-size: 0.9rem; 
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .user-menu-btn:hover { border-color: var(--accent-cyan); }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.5rem;
+            display: none;
+            flex-direction: column;
+            min-width: 180px;
+            backdrop-filter: blur(20px);            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 1001;
+        }
+        .user-dropdown.show { display: flex; }
+        
+        .user-dropdown a, .user-dropdown button {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        .user-dropdown a:hover, .user-dropdown button:hover {
+            background: rgba(34, 211, 238, 0.1);
+            color: var(--accent-cyan);
+        }
+        
         @media (max-width: 768px) {
             .nav-links { display: none; }
             .dashboard { padding: 1rem; }
@@ -326,29 +382,27 @@
         <div class="nav-container">
             <a href="index.html" class="logo">⚡ PromptHub</a>
             <ul class="nav-links">
-                <li><a href="index.html"> Accueil</a></li>
+                <li><a href="index.html">🏠 Accueil</a></li>
                 <li><a href="vendeur.html">💼 Vendre</a></li>
-                <li><a href="acheteur.html">📦 Mes Achats</a></li>
-                <li><a href="parametres.html" class="active">⚙️ Paramètres</a></li>
             </ul>
             <div class="nav-actions" id="navActions"></div>
         </div>
     </nav>
 
     <div class="dashboard">
-        <div class="dashboard-header">
-            <h1>⚙️ Paramètres du Compte</h1>
+        <div class="dashboard-header">            <h1>⚙️ Paramètres du Compte</h1>
             <p>Gérez vos informations personnelles et la sécurité de votre compte</p>
         </div>
 
         <div id="message"></div>
+
         <div class="settings-section">
             <h2>👤 Informations du Compte</h2>
             
             <div class="avatar-section">
                 <div class="avatar-preview">
                     <img id="avatarImage" alt="Avatar">
-                    <div class="avatar-placeholder" id="avatarPlaceholder"></div>
+                    <div class="avatar-placeholder" id="avatarPlaceholder">👤</div>
                 </div>
                 
                 <div class="avatar-actions">
@@ -377,24 +431,24 @@
                     <label for="fullName">Nom complet</label>
                     <input type="text" id="fullName" required placeholder="John Doe">
                 </div>
-                <button type="submit" class="btn btn-primary"> Enregistrer les modifications</button>
+                <button type="submit" class="btn btn-primary">💾 Enregistrer les modifications</button>
             </form>
         </div>
 
         <div class="settings-section">
-            <h2> Changer le Mot de Passe</h2>
+            <h2>🔒 Changer le Mot de Passe</h2>
             <form id="updatePasswordForm" onsubmit="handleUpdatePassword(event)">
                 <div class="form-group">
-                    <label for="newPassword">Nouveau mot de passe</label>
-                    <input type="password" id="newPassword" required placeholder="••••••••" minlength="6">
+                    <label for="newPassword">Nouveau mot de passe</label>                    <input type="password" id="newPassword" required placeholder="••••••••" minlength="6">
                     <small style="color: var(--text-secondary); font-size: 0.8rem; display: block; margin-top: 0.25rem;">
                         Minimum 6 caractères
                     </small>
-                </div>                <div class="form-group">
+                </div>
+                <div class="form-group">
                     <label for="confirmPassword">Confirmer le nouveau mot de passe</label>
                     <input type="password" id="confirmPassword" required placeholder="••••••••" minlength="6">
                 </div>
-                <button type="submit" class="btn btn-primary"> Changer le mot de passe</button>
+                <button type="submit" class="btn btn-primary">🔐 Changer le mot de passe</button>
             </form>
         </div>
 
@@ -411,37 +465,52 @@
     <script>
         const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
+        let supabaseClient = null;
         let currentUser = null;
+
+        function initSupabase() {
+            if (typeof supabase !== 'undefined') {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                return true;
+            }
+            return false;
+        }
 
         function showMessage(text, type) {
             const messageEl = document.getElementById('message');
-            messageEl.textContent = text;
-            messageEl.className = `message ${type}`;
-            setTimeout(() => { messageEl.className = 'message'; }, 5000);
+            if (messageEl) {
+                messageEl.textContent = text;
+                messageEl.className = `message ${type}`;
+                setTimeout(() => { messageEl.className = 'message'; }, 5000);
+            }
         }
 
         function updateNavbar(session) {
             const navActions = document.getElementById('navActions');
-            if (session) {
-                const userName = session.user.user_metadata.full_name || 'Utilisateur';
-                const avatarUrl = session.user.user_metadata.avatar_url;
+            if (session) {                const userName = session.user.user_metadata?.full_name || 'Utilisateur';
+                const avatarUrl = session.user.user_metadata?.avatar_url;
                 
                 let avatarHTML = '';
                 if (avatarUrl) {
-                    avatarHTML = `<img src="${avatarUrl}" alt="${userName}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-cyan);">`;
+                    avatarHTML = `<img src="${avatarUrl}" alt="${userName}" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">`;
                 } else {
-                    avatarHTML = `<div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; color: #0a0e1a;">${userName.charAt(0).toUpperCase()}</div>`;
+                    avatarHTML = `<div style="width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: #0a0e1a;">${userName.charAt(0).toUpperCase()}</div>`;
                 }
                 
                 navActions.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        ${avatarHTML}
-                        <span style="color: var(--text-secondary); font-size: 0.9rem;">👋 ${userName}</span>
-                    </div>                    <button id="btn-logout" class="btn btn-danger" style="font-size: 0.8rem; padding: 0.5rem 0.8rem;"> Déconnexion</button>
+                    <div class="user-menu-container">
+                        <button class="user-menu-btn" onclick="toggleUserMenu(event)">
+                            ${avatarHTML}
+                            <span>${userName}</span>
+                            <span style="font-size: 0.7rem;">▼</span>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="parametres.html">⚙️ Paramètres</a>
+                            <button onclick="deconnexion()">🚪 Déconnexion</button>
+                        </div>
+                    </div>
                 `;
-                document.getElementById('btn-logout').addEventListener('click', deconnexion);
             } else {
                 navActions.innerHTML = `
                     <a href="auth.html" class="btn btn-outline">Connexion</a>
@@ -450,44 +519,100 @@
             }
         }
 
+        function toggleUserMenu(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.closest('.user-menu-container')) {
+                const dropdowns = document.getElementsByClassName("user-dropdown");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    if (dropdowns[i].classList.contains('show')) {
+                        dropdowns[i].classList.remove('show');
+                    }
+                }
+            }
+        }
         function deconnexion() {
+            if (supabaseClient) {
+                supabaseClient.auth.signOut().catch(err => console.log('Signout:', err));
+            }
             localStorage.clear();
             sessionStorage.clear();
-            supabaseClient.auth.signOut().catch(err => console.log('Signout:', err));
             window.location.replace('index.html?logout=' + Date.now());
         }
 
-        supabaseClient.auth.onAuthStateChange((event, session) => {
-            updateNavbar(session);
-            if (event === 'SIGNED_OUT') window.location.replace('auth.html');
-        });
-
-        async function checkAuth() {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (!session) {
-                window.location.replace('auth.html');
-                return;
-            }
+        async function loadUserInfo(session) {
+            if (!session || !session.user) return;
             
             currentUser = session.user;
             
-            document.getElementById('userEmail').textContent = currentUser.email;
-            document.getElementById('userName').textContent = currentUser.user_metadata.full_name || 'Non défini';
-            document.getElementById('userDate').textContent = new Date(currentUser.created_at).toLocaleDateString('fr-FR');
-            document.getElementById('fullName').value = currentUser.user_metadata.full_name || '';
+            const emailEl = document.getElementById('userEmail');
+            if (emailEl && currentUser.email) {
+                emailEl.textContent = currentUser.email;
+            }
             
-            const avatarUrl = currentUser.user_metadata.avatar_url;
+            const nameEl = document.getElementById('userName');
+            const fullName = currentUser.user_metadata?.full_name || 'Non défini';
+            if (nameEl) {
+                nameEl.textContent = fullName;
+            }
+            
+            const dateEl = document.getElementById('userDate');
+            if (dateEl && currentUser.created_at) {
+                const date = new Date(currentUser.created_at);
+                dateEl.textContent = date.toLocaleDateString('fr-FR', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            }
+            
+            const fullNameInput = document.getElementById('fullName');
+            if (fullNameInput) {
+                fullNameInput.value = currentUser.user_metadata?.full_name || '';
+            }
+            
+            const avatarUrl = currentUser.user_metadata?.avatar_url;
             if (avatarUrl) {
                 const img = document.getElementById('avatarImage');
                 const placeholder = document.getElementById('avatarPlaceholder');
                 const removeBtn = document.getElementById('removeAvatarBtn');
                 
-                img.src = avatarUrl;
-                img.style.display = 'block';
-                placeholder.style.display = 'none';
-                removeBtn.style.display = 'inline-block';
+                if (img) img.src = avatarUrl;
+                if (img) img.style.display = 'block';
+                if (placeholder) placeholder.style.display = 'none';
+                if (removeBtn) removeBtn.style.display = 'inline-block';            }
+        }
+
+        async function checkAuth() {
+            if (!supabaseClient) return;
+            
+            try {
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
+                
+                if (error) {
+                    console.error('Auth error:', error);
+                    return;
+                }
+                
+                if (!session) {
+                    window.location.replace('auth.html');
+                    return;
+                }
+                
+                updateNavbar(session);
+                await loadUserInfo(session);
+                
+            } catch (err) {
+                console.error('CheckAuth error:', err);
             }
         }
+
         function previewAvatar(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -504,12 +629,13 @@
                 const placeholder = document.getElementById('avatarPlaceholder');
                 const removeBtn = document.getElementById('removeAvatarBtn');
                 
-                img.src = e.target.result;
-                img.style.display = 'block';
-                placeholder.style.display = 'none';
-                removeBtn.style.display = 'inline-block';
-            };
-            reader.readAsDataURL(file);
+                if (img) {
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                }
+                if (placeholder) placeholder.style.display = 'none';
+                if (removeBtn) removeBtn.style.display = 'inline-block';
+            };            reader.readAsDataURL(file);
         }
 
         function removeAvatar() {
@@ -518,14 +644,18 @@
             const removeBtn = document.getElementById('removeAvatarBtn');
             const input = document.getElementById('avatarInput');
             
-            img.src = '';
-            img.style.display = 'none';
-            placeholder.style.display = 'flex';
-            removeBtn.style.display = 'none';
-            input.value = '';
+            if (img) {
+                img.src = '';
+                img.style.display = 'none';
+            }
+            if (placeholder) placeholder.style.display = 'flex';
+            if (removeBtn) removeBtn.style.display = 'none';
+            if (input) input.value = '';
         }
 
         async function uploadAvatar(file) {
+            if (!currentUser) throw new Error('No user logged in');
+            
             const fileExt = file.name.split('.').pop();
             const fileName = `${currentUser.id}.${fileExt}`;
             const filePath = `${currentUser.id}/${fileName}`;
@@ -534,10 +664,8 @@
                 .from('avatars')
                 .upload(filePath, file, { upsert: true });
             
-            if (error) {
-                console.error('Erreur upload:', error);
-                throw error;
-            }            
+            if (error) throw error;
+            
             const { data: { publicUrl } } = supabaseClient.storage
                 .from('avatars')
                 .getPublicUrl(filePath);
@@ -556,8 +684,7 @@
             btn.disabled = true;
             btn.textContent = 'Mise à jour...';
             
-            try {
-                let avatarUrl = currentUser.user_metadata.avatar_url;
+            try {                let avatarUrl = currentUser.user_metadata?.avatar_url;
                 
                 if (avatarFile) {
                     avatarUrl = await uploadAvatar(avatarFile);
@@ -580,13 +707,16 @@
                     removeAvatar();
                 }
                 
-                updateNavbar(currentUser);
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session) updateNavbar(session);
+                
             } catch (error) {
                 showMessage('❌ Erreur: ' + error.message, 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = originalText;
-            }        }
+            }
+        }
 
         async function handleUpdatePassword(event) {
             event.preventDefault();
@@ -603,8 +733,7 @@
                 showMessage('❌ Le mot de passe doit contenir au moins 6 caractères', 'error');
                 return;
             }
-            
-            const btn = event.target.querySelector('.btn-primary');
+                        const btn = event.target.querySelector('.btn-primary');
             const originalText = btn.textContent;
             
             btn.disabled = true;
@@ -635,7 +764,8 @@
             if (!confirm('⚠️ Êtes-vous SÛR de vouloir supprimer votre compte ?\n\nCette action est IRREVERSIBLE.')) {
                 return;
             }
-                        if (!confirm('⚠️ Dernière confirmation. Cette action ne peut pas être annulée.')) {
+            
+            if (!confirm('⚠️ Dernière confirmation. Cette action ne peut pas être annulée.')) {
                 return;
             }
             
@@ -652,6 +782,7 @@
 
         function initAIBackground() {
             const canvas = document.getElementById('aiBackground');
+            if (!canvas) return;            
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -684,7 +815,8 @@
             }
             
             function init() {
-                particles = [];                for (let i = 0; i < 60; i++) {
+                particles = [];
+                for (let i = 0; i < 60; i++) {
                     particles.push(new Particle());
                 }
             }
@@ -699,8 +831,7 @@
                         const dy = particles[i].y - particles[j].y;
                         const distance = Math.sqrt(dx * dx + dy * dy);
                         if (distance < 150) {
-                            ctx.beginPath();
-                            ctx.strokeStyle = `rgba(34, 211, 238, ${0.3 * (1 - distance / 150)})`;
+                            ctx.beginPath();                            ctx.strokeStyle = `rgba(34, 211, 238, ${0.3 * (1 - distance / 150)})`;
                             ctx.lineWidth = 1;
                             ctx.moveTo(particles[i].x, particles[i].y);
                             ctx.lineTo(particles[j].x, particles[j].y);
@@ -722,7 +853,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            checkAuth();
+            const supabaseLoaded = initSupabase();
+            if (supabaseLoaded) {
+                checkAuth();
+            }
             initAIBackground();
         });
     </script>
