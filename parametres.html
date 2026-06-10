@@ -20,358 +20,61 @@
             --accent-red: #f87171;
             --border-color: rgba(34, 211, 238, 0.2);
         }
-        
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            position: relative;
-            min-height: 100vh;
-        }
-        
-        h1, h2, h3, .logo, .btn {
-            font-family: 'Space Grotesk', sans-serif;
-            letter-spacing: -0.02em;
-        }
-        
-        #aiBackground {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-        }
-        
-        .grid-overlay {            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background-image: linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-        }
-        
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-primary); color: var(--text-primary); line-height: 1.6; position: relative; min-height: 100vh; }
+        h1, h2, h3, .logo, .btn { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+        #aiBackground { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); }
+        .grid-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
-        
-        .navbar {
-            background: rgba(10, 14, 26, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            flex: 1;
-        }
-        
-        .nav-links a {            color: var(--text-secondary);
-            font-weight: 500;
-        }
-        
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--accent-cyan);
-        }
-        
-        .nav-actions {
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-        }
-        
-        .btn {
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            font-size: 0.9rem;
-        }
-        
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-        }
-        
-        .btn-outline:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            background: rgba(34, 211, 238, 0.1);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-            color: #0a0e1a;
-            font-weight: 700;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(34, 211, 238, 0.4);
-        }
-        
-        .btn-danger {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.4);            color: #f87171;
-        }
-        
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-        
-        .dashboard {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-        
-        .dashboard-header {
-            margin-bottom: 2rem;
-        }
-        
-        .dashboard-header h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .dashboard-header p {
-            color: var(--text-secondary);
-        }
-        
-        .settings-section {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 2rem;
-            backdrop-filter: blur(20px);
-            margin-bottom: 2rem;
-        }
-        
-        .settings-section h2 {
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .avatar-section {
-            text-align: center;
-            padding: 2rem;
-            background: rgba(10, 14, 26, 0.5);
-            border-radius: 12px;            margin-bottom: 1.5rem;
-        }
-        
-        .avatar-preview {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 1rem;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 3px solid var(--border-color);
-            background: var(--bg-card);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .avatar-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-        
-        .avatar-placeholder {
-            font-size: 3rem;
-            color: var(--accent-cyan);
-        }
-        
-        .avatar-actions {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 0.5rem;
-        }
-        
-        .avatar-actions input[type="file"] {
-            display: none;
-        }
-        
-        .avatar-info {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        label {            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 0.875rem;
-        }
-        
-        input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            background: rgba(10, 14, 26, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            color: var(--text-primary);
-            transition: all 0.3s;
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
-        }
-        
-        .message {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            display: none;
-            text-align: center;
-            font-weight: 500;
-        }
-        
-        .message.success {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            color: #34d399;
-            display: block;
-        }
-        
-        .message.error {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            color: #f87171;
-            display: block;
-        }
-        
-        .user-info {
-            background: rgba(34, 211, 238, 0.05);
-            border: 1px solid var(--border-color);            border-radius: 12px;
-            padding: 1.5rem;
-            margin-top: 1.5rem;
-        }
-        
-        .user-info p {
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-        }
-        
-        .user-info strong {
-            color: var(--accent-cyan);
-        }
-        
-        .danger-zone {
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            background: rgba(239, 68, 68, 0.05);
-        }
+        .navbar { background: rgba(10, 14, 26, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; position: sticky; top: 0; z-index: 1000; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; flex: 1; }
+        .nav-links a { color: var(--text-secondary); font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
+        .nav-actions { display: flex; gap: 0.75rem; align-items: center; }
+        .btn { padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; font-size: 0.9rem; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); background: rgba(34, 211, 238, 0.1); }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #0a0e1a; font-weight: 700; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(34, 211, 238, 0.4); }
+        .btn-danger { background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+        .dashboard { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
+        .dashboard-header { margin-bottom: 2rem; }
+        .dashboard-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .dashboard-header p { color: var(--text-secondary); }
+        .settings-section { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; backdrop-filter: blur(20px); margin-bottom: 2rem; }
+        .settings-section h2 { font-size: 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .avatar-section { text-align: center; padding: 2rem; background: rgba(10, 14, 26, 0.5); border-radius: 12px; margin-bottom: 1.5rem; }        .avatar-preview { width: 120px; height: 120px; margin: 0 auto 1rem; border-radius: 50%; overflow: hidden; border: 3px solid var(--border-color); background: var(--bg-card); display: flex; align-items: center; justify-content: center; }
+        .avatar-preview img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .avatar-placeholder { font-size: 3rem; color: var(--accent-cyan); }
+        .avatar-actions { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.5rem; }
+        .avatar-actions input[type="file"] { display: none; }
+        .avatar-info { color: var(--text-secondary); font-size: 0.8rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500; font-size: 0.875rem; }
+        input { width: 100%; padding: 0.75rem 1rem; background: rgba(10, 14, 26, 0.5); border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; color: var(--text-primary); transition: all 0.3s; }
+        input:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1); }
+        .message { padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: none; text-align: center; font-weight: 500; }
+        .message.success { background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; display: block; }
+        .message.error { background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; display: block; }
+        .user-info { background: rgba(34, 211, 238, 0.05); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; }
+        .user-info p { margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .user-info strong { color: var(--accent-cyan); }
+        .danger-zone { border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); }
         
         /* Menu déroulant utilisateur */
         .user-menu-container { position: relative; }
-        .user-menu-btn { 
-            background: rgba(17, 24, 39, 0.7); 
-            border: 1px solid var(--border-color); 
-            color: var(--text-primary); 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            gap: 0.5rem; 
-            padding: 0.4rem 0.8rem; 
-            border-radius: 8px; 
-            font-size: 0.9rem; 
-            font-weight: 600;
-            transition: all 0.3s;
-        }
+        .user-menu-btn { background: rgba(17, 24, 39, 0.7); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; transition: all 0.3s; }
         .user-menu-btn:hover { border-color: var(--accent-cyan); }
-        
-        .user-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 0.5rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 0.5rem;
-            display: none;
-            flex-direction: column;
-            min-width: 180px;
-            backdrop-filter: blur(20px);            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            z-index: 1001;
-        }
+        .user-dropdown { position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 0.5rem; display: none; flex-direction: column; min-width: 200px; backdrop-filter: blur(20px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 1001; }
         .user-dropdown.show { display: flex; }
+        .user-dropdown a, .user-dropdown button { padding: 0.75rem 1rem; text-align: left; background: none; border: none; color: var(--text-secondary); cursor: pointer; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; }
+        .user-dropdown a:hover, .user-dropdown button:hover { background: rgba(34, 211, 238, 0.1); color: var(--accent-cyan); }
         
-        .user-dropdown a, .user-dropdown button {
-            padding: 0.75rem 1rem;
-            text-align: left;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
-        }
-        .user-dropdown a:hover, .user-dropdown button:hover {
-            background: rgba(34, 211, 238, 0.1);
-            color: var(--accent-cyan);
-        }
-        
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .dashboard { padding: 1rem; }
-            .settings-section { padding: 1.5rem 1rem; }
-        }
+        @media (max-width: 768px) { .nav-links { display: none; } .dashboard { padding: 1rem; } .settings-section { padding: 1.5rem 1rem; } }
     </style>
 </head>
 <body>
@@ -390,10 +93,10 @@
     </nav>
 
     <div class="dashboard">
-        <div class="dashboard-header">            <h1>⚙️ Paramètres du Compte</h1>
+        <div class="dashboard-header">
+            <h1>⚙️ Paramètres du Compte</h1>
             <p>Gérez vos informations personnelles et la sécurité de votre compte</p>
         </div>
-
         <div id="message"></div>
 
         <div class="settings-section">
@@ -410,9 +113,7 @@
                         📷 Changer l'image
                         <input type="file" id="avatarInput" accept="image/*" onchange="previewAvatar(event)">
                     </label>
-                    <button id="removeAvatarBtn" class="btn btn-danger" onclick="removeAvatar()" style="display: none;">
-                        🗑️ Supprimer
-                    </button>
+                    <button id="removeAvatarBtn" class="btn btn-danger" onclick="removeAvatar()" style="display: none;">🗑️ Supprimer</button>
                 </div>
                 <p class="avatar-info">JPG, PNG ou GIF. Max 2MB</p>
             </div>
@@ -439,14 +140,12 @@
             <h2>🔒 Changer le Mot de Passe</h2>
             <form id="updatePasswordForm" onsubmit="handleUpdatePassword(event)">
                 <div class="form-group">
-                    <label for="newPassword">Nouveau mot de passe</label>                    <input type="password" id="newPassword" required placeholder="••••••••" minlength="6">
-                    <small style="color: var(--text-secondary); font-size: 0.8rem; display: block; margin-top: 0.25rem;">
-                        Minimum 6 caractères
-                    </small>
+                    <label for="newPassword">Nouveau mot de passe</label>
+                    <input type="password" id="newPassword" required placeholder="••••••••" minlength="6">
+                    <small style="color: var(--text-secondary); font-size: 0.8rem; display: block; margin-top: 0.25rem;">Minimum 6 caractères</small>
                 </div>
                 <div class="form-group">
-                    <label for="confirmPassword">Confirmer le nouveau mot de passe</label>
-                    <input type="password" id="confirmPassword" required placeholder="••••••••" minlength="6">
+                    <label for="confirmPassword">Confirmer le nouveau mot de passe</label>                    <input type="password" id="confirmPassword" required placeholder="••••••••" minlength="6">
                 </div>
                 <button type="submit" class="btn btn-primary">🔐 Changer le mot de passe</button>
             </form>
@@ -454,9 +153,7 @@
 
         <div class="settings-section danger-zone">
             <h2>⚠️ Zone de Danger</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
-                Ces actions sont irréversibles. Soyez certain de ce que vous faites.
-            </p>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">Ces actions sont irréversibles. Soyez certain de ce que vous faites.</p>
             <button class="btn btn-danger" onclick="handleDeleteAccount()">🗑️ Supprimer mon compte</button>
         </div>
     </div>
@@ -465,7 +162,6 @@
     <script>
         const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
-        
         let supabaseClient = null;
         let currentUser = null;
 
@@ -488,7 +184,8 @@
 
         function updateNavbar(session) {
             const navActions = document.getElementById('navActions');
-            if (session) {                const userName = session.user.user_metadata?.full_name || 'Utilisateur';
+            if (session) {
+                const userName = session.user.user_metadata?.full_name || 'Utilisateur';
                 const avatarUrl = session.user.user_metadata?.avatar_url;
                 
                 let avatarHTML = '';
@@ -497,8 +194,7 @@
                 } else {
                     avatarHTML = `<div style="width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: #0a0e1a;">${userName.charAt(0).toUpperCase()}</div>`;
                 }
-                
-                navActions.innerHTML = `
+                                navActions.innerHTML = `
                     <div class="user-menu-container">
                         <button class="user-menu-btn" onclick="toggleUserMenu(event)">
                             ${avatarHTML}
@@ -506,6 +202,7 @@
                             <span style="font-size: 0.7rem;">▼</span>
                         </button>
                         <div class="user-dropdown" id="userDropdown">
+                            <a href="vendeur.html">💼 Dashboard Vendeur</a>
                             <a href="parametres.html">⚙️ Paramètres</a>
                             <button onclick="deconnexion()">🚪 Déconnexion</button>
                         </div>
@@ -522,25 +219,20 @@
         function toggleUserMenu(event) {
             event.stopPropagation();
             const dropdown = document.getElementById('userDropdown');
-            if (dropdown) {
-                dropdown.classList.toggle('show');
-            }
+            if (dropdown) dropdown.classList.toggle('show');
         }
 
         window.onclick = function(event) {
             if (!event.target.closest('.user-menu-container')) {
                 const dropdowns = document.getElementsByClassName("user-dropdown");
                 for (let i = 0; i < dropdowns.length; i++) {
-                    if (dropdowns[i].classList.contains('show')) {
-                        dropdowns[i].classList.remove('show');
-                    }
+                    if (dropdowns[i].classList.contains('show')) dropdowns[i].classList.remove('show');
                 }
             }
         }
+
         function deconnexion() {
-            if (supabaseClient) {
-                supabaseClient.auth.signOut().catch(err => console.log('Signout:', err));
-            }
+            if (supabaseClient) supabaseClient.auth.signOut().catch(err => console.log('Signout:', err));
             localStorage.clear();
             sessionStorage.clear();
             window.location.replace('index.html?logout=' + Date.now());
@@ -548,106 +240,66 @@
 
         async function loadUserInfo(session) {
             if (!session || !session.user) return;
-            
             currentUser = session.user;
-            
             const emailEl = document.getElementById('userEmail');
-            if (emailEl && currentUser.email) {
-                emailEl.textContent = currentUser.email;
-            }
-            
-            const nameEl = document.getElementById('userName');
-            const fullName = currentUser.user_metadata?.full_name || 'Non défini';
-            if (nameEl) {
-                nameEl.textContent = fullName;
-            }
-            
+            if (emailEl && currentUser.email) emailEl.textContent = currentUser.email;
+            const nameEl = document.getElementById('userName');            const fullName = currentUser.user_metadata?.full_name || 'Non défini';
+            if (nameEl) nameEl.textContent = fullName;
             const dateEl = document.getElementById('userDate');
             if (dateEl && currentUser.created_at) {
                 const date = new Date(currentUser.created_at);
-                dateEl.textContent = date.toLocaleDateString('fr-FR', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                });
+                dateEl.textContent = date.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
             }
-            
             const fullNameInput = document.getElementById('fullName');
-            if (fullNameInput) {
-                fullNameInput.value = currentUser.user_metadata?.full_name || '';
-            }
-            
+            if (fullNameInput) fullNameInput.value = currentUser.user_metadata?.full_name || '';
             const avatarUrl = currentUser.user_metadata?.avatar_url;
             if (avatarUrl) {
                 const img = document.getElementById('avatarImage');
                 const placeholder = document.getElementById('avatarPlaceholder');
                 const removeBtn = document.getElementById('removeAvatarBtn');
-                
                 if (img) img.src = avatarUrl;
                 if (img) img.style.display = 'block';
                 if (placeholder) placeholder.style.display = 'none';
-                if (removeBtn) removeBtn.style.display = 'inline-block';            }
+                if (removeBtn) removeBtn.style.display = 'inline-block';
+            }
         }
 
         async function checkAuth() {
             if (!supabaseClient) return;
-            
             try {
                 const { data: { session }, error } = await supabaseClient.auth.getSession();
-                
-                if (error) {
-                    console.error('Auth error:', error);
-                    return;
-                }
-                
-                if (!session) {
-                    window.location.replace('auth.html');
-                    return;
-                }
-                
+                if (error) { console.error('Auth error:', error); return; }
+                if (!session) { window.location.replace('auth.html'); return; }
                 updateNavbar(session);
                 await loadUserInfo(session);
-                
-            } catch (err) {
-                console.error('CheckAuth error:', err);
-            }
+            } catch (err) { console.error('CheckAuth error:', err); }
         }
 
         function previewAvatar(event) {
             const file = event.target.files[0];
             if (!file) return;
-            
             if (file.size > 2 * 1024 * 1024) {
                 showMessage('❌ L\'image ne doit pas dépasser 2MB', 'error');
                 event.target.value = '';
                 return;
             }
-            
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = document.getElementById('avatarImage');
                 const placeholder = document.getElementById('avatarPlaceholder');
                 const removeBtn = document.getElementById('removeAvatarBtn');
-                
-                if (img) {
-                    img.src = e.target.result;
-                    img.style.display = 'block';
-                }
+                if (img) { img.src = e.target.result; img.style.display = 'block'; }
                 if (placeholder) placeholder.style.display = 'none';
                 if (removeBtn) removeBtn.style.display = 'inline-block';
-            };            reader.readAsDataURL(file);
-        }
+            };
+            reader.readAsDataURL(file);        }
 
         function removeAvatar() {
             const img = document.getElementById('avatarImage');
             const placeholder = document.getElementById('avatarPlaceholder');
             const removeBtn = document.getElementById('removeAvatarBtn');
             const input = document.getElementById('avatarInput');
-            
-            if (img) {
-                img.src = '';
-                img.style.display = 'none';
-            }
+            if (img) { img.src = ''; img.style.display = 'none'; }
             if (placeholder) placeholder.style.display = 'flex';
             if (removeBtn) removeBtn.style.display = 'none';
             if (input) input.value = '';
@@ -655,61 +307,34 @@
 
         async function uploadAvatar(file) {
             if (!currentUser) throw new Error('No user logged in');
-            
             const fileExt = file.name.split('.').pop();
             const fileName = `${currentUser.id}.${fileExt}`;
             const filePath = `${currentUser.id}/${fileName}`;
-            
-            const { data, error } = await supabaseClient.storage
-                .from('avatars')
-                .upload(filePath, file, { upsert: true });
-            
+            const { data, error } = await supabaseClient.storage.from('avatars').upload(filePath, file, { upsert: true });
             if (error) throw error;
-            
-            const { data: { publicUrl } } = supabaseClient.storage
-                .from('avatars')
-                .getPublicUrl(filePath);
-            
+            const { data: { publicUrl } } = supabaseClient.storage.from('avatars').getPublicUrl(filePath);
             return publicUrl;
         }
 
         async function handleUpdateProfile(event) {
             event.preventDefault();
-            
             const fullName = document.getElementById('fullName').value;
             const avatarFile = document.getElementById('avatarInput').files[0];
             const btn = event.target.querySelector('.btn-primary');
             const originalText = btn.textContent;
-            
             btn.disabled = true;
             btn.textContent = 'Mise à jour...';
-            
-            try {                let avatarUrl = currentUser.user_metadata?.avatar_url;
-                
-                if (avatarFile) {
-                    avatarUrl = await uploadAvatar(avatarFile);
-                }
-                
-                const { error } = await supabaseClient.auth.updateUser({
-                    data: {
-                        full_name: fullName,
-                        avatar_url: avatarUrl
-                    }
-                });
-                
+            try {
+                let avatarUrl = currentUser.user_metadata?.avatar_url;
+                if (avatarFile) avatarUrl = await uploadAvatar(avatarFile);
+                const { error } = await supabaseClient.auth.updateUser({ data: { full_name: fullName, avatar_url: avatarUrl } });
                 if (error) throw error;
-                
                 showMessage('✅ Profil mis à jour avec succès !', 'success');
                 document.getElementById('userName').textContent = fullName;
                 document.getElementById('avatarInput').value = '';
-                
-                if (avatarFile) {
-                    removeAvatar();
-                }
-                
+                if (avatarFile) removeAvatar();
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 if (session) updateNavbar(session);
-                
             } catch (error) {
                 showMessage('❌ Erreur: ' + error.message, 'error');
             } finally {
@@ -717,41 +342,21 @@
                 btn.textContent = originalText;
             }
         }
-
         async function handleUpdatePassword(event) {
             event.preventDefault();
-            
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (newPassword !== confirmPassword) {
-                showMessage('❌ Les mots de passe ne correspondent pas', 'error');
-                return;
-            }
-            
-            if (newPassword.length < 6) {
-                showMessage('❌ Le mot de passe doit contenir au moins 6 caractères', 'error');
-                return;
-            }
-                        const btn = event.target.querySelector('.btn-primary');
+            if (newPassword !== confirmPassword) { showMessage('❌ Les mots de passe ne correspondent pas', 'error'); return; }
+            if (newPassword.length < 6) { showMessage('❌ Le mot de passe doit contenir au moins 6 caractères', 'error'); return; }
+            const btn = event.target.querySelector('.btn-primary');
             const originalText = btn.textContent;
-            
             btn.disabled = true;
             btn.textContent = 'Changement...';
-            
             try {
-                const { error } = await supabaseClient.auth.updateUser({
-                    password: newPassword
-                });
-                
+                const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
                 if (error) throw error;
-                
                 showMessage('✅ Mot de passe changé avec succès ! Déconnexion...', 'success');
-                
-                setTimeout(async () => {
-                    await supabaseClient.auth.signOut();
-                    window.location.replace('auth.html');
-                }, 2000);
+                setTimeout(async () => { await supabaseClient.auth.signOut(); window.location.replace('auth.html'); }, 2000);
             } catch (error) {
                 showMessage('❌ Erreur: ' + error.message, 'error');
             } finally {
@@ -761,20 +366,12 @@
         }
 
         async function handleDeleteAccount() {
-            if (!confirm('⚠️ Êtes-vous SÛR de vouloir supprimer votre compte ?\n\nCette action est IRREVERSIBLE.')) {
-                return;
-            }
-            
-            if (!confirm('⚠️ Dernière confirmation. Cette action ne peut pas être annulée.')) {
-                return;
-            }
-            
+            if (!confirm('⚠️ Êtes-vous SÛR de vouloir supprimer votre compte ?\n\nCette action est IRREVERSIBLE.')) return;
+            if (!confirm('⚠️ Dernière confirmation. Cette action ne peut pas être annulée.')) return;
             try {
                 await supabaseClient.auth.signOut();
                 showMessage('✅ Compte supprimé. Redirection...', 'success');
-                setTimeout(() => {
-                    window.location.replace('index.html');
-                }, 2000);
+                setTimeout(() => { window.location.replace('index.html'); }, 2000);
             } catch (error) {
                 showMessage('❌ Erreur: ' + error.message, 'error');
             }
@@ -782,30 +379,25 @@
 
         function initAIBackground() {
             const canvas = document.getElementById('aiBackground');
-            if (!canvas) return;            
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            
             let particles = [];
-            
             class Particle {
                 constructor() {
                     this.x = Math.random() * canvas.width;
                     this.y = Math.random() * canvas.height;
                     this.vx = (Math.random() - 0.5) * 0.8;
                     this.vy = (Math.random() - 0.5) * 0.8;
-                    this.size = Math.random() * 3 + 2;
-                    this.color = Math.random() > 0.5 ? '#22d3ee' : '#60a5fa';
+                    this.size = Math.random() * 3 + 2;                    this.color = Math.random() > 0.5 ? '#22d3ee' : '#60a5fa';
                 }
-                
                 update() {
                     this.x += this.vx;
                     this.y += this.vy;
                     if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
                     if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
                 }
-                
                 draw() {
                     ctx.fillStyle = this.color;
                     ctx.beginPath();
@@ -813,14 +405,7 @@
                     ctx.fill();
                 }
             }
-            
-            function init() {
-                particles = [];
-                for (let i = 0; i < 60; i++) {
-                    particles.push(new Particle());
-                }
-            }
-            
+            function init() { particles = []; for (let i = 0; i < 60; i++) particles.push(new Particle()); }
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 for (let i = 0; i < particles.length; i++) {
@@ -831,7 +416,8 @@
                         const dy = particles[i].y - particles[j].y;
                         const distance = Math.sqrt(dx * dx + dy * dy);
                         if (distance < 150) {
-                            ctx.beginPath();                            ctx.strokeStyle = `rgba(34, 211, 238, ${0.3 * (1 - distance / 150)})`;
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(34, 211, 238, ${0.3 * (1 - distance / 150)})`;
                             ctx.lineWidth = 1;
                             ctx.moveTo(particles[i].x, particles[i].y);
                             ctx.lineTo(particles[j].x, particles[j].y);
@@ -841,22 +427,14 @@
                 }
                 requestAnimationFrame(animate);
             }
-            
             init();
             animate();
-            
-            window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                init();
-            });
+            window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; init(); });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             const supabaseLoaded = initSupabase();
-            if (supabaseLoaded) {
-                checkAuth();
-            }
+            if (supabaseLoaded) checkAuth();
             initAIBackground();
         });
     </script>
