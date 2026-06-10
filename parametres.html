@@ -1,160 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PromptHub - Paramètres du Compte</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg-primary: #0a0e1a;
-            --bg-card: rgba(17, 24, 39, 0.7);
-            --text-primary: #ffffff;
-            --text-secondary: #cbd5e1;
-            --accent-cyan: #22d3ee;
-            --accent-blue: #60a5fa;
-            --accent-green: #34d399;
-            --accent-red: #f87171;
-            --border-color: rgba(34, 211, 238, 0.2);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-primary); color: var(--text-primary); line-height: 1.6; position: relative; }
-        h1, h2, h3, .logo, .btn { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
-        
-        #aiBackground { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); }
-        .grid-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; }
-        a { text-decoration: none; color: inherit; }
-        ul { list-style: none; }
-
-        .navbar { background: rgba(10, 14, 26, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; position: sticky; top: 0; z-index: 1000; }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .nav-links { display: flex; gap: 2rem; align-items: center; flex: 1; }
-        .nav-links a { color: var(--text-secondary); font-weight: 500; }
-        .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
-        .nav-actions { display: flex; gap: 0.75rem; align-items: center; }
-
-        .btn { padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; font-size: 0.9rem; }
-        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
-        .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); background: rgba(34, 211, 238, 0.1); }
-        .btn-primary { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #0a0e1a; font-weight: 700; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(34, 211, 238, 0.4); }
-        .btn-danger { background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; }
-        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
-
-        .dashboard { max-width: 800px; margin: 0 auto; padding: 2rem; }
-        .dashboard-header { margin-bottom: 2rem; }
-        .dashboard-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }        .dashboard-header p { color: var(--text-secondary); }
-
-        .settings-section { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; backdrop-filter: blur(20px); margin-bottom: 2rem; }
-        .settings-section h2 { font-size: 1.25rem; margin-bottom: 1.5rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
-        
-        .form-group { margin-bottom: 1.5rem; }
-        label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500; font-size: 0.875rem; }
-        input { width: 100%; padding: 0.75rem 1rem; background: rgba(10, 14, 26, 0.5); border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; color: var(--text-primary); transition: all 0.3s; }
-        input:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1); }
-
-        .message { padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: none; text-align: center; font-weight: 500; }
-        .message.success { background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; display: block; }
-        .message.error { background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; display: block; }
-
-        .user-info { background: rgba(34, 211, 238, 0.05); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; }
-        .user-info p { margin-bottom: 0.5rem; color: var(--text-secondary); }
-        .user-info strong { color: var(--accent-cyan); }
-
-        .danger-zone { border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .dashboard { padding: 1rem; }
-            .settings-section { padding: 1.5rem 1rem; }
-        }
-    </style>
-</head>
-<body>
-    <canvas id="aiBackground"></canvas>
-    <div class="grid-overlay"></div>
-
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="logo">⚡ PromptHub</a>
-            <ul class="nav-links">
-                <li><a href="index.html">🏠 Accueil</a></li>
-                <li><a href="vendeur.html">💼 Vendre</a></li>
-                <li><a href="acheteur.html">📦 Mes Achats</a></li>
-                <li><a href="parametres.html" class="active">⚙️ Paramètres</a></li>
-            </ul>
-            <div class="nav-actions" id="navActions"></div>
-        </div>
-    </nav>
-
-    <div class="dashboard">
-        <div class="dashboard-header">
-            <h1>⚙️ Paramètres du Compte</h1>
-            <p>Gérez vos informations personnelles et la sécurité de votre compte</p>
-        </div>
-        <div id="message" class="message"></div>
-
-        <!-- SECTION AVATAR & INFOS -->
-        <div class="settings-section">
-            <h2>👤 Informations du Compte</h2>
-            
-            <div style="text-align: center; margin-bottom: 2rem; padding: 2rem; background: rgba(10, 14, 26, 0.5); border-radius: 12px;">
-                <div style="width: 120px; height: 120px; margin: 0 auto 1rem; border-radius: 50%; overflow: hidden; border: 3px solid var(--border-color); background: var(--bg-card); display: flex; align-items: center; justify-content: center;">
-                    <img id="avatarImage" src="" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; display: none;">
-                    <div id="avatarPlaceholder" style="font-size: 3rem; color: var(--accent-cyan);">👤</div>
-                </div>
-                <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
-                    <label class="btn btn-outline" style="cursor: pointer;">
-                        📷 Changer l'image
-                        <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="previewAvatar(event)">
-                    </label>
-                    <button id="removeAvatarBtn" class="btn btn-danger" onclick="removeAvatar()" style="display: none;">🗑️ Supprimer</button>
-                </div>
-                <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 0.5rem;">JPG, PNG ou GIF. Max 2MB</p>
-            </div>
-            
-            <div class="user-info">
-                <p>Email: <strong id="userEmail">Chargement...</strong></p>
-                <p>Nom complet: <strong id="userName">Chargement...</strong></p>
-                <p>Membre depuis: <strong id="userDate">Chargement...</strong></p>
-            </div>
-        </div>
-
-        <!-- MODIFIER LE NOM -->
-        <div class="settings-section">
-            <h2>✏️ Modifier mon Profil</h2>
-            <form id="updateProfileForm" onsubmit="handleUpdateProfile(event)">
-                <div class="form-group">
-                    <label for="fullName">Nom complet</label>
-                    <input type="text" id="fullName" required placeholder="John Doe">
-                </div>
-                <button type="submit" class="btn btn-primary">💾 Enregistrer les modifications</button>
-            </form>
-        </div>
-
-        <!-- CHANGER LE MOT DE PASSE -->
-        <div class="settings-section">
-            <h2>🔒 Changer le Mot de Passe</h2>
-            <form id="updatePasswordForm" onsubmit="handleUpdatePassword(event)">
-                <div class="form-group">
-                    <label for="newPassword">Nouveau mot de passe</label>
-                    <input type="password" id="newPassword" required placeholder="••••••••" minlength="6">
-                    <small style="color: var(--text-secondary); font-size: 0.8rem;">Minimum 6 caractères</small>
-                </div>
-                <div class="form-group">                    <label for="confirmPassword">Confirmer le nouveau mot de passe</label>
-                    <input type="password" id="confirmPassword" required placeholder="••••••••" minlength="6">
-                </div>
-                <button type="submit" class="btn btn-primary"> Changer le mot de passe</button>
-            </form>
-        </div>
-
-        <!-- ZONE DE DANGER -->
-        <div class="settings-section danger-zone">
-            <h2>️ Zone de Danger</h2>
+ Danger</h2>
             <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
                 Ces actions sont irréversibles. Soyez certain de ce que vous faites.
             </p>
@@ -341,3 +185,557 @@
             class Particle {
                 constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.vx = (Math.random() - 0.5) * 0.8; this.vy = (Math.random() - 0.5) * 0.8; this.size = Math.random() * 3 + 2; this.color = Math.random() > 0.5 ? '#22d3ee' : '#60a5fa'; }
                 update() { this.x += this.vx; this.y += this.vy; if (this.x < 0 || this.x > canvas.width) this.vx *= -1; i
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptHub - Paramètres du Compte</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --accent-cyan: #22d3ee;
+            --accent-blue: #60a5fa;
+            --accent-green: #34d399;
+            --accent-red: #f87171;
+            --border-color: rgba(34, 211, 238, 0.2);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        h1, h2, h3, .logo, .btn {
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.02em;
+        }
+        
+        /* Background animé */
+        #aiBackground {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+        }
+        
+        .grid-overlay {            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+        
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        
+        /* NAVBAR */
+        .navbar {
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex: 1;
+        }
+                .nav-links a {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent-cyan);
+        }
+        
+        .nav-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        
+        /* BOUTONS */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(34, 211, 238, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #0a0e1a;
+            font-weight: 700;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 211, 238, 0.4);
+        }
+        
+        .btn-danger {            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #f87171;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        /* DASHBOARD */
+        .dashboard {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-header p {
+            color: var(--text-secondary);
+        }
+        
+        /* SECTIONS */
+        .settings-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            margin-bottom: 2rem;
+        }
+        
+        .settings-section h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* AVATAR UPLOAD */        .avatar-section {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(10, 14, 26, 0.5);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--border-color);
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        
+        .avatar-placeholder {
+            font-size: 3rem;
+            color: var(--accent-cyan);
+        }
+        
+        .avatar-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
+        }
+        
+        .avatar-actions input[type="file"] {
+            display: none;
+        }
+        
+        .avatar-info {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+                /* FORMULAIRES */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(10, 14, 26, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
+        }
+        
+        /* MESSAGES */
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .message.success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #34d399;
+            display: block;
+        }
+        
+        .message.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);            color: #f87171;
+            display: block;
+        }
+        
+        /* INFO UTILISATEUR */
+        .user-info {
+            background: rgba(34, 211, 238, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .user-info p {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .user-info strong {
+            color: var(--accent-cyan);
+        }
+        
+        /* ZONE DANGER */
+        .danger-zone {
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.05);
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .dashboard { padding: 1rem; }
+            .settings-section { padding: 1.5rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="aiBackground"></canvas>
+    <div class="grid-overlay"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ PromptHub</a>
+            <ul class="nav-links">
+                <li><a href="index.html">🏠 Accueil</a></li>
+                <li><a href="vendeur.html">💼 Vendre</a></li>
+                <li><a href="acheteur.html">📦 Mes Achats</a></li>
+                <li><a href="parametres.html" class="active">⚙️ Paramètres</a></li>
+            </ul>            <div class="nav-actions" id="navActions"></div>
+        </div>
+    </nav>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <h1>⚙️ Paramètres du Compte</h1>
+            <p>Gérez vos informations personnelles et la sécurité de votre compte</p>
+        </div>
+
+        <!-- MESSAGE -->
+        <div id="message"></div>
+
+        <!-- SECTION 1: AVATAR & INFOS -->
+        <div class="settings-section">
+            <h2>👤 Informations du Compte</h2>
+            
+            <!-- Avatar Upload -->
+            <div class="avatar-section">
+                <div class="avatar-preview">
+                    <img id="avatarImage" alt="Avatar">
+                    <div class="avatar-placeholder" id="avatarPlaceholder">👤</div>
+                </div>
+                
+                <div class="avatar-actions">
+                    <label class="btn btn-outline" style="cursor: pointer;">
+                        📷 Changer l'image
+                        <input type="file" id="avatarInput" accept="image/*" onchange="previewAvatar(event)">
+                    </label>
+                    <button id="removeAvatarBtn" class="btn btn-danger" onclick="removeAvatar()" style="display: none;">
+                        🗑️ Supprimer
+                    </button>
+                </div>
+                <p class="avatar-info">JPG, PNG ou GIF. Max 2MB</p>
+            </div>
+            
+            <!-- User Info Display -->
+            <div class="user-info">
+                <p>Email: <strong id="userEmail">Chargement...</strong></p>
+                <p>Nom complet: <strong id="userName">Chargement...</strong></p>
+                <p>Membre depuis: <strong id="userDate">Chargement...</strong></p>
+            </div>
+        </div>
+
+        <!-- SECTION 2: MODIFIER PROFIL -->
+        <div class="settings-section">
+            <h2>✏️ Modifier mon Profil</h2>
+            <form id="updateProfileForm" onsubmit="handleUpdateProfile(event)">
+                <div class="form-group">                    <label for="fullName">Nom complet</label>
+                    <input type="text" id="fullName" required placeholder="John Doe">
+                </div>
+                <button type="submit" class="btn btn-primary">💾 Enregistrer les modifications</button>
+            </form>
+        </div>
+
+        <!-- SECTION 3: CHANGER MOT DE PASSE -->
+        <div class="settings-section">
+            <h2>🔒 Changer le Mot de Passe</h2>
+            <form id="updatePasswordForm" onsubmit="handleUpdatePassword(event)">
+                <div class="form-group">
+                    <label for="newPassword">Nouveau mot de passe</label>
+                    <input type="password" id="newPassword" required placeholder="••••••••" minlength="6">
+                    <small style="color: var(--text-secondary); font-size: 0.8rem; display: block; margin-top: 0.25rem;">
+                        Minimum 6 caractères
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmer le nouveau mot de passe</label>
+                    <input type="password" id="confirmPassword" required placeholder="••••••••" minlength="6">
+                </div>
+                <button type="submit" class="btn btn-primary">🔐 Changer le mot de passe</button>
+            </form>
+        </div>
+
+        <!-- SECTION 4: ZONE DANGER -->
+        <div class="settings-section danger-zone">
+            <h2>⚠️ Zone de Danger</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+                Ces actions sont irréversibles. Soyez certain de ce que vous faites.
+            </p>
+            <button class="btn btn-danger" onclick="handleDeleteAccount()">🗑️ Supprimer mon compte</button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Configuration Supabase
+        const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        let currentUser = null;
+
+        // Afficher un message
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;            messageEl.className = `message ${type}`;
+            setTimeout(() => { messageEl.className = 'message'; }, 5000);
+        }
+
+        // Mettre à jour la navbar
+        function updateNavbar(session) {
+            const navActions = document.getElementById('navActions');
+            if (session) {
+                const userName = session.user.user_metadata.full_name || 'Utilisateur';
+                const avatarUrl = session.user.user_metadata.avatar_url;
+                
+                let avatarHTML = '';
+                if (avatarUrl) {
+                    avatarHTML = `<img src="${avatarUrl}" alt="${userName}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-cyan);">`;
+                } else {
+                    avatarHTML = `<div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; color: #0a0e1a;">${userName.charAt(0).toUpperCase()}</div>`;
+                }
+                
+                navActions.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        ${avatarHTML}
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;">👋 ${userName}</span>
+                    </div>
+                    <button id="btn-logout" class="btn btn-danger" style="font-size: 0.8rem; padding: 0.5rem 0.8rem;">🚪 Déconnexion</button>
+                `;
+                document.getElementById('btn-logout').addEventListener('click', deconnexion);
+            } else {
+                navActions.innerHTML = `
+                    <a href="auth.html" class="btn btn-outline">Connexion</a>
+                    <a href="auth.html" class="btn btn-primary">S'inscrire</a>
+                `;
+            }
+        }
+
+        // Déconnexion
+        function deconnexion() {
+            localStorage.clear();
+            sessionStorage.clear();
+            supabaseClient.auth.signOut().catch(err => console.log('Signout:', err));
+            window.location.replace('index.html?logout=' + Date.now());
+        }
+
+        // Écouteur d'authentification
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            updateNavbar(session);
+            if (event === 'SIGNED_OUT') window.location.replace('auth.html');
+        });
+
+        // Vérifier l'authentification et charger les infos
+        async function checkAuth() {            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.replace('auth.html');
+                return;
+            }
+            
+            currentUser = session.user;
+            
+            // Afficher les infos
+            document.getElementById('userEmail').textContent = currentUser.email;
+            document.getElementById('userName').textContent = currentUser.user_metadata.full_name || 'Non défini';
+            document.getElementById('userDate').textContent = new Date(currentUser.created_at).toLocaleDateString('fr-FR');
+            document.getElementById('fullName').value = currentUser.user_metadata.full_name || '';
+            
+            // Charger l'avatar
+            const avatarUrl = currentUser.user_metadata.avatar_url;
+            if (avatarUrl) {
+                const img = document.getElementById('avatarImage');
+                const placeholder = document.getElementById('avatarPlaceholder');
+                const removeBtn = document.getElementById('removeAvatarBtn');
+                
+                img.src = avatarUrl;
+                img.style.display = 'block';
+                placeholder.style.display = 'none';
+                removeBtn.style.display = 'inline-block';
+            }
+        }
+
+        // Prévisualiser l'avatar
+        function previewAvatar(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Vérifier la taille (max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                showMessage('❌ L\'image ne doit pas dépasser 2MB', 'error');
+                event.target.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('avatarImage');
+                const placeholder = document.getElementById('avatarPlaceholder');
+                const removeBtn = document.getElementById('removeAvatarBtn');
+                
+                img.src = e.target.result;
+                img.style.display = 'block';
+                placeholder.style.display = 'none';
+                removeBtn.style.display = 'inline-block';            };
+            reader.readAsDataURL(file);
+        }
+
+        // Supprimer l'avatar
+        function removeAvatar() {
+            const img = document.getElementById('avatarImage');
+            const placeholder = document.getElementById('avatarPlaceholder');
+            const removeBtn = document.getElementById('removeAvatarBtn');
+            const input = document.getElementById('avatarInput');
+            
+            img.src = '';
+            img.style.display = 'none';
+            placeholder.style.display = 'flex';
+            removeBtn.style.display =
