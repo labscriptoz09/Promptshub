@@ -108,7 +108,7 @@
             padding: 0.5rem;
             display: none;
             flex-direction: column;
-            min-width: 180px;
+            min-width: 200px;
             backdrop-filter: blur(20px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             z-index: 1001;
@@ -137,15 +137,20 @@
         }
         
         @media (max-width: 768px) {
-            .navbar { padding: 0.8rem 1rem; } .nav-links { display: none; } .nav-actions { gap: 0.5rem; }
+            .navbar { padding: 0.8rem 1rem; } 
+            .nav-links { display: none; } 
+            .nav-actions { gap: 0.5rem; }
             .btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; } 
-            .hero { padding: 5rem 1.5rem 3rem; } .hero h1 { font-size: 2.5rem; }
+            .hero { padding: 5rem 1.5rem 3rem; } 
+            .hero h1 { font-size: 2.5rem; }
             .hero-buttons { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto 3rem; }
             .btn-large { width: 100%; }
-            .stats { gap: 1.5rem; padding: 1.5rem; } .stat-value { font-size: 1.5rem; }
-            .section { padding: 4rem 1rem; } .section-header h2 { font-size: 1.8rem; }
+            .stats { gap: 1.5rem; padding: 1.5rem; }             .stat-value { font-size: 1.5rem; }
+            .section { padding: 4rem 1rem; } 
+            .section-header h2 { font-size: 1.8rem; }
         }
-    </style></head>
+    </style>
+</head>
 <body>
     <canvas id="aiBackground"></canvas>
     <div class="grid-overlay"></div>
@@ -189,12 +194,12 @@
         </div>
     </section>
 
-    <section class="section">
-        <div class="section-header reveal"><h2>Trending Prompts</h2><p>Handpicked by our community</p></div>
+    <section class="section">        <div class="section-header reveal"><h2>Trending Prompts</h2><p>Handpicked by our community</p></div>
         <div class="prompts-grid" id="prompts-container">
             <p style="text-align: center; color: var(--text-secondary); grid-column: 1/-1;">Chargement des prompts...</p>
         </div>
     </section>
+
     <section class="section">
         <div class="section-header reveal"><h2>Why PromptHub</h2><p>The most advanced prompt marketplace</p></div>
         <div class="features-grid">
@@ -236,14 +241,15 @@
                             <span style="font-size: 0.7rem;">▼</span>
                         </button>
                         <div class="user-dropdown" id="userDropdown">
+                            <a href="vendeur.html">💼 Dashboard Vendeur</a>
                             <a href="parametres.html">⚙️ Paramètres</a>
-                            <button onclick="deconnexion()">🚪 Déconnexion</button>
-                        </div>
+                            <button onclick="deconnexion()">🚪 Déconnexion</button>                        </div>
                     </div>
                 `;
             } else {
                 navActions.innerHTML = `
-                    <a href="auth.html" class="btn btn-ghost">Connexion</a>                    <a href="auth.html" class="btn btn-primary">S'inscrire</a>
+                    <a href="auth.html" class="btn btn-ghost">Connexion</a>
+                    <a href="auth.html" class="btn btn-primary">S'inscrire</a>
                 `;
             }
         }
@@ -286,13 +292,13 @@
                 current += increment;
                 if (current < target) { counter.innerText = Math.ceil(current); requestAnimationFrame(update); }
                 else counter.innerText = target;
-            };
-            update();
+            };            update();
         });
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
-        }, { threshold: 0.1 });        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         function initAIBackground() {
             const canvas = document.getElementById('aiBackground'); 
@@ -335,13 +341,13 @@
                         const dy = particles[i].y - particles[j].y; 
                         const distance = Math.sqrt(dx * dx + dy * dy);
                         if (distance < 150) { 
-                            ctx.beginPath(); 
-                            ctx.strokeStyle = `rgba(34, 211, 238, ${0.3 * (1 - distance / 150)})`; 
+                            ctx.beginPath();                             ctx.strokeStyle = `rgba(34, 211, 238, ${0.3 * (1 - distance / 150)})`; 
                             ctx.lineWidth = 1; 
                             ctx.moveTo(particles[i].x, particles[i].y); 
                             ctx.lineTo(particles[j].x, particles[j].y); 
                             ctx.stroke(); 
-                        }                    }
+                        }
+                    }
                 }
                 requestAnimationFrame(animate);
             }
