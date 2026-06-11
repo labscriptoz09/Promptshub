@@ -3,365 +3,528 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PromptHub - Admin Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>PromptHub - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg-main: #0a0e1a;
-            --bg-sidebar: #111827;
             --bg-card: #1f2937;
             --bg-hover: #374151;
             --text-primary: #f9fafb;
             --text-secondary: #9ca3af;
             --text-muted: #6b7280;
             --accent: #3b82f6;
-            --accent-light: #60a5fa;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
             --purple: #8b5cf6;
             --border: #374151;
         }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-primary); display: flex; min-height: 100vh; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg-main); 
+            color: var(--text-primary); 
+            min-height: 100vh;
+        }
         
-        .sidebar { width: 300px; background: var(--bg-sidebar); border-right: 1px solid var(--border); padding: 2rem 1.5rem; position: fixed; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
-        .logo { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
-        .logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--accent), var(--purple)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4); }
-        .logo-text { font-size: 1.4rem; font-weight: 800; background: linear-gradient(135deg, var(--text-primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
-        .logo-text span { display: block; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; -webkit-text-fill-color: var(--text-muted); margin-top: 0.25rem; }
+        /* HEADER MOBILE */
+        .mobile-header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .mobile-header h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .menu-btn {            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
         
-        .nav-section { margin-bottom: 2.5rem; }
-        .nav-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 1rem; padding-left: 0.75rem; font-weight: 700; }
-        .nav-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-radius: 12px; cursor: pointer; transition: all 0.3s; margin-bottom: 0.5rem; color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 0.95rem; }
-        .nav-item:hover { background: var(--bg-hover); color: var(--text-primary); transform: translateX(6px); }
-        .nav-item.active { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: white; box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4); }
-        .nav-item svg { width: 22px; height: 22px; flex-shrink: 0; }
-        .nav-item .badge { margin-left: auto; background: var(--danger); color: white; font-size: 0.75rem; padding: 0.25rem 0.75rem; border-radius: 999px; font-weight: 700; }
+        /* NAVIGATION MOBILE */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 200;
+            padding: 2rem 1rem;
+            overflow-y: auto;
+        }
+        .mobile-nav.active { display: block; }
+        .mobile-nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-item-mobile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .nav-item-mobile:hover, .nav-item-mobile.active {
+            background: var(--accent);
+            color: white;
+        }
+        .nav-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);            margin: 1.5rem 0 0.75rem 1rem;
+            font-weight: 700;
+        }
         
-        .sidebar-footer { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border); }
-        .user-profile { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--bg-card); border-radius: 12px; }
-        .user-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--purple)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3); }
+        /* CONTENU */
+        .content { padding: 1rem; }
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .page-subtitle { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem; }
+        
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+        .stat-card h3 {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        
+        /* CARTES UTILISATEURS (MOBILE) */
+        .user-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        .user-card-header {            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
         .user-info { flex: 1; min-width: 0; }
-        .user-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
-        .user-email { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .logout-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.75rem; border-radius: 10px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
-        .logout-btn:hover { background: var(--danger); color: white; }
-                .main { flex: 1; margin-left: 300px; padding: 2.5rem; background: var(--bg-main); }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
-        .header-title h1 { font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem; background: linear-gradient(135deg, var(--text-primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .header-title p { color: var(--text-secondary); font-size: 1rem; }
+        .user-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.25rem; }
+        .user-email { font-size: 0.85rem; color: var(--text-muted); word-break: break-all; }
         
-        .btn { padding: 0.875rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.625rem; }
-        .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: white; box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); }
-        .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
-        .btn-secondary:hover { background: var(--bg-hover); }
+        .user-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: var(--bg-main);
+            border-radius: 8px;
+        }
+        .detail-item { }
+        .detail-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+        .detail-value {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
         
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
-        .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; transition: all 0.3s; position: relative; overflow: hidden; }
-        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--purple)); opacity: 0; transition: opacity 0.3s; }
-        .stat-card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3); border-color: var(--accent); }
-        .stat-card:hover::before { opacity: 1; }
-        .stat-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; }
-        .stat-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; }
-        .stat-icon.blue { background: rgba(59, 130, 246, 0.15); color: var(--accent); }
-        .stat-icon.green { background: rgba(16, 185, 129, 0.15); color: var(--success); }
-        .stat-icon.orange { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
-        .stat-icon.purple { background: rgba(139, 92, 246, 0.15); color: var(--purple); }
-        .stat-value { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.375rem; background: linear-gradient(135deg, var(--text-primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .stat-label { color: var(--text-secondary); font-size: 0.95rem; font-weight: 500; }
+        .user-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .btn {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: none;            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex: 1;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-secondary { background: var(--bg-hover); color: var(--text-primary); }
         
-        .table-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 1.5rem; }
-        .table-header { padding: 1.75rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .table-title { font-size: 1.375rem; font-weight: 700; }
-        .search-input { padding: 0.75rem 1.25rem; background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 0.9rem; width: 320px; }
-        .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .badge {
+            padding: 0.375rem 0.875rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .badge-admin { background: rgba(139, 92, 246, 0.2); color: var(--purple); }
+        .badge-seller { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .badge-buyer { background: rgba(59, 130, 246, 0.2); color: var(--accent); }
+        .badge-active { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .badge-banned { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
         
-        table { width: 100%; border-collapse: collapse; }
-        th { padding: 1.25rem 1.5rem; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700; background: var(--bg-main); }
-        td { padding: 1.5rem 1.5rem; border-top: 1px solid var(--border); font-size: 0.95rem; }
-        tr:hover td { background: var(--bg-hover); }
-        
-        .user-cell { display: flex; align-items: center; gap: 1rem; }
-        .user-cell-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--purple)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; flex-shrink: 0; }
-        .user-cell-name { font-weight: 600; margin-bottom: 0.25rem; }
-        .user-cell-email { font-size: 0.85rem; color: var(--text-muted); }
-        
-        .status-badge { padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; display: inline-block; }
-        .status-active { background: rgba(16, 185, 129, 0.15); color: var(--success); }
-        .status-pending { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
-        .status-banned { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
-        .status-admin { background: rgba(139, 92, 246, 0.15); color: var(--purple); }
-        
-        .action-btns { display: flex; gap: 0.625rem; flex-wrap: wrap; }
-        .action-btn { padding: 0.625rem 1rem; border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
-        .action-btn-edit { background: var(--bg-hover); color: var(--text-primary); }        .action-btn-edit:hover { background: var(--accent); color: white; }
-        .action-btn-delete { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
-        .action-btn-delete:hover { background: var(--danger); color: white; }
-        
-        .section { display: none; animation: fadeIn 0.4s ease; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .settings-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; }
-        .settings-card h3 { font-size: 1.375rem; font-weight: 700; margin-bottom: 1.75rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
-        .form-group { margin-bottom: 1.75rem; }
-        .form-group label { display: block; font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text-secondary); }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 1rem 1.25rem; background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 0.95rem; font-family: inherit; transition: all 0.2s; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-        
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center; }
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
         .modal.active { display: flex; }
-        .modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; width: 90%; max-width: 500px; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .modal-title { font-size: 1.375rem; font-weight: 700; }
-        .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.5rem; }
-        .modal-close:hover { color: var(--text-primary); }
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .modal-title { font-size: 1.25rem; font-weight: 700; }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        .modal-actions button { flex: 1; }
         
-        .toast { position: fixed; top: 2rem; right: 2rem; padding: 1.25rem 1.75rem; border-radius: 12px; font-weight: 600; font-size: 0.95rem; z-index: 9999; animation: slideIn 0.3s ease; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3); }
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 80px;
+            right: 1rem;
+            left: 1rem;
+            padding: 1rem;            border-radius: 10px;
+            font-weight: 600;
+            z-index: 400;
+            animation: slideIn 0.3s ease;
+            text-align: center;
+        }
         .toast-success { background: var(--success); color: white; }
         .toast-error { background: var(--danger); color: white; }
-        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideIn {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
         
-        @media (max-width: 768px) {
-            .sidebar { width: 100%; position: relative; height: auto; padding: 1.5rem; }
-            .main { margin-left: 0; padding: 1.5rem; }
-            body { flex-direction: column; }
-            .stats-grid { grid-template-columns: 1fr; }
+        .section { display: none; }
+        .section.active { display: block; }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .settings-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .settings-card h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);        }
+        
+        .user-profile-mobile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        .user-profile-mobile .user-avatar {
+            width: 45px;
+            height: 45px;
+            font-size: 1.1rem;
+        }
+        .user-profile-info { flex: 1; }
+        .user-profile-name { font-weight: 700; font-size: 1rem; }
+        .user-profile-email { font-size: 0.8rem; color: var(--text-muted); }
+        
+        @media (min-width: 768px) {
+            .mobile-header { display: none; }
+            .content { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }
+            .user-details { grid-template-columns: repeat(4, 1fr); }
         }
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="logo">
-            <div class="logo-icon"></div>
-            <div class="logo-text">PromptHub<span>Admin Panel</span></div>
+    <!-- HEADER MOBILE -->
+    <div class="mobile-header">
+        <h1>⚡ PromptHub Admin</h1>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    </div>
+
+    <!-- NAVIGATION MOBILE -->
+    <div id="mobileNav" class="mobile-nav">
+        <div class="mobile-nav-header">
+            <h1>⚡ PromptHub</h1>
+            <button class="menu-btn" onclick="toggleMenu()"></button>
         </div>
-
-        <nav>
-            <div class="nav-section">
-                <div class="nav-title">Principal</div>
-                <a class="nav-item active" onclick="showSection('dashboard', this)">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                    Dashboard
-                </a>                <a class="nav-item" onclick="showSection('users', this)">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                    Utilisateurs
-                    <span class="badge" id="usersBadge">0</span>
-                </a>
-                <a class="nav-item" onclick="showSection('prompts', this)">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                    Prompts
-                    <span class="badge" id="promptsBadge">0</span>
-                </a>
-                <a class="nav-item" onclick="showSection('orders', this)">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-                    Commandes
-                </a>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-title">Paramètres</div>
-                <a class="nav-item" onclick="showSection('maintenance', this)">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    Maintenance
-                </a>
-                <a class="nav-item" onclick="showSection('config', this)">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-                    Configuration
-                </a>
-            </div>
-        </nav>
-
-        <div class="sidebar-footer">
-            <div class="user-profile">
-                <div class="user-avatar" id="userAvatar">A</div>
-                <div class="user-info">
-                    <div class="user-name" id="userName">Admin</div>
-                    <div class="user-email" id="userEmail">admin@prompthub.com</div>
-                </div>
-                <button class="logout-btn" onclick="logout()" title="Déconnexion">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                </button>
+        
+        <div class="user-profile-mobile">
+            <div class="user-avatar" id="userAvatar">A</div>
+            <div class="user-profile-info">
+                <div class="user-profile-name" id="userName">Admin</div>
+                <div class="user-profile-email" id="userEmail">admin@prompthub.com</div>
             </div>
         </div>
-    </aside>
+        <div class="nav-section-title">Principal</div>
+        <div class="nav-item-mobile active" onclick="showSection('dashboard', this)">📊 Dashboard</div>
+        <div class="nav-item-mobile" onclick="showSection('users', this)">👥 Utilisateurs <span id="usersBadge" style="margin-left:auto;background:#ef4444;color:white;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
+        <div class="nav-item-mobile" onclick="showSection('prompts', this)"> Prompts <span id="promptsBadge" style="margin-left:auto;background:#ef4444;color:white;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
+        <div class="nav-item-mobile" onclick="showSection('orders', this)">💰 Commandes</div>
+        
+        <div class="nav-section-title">Paramètres</div>
+        <div class="nav-item-mobile" onclick="showSection('maintenance', this)">🔧 Maintenance</div>
+        <div class="nav-item-mobile" onclick="showSection('config', this)">⚙️ Configuration</div>
+        
+        <div class="nav-item-mobile" onclick="logout()" style="color: var(--danger); margin-top: 2rem;"> Déconnexion</div>
+    </div>
 
-    <main class="main">
-        <div class="header">
-            <div class="header-title">
-                <h1 id="pageTitle">Dashboard</h1>
-                <p id="pageSubtitle">Vue d'ensemble de votre plateforme</p>
-            </div>
-            <button class="btn btn-secondary" onclick="loadAllData()">                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                Actualiser
-            </button>
-        </div>
-
+    <!-- CONTENU -->
+    <div class="content">
         <!-- DASHBOARD -->
         <div id="dashboard" class="section active">
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-subtitle">Vue d'ensemble de votre plateforme</p>
+            
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon blue">👥</div>
-                    </div>
+                    <h3>👥 Utilisateurs</h3>
                     <div class="stat-value" id="statUsers">0</div>
-                    <div class="stat-label">Utilisateurs totaux</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon purple">📦</div>
-                    </div>
+                    <h3>📦 Prompts</h3>
                     <div class="stat-value" id="statPrompts">0</div>
-                    <div class="stat-label">Prompts actifs</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon orange">💰</div>
-                    </div>
+                    <h3>💰 Ventes</h3>
                     <div class="stat-value" id="statSales">0</div>
-                    <div class="stat-label">Ventes totales</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon green">💵</div>
-                    </div>
+                    <h3>💵 Revenus</h3>
                     <div class="stat-value" id="statRevenue">$0</div>
-                    <div class="stat-label">Revenus (ta commission)</div>
                 </div>
             </div>
         </div>
 
         <!-- UTILISATEURS -->
         <div id="users" class="section">
-            <div class="table-card">
-                <div class="table-header">
-                    <div class="table-title">👥 Gestion des Utilisateurs</div>
-                    <input type="text" class="search-input" placeholder="🔍 Rechercher un utilisateur..." oninput="filterUsers(this.value)">
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Utilisateur</th>                            <th>Rôle</th>
-                            <th>Inscription</th>
-                            <th>Dernière connexion</th>
-                            <th>Statut</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersTableBody">
-                        <tr><td colspan="6" style="text-align: center; padding: 2rem;">Chargement...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+            <h1 class="page-title">👥 Utilisateurs</h1>
+            <p class="page-subtitle">Gérer tous les utilisateurs</p>
+            
+            <input type="text" class="search-input" placeholder="🔍 Rechercher un utilisateur..." oninput="filterUsers(this.value)">
+            
+            <div id="usersList"></div>
         </div>
-
         <!-- PROMPTS -->
         <div id="prompts" class="section">
-            <div class="table-card">
-                <div class="table-header">
-                    <div class="table-title"> Gestion des Prompts</div>
-                    <input type="text" class="search-input" placeholder=" Rechercher un prompt..." oninput="filterPrompts(this.value)">
-                </div>
-                <table>
-                    <thead>
-                        <tr><th>Titre</th><th>Vendeur</th><th>Catégorie</th><th>Prix</th><th>Statut</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody id="promptsTableBody">
-                        <tr><td colspan="6" style="text-align: center; padding: 2rem;">Chargement...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+            <h1 class="page-title">📦 Prompts</h1>
+            <p class="page-subtitle">Gérer tous les prompts</p>
+            <div id="promptsList"></div>
         </div>
 
         <!-- COMMANDES -->
         <div id="orders" class="section">
-            <div class="table-card">
-                <div class="table-header">
-                    <div class="table-title">💰 Historique des Commandes</div>
-                    <div style="color: var(--success); font-weight: 700; font-size: 1.1rem;">Total commissions: <span id="totalCommission">$0</span></div>
-                </div>
-                <table>
-                    <thead>
-                        <tr><th>Date</th><th>Acheteur</th><th>Prompt</th><th>Montant</th><th>Commission (20%)</th><th>Statut</th></tr>
-                    </thead>
-                    <tbody id="ordersTableBody">
-                        <tr><td colspan="6" style="text-align: center; padding: 2rem;">Aucune commande</td></tr>
-                    </tbody>
-                </table>
-            </div>
+            <h1 class="page-title">💰 Commandes</h1>
+            <p class="page-subtitle">Historique des transactions</p>
+            <div id="ordersList"></div>
         </div>
+
         <!-- MAINTENANCE -->
         <div id="maintenance" class="section">
+            <h1 class="page-title">🔧 Maintenance</h1>
+            <p class="page-subtitle">Mode maintenance du site</p>
+            
             <div class="settings-card">
-                <h3>🔧 Mode Maintenance</h3>
+                <h3>État du site</h3>
                 <div class="form-group">
-                    <label>État du site</label>
+                    <label>Mode</label>
                     <select id="maintenanceEnabled">
-                        <option value="false">🟢 Site en ligne (Normal)</option>
+                        <option value="false"> Site en ligne (Normal)</option>
                         <option value="true">🔴 Mode Maintenance (Bloqué)</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Message affiché aux visiteurs</label>
+                    <label>Message aux visiteurs</label>
                     <textarea id="maintenanceMessage" rows="4">Site en maintenance. Revenez bientôt !</textarea>
                 </div>
-                <button class="btn btn-primary" onclick="saveMaintenance()">💾 Sauvegarder</button>
-                <div id="maintenanceStatus" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 12px; display: none;"></div>
+                <button class="btn btn-primary" onclick="saveMaintenance()" style="width:100%;"> Sauvegarder</button>
+                <div id="maintenanceStatus" style="margin-top:1rem;padding:1rem;border-radius:8px;display:none;"></div>
             </div>
         </div>
 
         <!-- CONFIGURATION -->
         <div id="config" class="section">
+            <h1 class="page-title">⚙️ Configuration</h1>
+            <p class="page-subtitle">Paramètres du site</p>
+            
             <div class="settings-card">
-                <h3> Configuration Générale</h3>
+                <h3>🌐 Configuration Générale</h3>
                 <div class="form-group">
                     <label>Nom du site</label>
                     <input type="text" id="settingSiteName" value="PromptHub">
                 </div>
                 <div class="form-group">
-                    <label>Email de contact</label>
-                    <input type="email" id="settingEmail" value="contact@prompthub.com">
+                    <label>Email de contact</label>                    <input type="email" id="settingEmail" value="contact@prompthub.com">
                 </div>
-                <div class="form-group">
-                    <label>Commission plateforme (%)</label>
-                    <input type="number" id="settingCommission" value="20" min="0" max="100">
-                </div>
-                <button class="btn btn-primary" onclick="saveConfig()">💾 Sauvegarder</button>
+                <button class="btn btn-primary" onclick="saveConfig()" style="width:100%;">💾 Sauvegarder</button>
             </div>
         </div>
-    </main>
+    </div>
 
-    <!-- MODAL ÉDITION UTILISATEUR -->
-    <div id="editUserModal" class="modal">
+    <!-- MODAL ÉDITION -->
+    <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">✏️ Modifier l'utilisateur</h3>
-                <button class="modal-close" onclick="closeEditModal()">✕</button>
+                <button class="modal-close" onclick="closeModal()">✕</button>
             </div>
             <div class="form-group">
-                <label>ID Utilisateur</label>                <input type="text" id="editUserId" readonly style="opacity: 0.6;">
+                <label>ID</label>
+                <input type="text" id="editId" readonly style="opacity:0.6;">
             </div>
             <div class="form-group">
                 <label>Nom complet</label>
-                <input type="text" id="editUserName" placeholder="Nom de l'utilisateur">
+                <input type="text" id="editName">
             </div>
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" id="editUserEmail" readonly style="opacity: 0.6;">
+                <input type="email" id="editEmail" readonly style="opacity:0.6;">
             </div>
             <div class="form-group">
                 <label>Rôle</label>
-                <select id="editUserRole">
-                    <option value="buyer">Acheteur</option>
-                    <option value="seller">Vendeur</option>
-                    <option value="admin">Admin</option>
+                <select id="editRole">
+                    <option value="buyer">🛒 Acheteur</option>
+                    <option value="seller">💼 Vendeur</option>
+                    <option value="admin">👑 Admin</option>
                 </select>
             </div>
-            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                <button class="btn btn-primary" onclick="saveUserEdit()" style="flex: 1;"> Sauvegarder</button>
-                <button class="btn btn-secondary" onclick="closeEditModal()" style="flex: 1;">❌ Annuler</button>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">❌ Annuler</button>
+                <button class="btn btn-primary" onclick="saveEdit()">💾 Sauvegarder</button>
             </div>
         </div>
     </div>
@@ -373,9 +536,7 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let allUsers = [];
-        let allPrompts = [];
-        let currentEditUserId = null;
-
+        let currentEditId = null;
         async function init() {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (!session) { window.location.href = 'auth.html'; return; }
@@ -390,196 +551,129 @@
                 setTimeout(() => window.location.href = 'index.html', 2000);
                 return;
             }
-            await loadAllData();
-        }
 
-        async function loadAllData() {
-            await Promise.all([loadUsers(), loadPrompts(), loadOrders(), loadMaintenance()]);
+            loadUsers();
         }
 
         async function loadUsers() {
-            const { data: users, error } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false });
-            if (error) { console.error(error); showToast('❌ Erreur: ' + error.message, 'error'); return; }
+            const { data, error } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false });
+            if (error) { showToast('❌ Erreur: ' + error.message, 'error'); return; }
             
-            allUsers = users || [];
+            allUsers = data || [];
             document.getElementById('statUsers').textContent = allUsers.length;
             document.getElementById('usersBadge').textContent = allUsers.length;
             renderUsers(allUsers);
         }
 
         function renderUsers(users) {
-            const tbody = document.getElementById('usersTableBody');
+            const container = document.getElementById('usersList');
             if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Aucun utilisateur</td></tr>';
+                container.innerHTML = '<div class="empty-state">Aucun utilisateur</div>';
                 return;
             }
             
-            tbody.innerHTML = users.map(u => {
-                const roleBadge = u.role === 'admin' ? '<span class="status-badge status-admin">👑 Admin</span>' :
-                                  u.role === 'seller' ? '<span class="status-badge status-pending">💼 Vendeur</span>' :
-                                  '<span class="status-badge status-active">🛒 Acheteur</span>';
-                const statusBadge = u.is_banned ? '<span class="status-badge status-banned">🚫 Banni</span>' : '<span class="status-badge status-active">✅ Actif</span>';
-                const inscription = new Date(u.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                const lastLogin = u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Jamais';
-                const initials = (u.full_name || 'U').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            container.innerHTML = users.map(u => {
+                const roleBadge = u.role === 'admin' ? '<span class="badge badge-admin">👑 Admin</span>' :
+                                  u.role === 'seller' ? '<span class="badge badge-seller">💼 Vendeur</span>' :
+                                  '<span class="badge badge-buyer">🛒 Acheteur</span>';
+                const statusBadge = u.is_banned ? '<span class="badge badge-banned">🚫 Banni</span>' : '<span class="badge badge-active">✅ Actif</span>';
+                const inscription = new Date(u.created_at).toLocaleDateString('fr-FR');
+                const lastLogin = u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : 'Jamais';
+                const initials = (u.full_name || 'U').charAt(0).toUpperCase();
 
-                return `<tr>
-                    <td>
-                        <div class="user-cell">
-                            <div class="user-cell-avatar">${initials}</div>
-                            <div>
-                                <div class="user-cell-name">${u.full_name || 'Utilisateur'}</div>
-                                <div class="user-cell-email">${u.email || 'N/A'}</div>
-                            </div>
+                return `<div class="user-card">
+                    <div class="user-card-header">
+                        <div class="user-avatar">${initials}</div>
+                        <div class="user-info">
+                            <div class="user-name">${u.full_name || 'Utilisateur'}</div>
+                            <div class="user-email">${u.email || 'N/A'}</div>                        </div>
+                        ${roleBadge}
+                    </div>
+                    <div class="user-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Inscription</div>
+                            <div class="detail-value">${inscription}</div>
                         </div>
-                    </td>
-                    <td>${roleBadge}</td>
-                    <td>${inscription}</td>
-                    <td style="font-size: 0.85rem;">${lastLogin}</td>
-                    <td>${statusBadge}</td>
-                    <td>
-                        <div class="action-btns">
-                            <button class="action-btn action-btn-edit" onclick="openEditModal('${u.id}', '${u.full_name || ''}', '${u.email || ''}', '${u.role}')">✏️ Modifier</button>                            <button class="action-btn ${u.is_banned ? 'action-btn-edit' : 'action-btn-delete'}" onclick="toggleBan('${u.id}', ${u.is_banned})">${u.is_banned ? '✅ Débannir' : '🚫 Bannir'}</button>
+                        <div class="detail-item">
+                            <div class="detail-label">Dernière connexion</div>
+                            <div class="detail-value">${lastLogin}</div>
                         </div>
-                    </td>
-                </tr>`;
+                        <div class="detail-item">
+                            <div class="detail-label">Statut</div>
+                            <div class="detail-value">${statusBadge}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">ID</div>
+                            <div class="detail-value" style="font-size:0.7rem;word-break:break-all;">${u.id.substring(0, 8)}...</div>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn btn-primary" onclick="openEdit('${u.id}', '${u.full_name || ''}', '${u.email || ''}', '${u.role}')">✏️ Modifier</button>
+                        <button class="btn ${u.is_banned ? 'btn-success' : 'btn-danger'}" onclick="toggleBan('${u.id}', ${u.is_banned})">${u.is_banned ? '✅ Débannir' : '🚫 Bannir'}</button>
+                    </div>
+                </div>`;
             }).join('');
         }
 
-        function openEditModal(userId, fullName, email, role) {
-            currentEditUserId = userId;
-            document.getElementById('editUserId').value = userId;
-            document.getElementById('editUserName').value = fullName;
-            document.getElementById('editUserEmail').value = email;
-            document.getElementById('editUserRole').value = role;
-            document.getElementById('editUserModal').classList.add('active');
+        function openEdit(id, name, email, role) {
+            currentEditId = id;
+            document.getElementById('editId').value = id;
+            document.getElementById('editName').value = name;
+            document.getElementById('editEmail').value = email;
+            document.getElementById('editRole').value = role;
+            document.getElementById('editModal').classList.add('active');
         }
 
-        function closeEditModal() {
-            document.getElementById('editUserModal').classList.remove('active');
-            currentEditUserId = null;
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('active');
+            currentEditId = null;
         }
 
-        async function saveUserEdit() {
-            if (!currentEditUserId) return;
-            
-            const fullName = document.getElementById('editUserName').value;
-            const role = document.getElementById('editUserRole').value;
+        async function saveEdit() {
+            if (!currentEditId) return;
+            const name = document.getElementById('editName').value;
+            const role = document.getElementById('editRole').value;
             
             const { error } = await supabaseClient.from('profiles').update({ 
-                full_name: fullName, 
-                role: role 
-            }).eq('id', currentEditUserId);
+                full_name: name, role: role             }).eq('id', currentEditId);
             
-            if (error) {
-                showToast(' Erreur: ' + error.message, 'error');
-            } else {
-                showToast('✅ Utilisateur modifié avec succès', 'success');
-                closeEditModal();
-                loadUsers();
-            }
+            if (error) { showToast('❌ Erreur: ' + error.message, 'error'); }
+            else { showToast('✅ Utilisateur modifié !', 'success'); closeModal(); loadUsers(); }
+        }
+
+        async function toggleBan(id, currentStatus) {
+            const { error } = await supabaseClient.from('profiles').update({ is_banned: !currentStatus }).eq('id', id);
+            if (error) { showToast('❌ Erreur: ' + error.message, 'error'); }
+            else { showToast(!currentStatus ? '🚫 Utilisateur banni' : '✅ Utilisateur débanni', 'success'); loadUsers(); }
         }
 
         function filterUsers(query) {
-            const filtered = allUsers.filter(u => (u.full_name || '').toLowerCase().includes(query.toLowerCase()) || (u.email || '').toLowerCase().includes(query.toLowerCase()));
+            const filtered = allUsers.filter(u => 
+                (u.full_name || '').toLowerCase().includes(query.toLowerCase()) || 
+                (u.email || '').toLowerCase().includes(query.toLowerCase())
+            );
             renderUsers(filtered);
-        }
-
-        async function toggleBan(userId, currentStatus) {
-            const { error } = await supabaseClient.from('profiles').update({ is_banned: !currentStatus }).eq('id', userId);
-            if (error) { showToast('❌ Erreur: ' + error.message, 'error'); }
-            else { showToast(!currentStatus ? '🚫 Utilisateur banni' : '✅ Utilisateur débanni', 'success'); loadUsers(); }        }
-
-        async function loadPrompts() {
-            const { data, error } = await supabaseClient.from('prompts').select('*').order('created_at', { ascending: false });
-            if (error) { console.error(error); return; }
-            allPrompts = data || [];
-            document.getElementById('statPrompts').textContent = allPrompts.length;
-            document.getElementById('promptsBadge').textContent = allPrompts.length;
-            renderPrompts(allPrompts);
-        }
-
-        function renderPrompts(prompts) {
-            const tbody = document.getElementById('promptsTableBody');
-            if (prompts.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Aucun prompt</td></tr>';
-                return;
-            }
-            tbody.innerHTML = prompts.map(p => {
-                const statusBadge = p.status === 'published' ? '<span class="status-badge status-active">✅ Publié</span>' : '<span class="status-badge status-pending">📝 Brouillon</span>';
-                return `<tr>
-                    <td><strong>${p.title}</strong></td>
-                    <td>${p.seller_name || 'Inconnu'}</td>
-                    <td>${p.category || '-'}</td>
-                    <td style="font-weight: 700; color: var(--accent);">$${p.price}</td>
-                    <td>${statusBadge}</td>
-                    <td><button class="action-btn action-btn-delete" onclick="deletePrompt('${p.id}')">🗑️ Supprimer</button></td>
-                </tr>`;
-            }).join('');
-        }
-
-        function filterPrompts(query) {
-            const filtered = allPrompts.filter(p => (p.title || '').toLowerCase().includes(query.toLowerCase()));
-            renderPrompts(filtered);
-        }
-
-        async function deletePrompt(id) {
-            if (!confirm('⚠️ Supprimer ce prompt ?')) return;
-            const { error } = await supabaseClient.from('prompts').delete().eq('id', id);
-            if (error) { showToast('❌ Erreur: ' + error.message, 'error'); }
-            else { showToast('🗑️ Prompt supprimé', 'success'); loadPrompts(); }
-        }
-
-        async function loadOrders() {
-            const { data, error } = await supabaseClient.from('orders').select('*, prompts(title), profiles:buyer_id(full_name)').order('created_at', { ascending: false });
-            const tbody = document.getElementById('ordersTableBody');
-            let totalCommission = 0;
-
-            if (error || !data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Aucune commande</td></tr>';
-                return;            }
-
-            document.getElementById('statSales').textContent = data.length;
-            tbody.innerHTML = data.map(o => {
-                const commission = o.amount * 0.20;
-                totalCommission += commission;
-                return `<tr>
-                    <td>${new Date(o.created_at).toLocaleDateString('fr-FR')}</td>
-                    <td>${o.profiles?.full_name || 'Utilisateur'}</td>
-                    <td>${o.prompts?.title || 'Prompt supprimé'}</td>
-                    <td style="font-weight: 700;">$${parseFloat(o.amount).toFixed(2)}</td>
-                    <td style="color: var(--success); font-weight: 700;">+$${commission.toFixed(2)}</td>
-                    <td><span class="status-badge status-active">✅ Payé</span></td>
-                </tr>`;
-            }).join('');
-
-            document.getElementById('totalCommission').textContent = '$' + totalCommission.toFixed(2);
-            document.getElementById('statRevenue').textContent = '$' + totalCommission.toFixed(2);
-        }
-
-        async function loadMaintenance() {
-            const { data } = await supabaseClient.from('site_config').select('value').eq('key', 'maintenance').single();
-            if (data && data.value) {
-                document.getElementById('maintenanceEnabled').value = data.value.enabled.toString();
-                document.getElementById('maintenanceMessage').value = data.value.message || 'Site en maintenance.';
-            }
         }
 
         async function saveMaintenance() {
             const enabled = document.getElementById('maintenanceEnabled').value === 'true';
             const message = document.getElementById('maintenanceMessage').value;
-            const { error } = await supabaseClient.from('site_config').upsert({ key: 'maintenance', value: { enabled, message }, updated_at: new Date().toISOString() });
+            const { error } = await supabaseClient.from('site_config').upsert({ 
+                key: 'maintenance', 
+                value: { enabled, message },
+                updated_at: new Date().toISOString() 
+            });
             if (error) { showToast(' Erreur: ' + error.message, 'error'); return; }
             const statusDiv = document.getElementById('maintenanceStatus');
             statusDiv.style.display = 'block';
             if (enabled) {
-                statusDiv.style.background = 'rgba(239, 68, 68, 0.15)';
+                statusDiv.style.background = 'rgba(239, 68, 68, 0.2)';
                 statusDiv.style.color = '#ef4444';
-                statusDiv.textContent = ' Mode maintenance ACTIVÉ - Le site est maintenant bloqué pour les visiteurs';
+                statusDiv.textContent = '🔴 Mode maintenance ACTIVÉ';
             } else {
-                statusDiv.style.background = 'rgba(16, 185, 129, 0.15)';
+                statusDiv.style.background = 'rgba(16, 185, 129, 0.2)';
                 statusDiv.style.color = '#10b981';
-                statusDiv.textContent = '🟢 Mode maintenance DÉSACTIVÉ - Le site est en ligne';
+                statusDiv.textContent = '🟢 Mode maintenance DÉSACTIVÉ';
             }
             showToast(enabled ? 'Mode maintenance activé' : 'Mode maintenance désactivé', 'success');
         }
@@ -587,21 +681,16 @@
         async function saveConfig() {
             showToast('✅ Configuration sauvegardée', 'success');
         }
+
         function showSection(sectionId, navItem) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            navItem.classList.add('active');
-            const titles = { 
-                dashboard: ['Dashboard', 'Vue d\'ensemble de votre plateforme'], 
-                users: ['Utilisateurs', 'Gérer tous les utilisateurs'], 
-                prompts: ['Prompts', 'Gérer tous les prompts'], 
-                orders: ['Commandes', 'Historique des transactions'],
-                maintenance: ['Maintenance', 'Mode maintenance du site'],
-                config: ['Configuration', 'Paramètres du site']
-            };
-            document.getElementById('pageTitle').textContent = titles[sectionId][0];
-            document.getElementById('pageSubtitle').textContent = titles[sectionId][1];
+            document.querySelectorAll('.nav-item-mobile').forEach(n => n.classList.remove('active'));            document.getElementById(sectionId).classList.add('active');
+            if (navItem) navItem.classList.add('active');
+            toggleMenu();
+        }
+
+        function toggleMenu() {
+            document.getElementById('mobileNav').classList.toggle('active');
         }
 
         function showToast(message, type) {
