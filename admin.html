@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptHub - Admin Control Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --accent-cyan: #22d3ee;
+            --accent-blue: #60a5fa;
+            --accent-green: #34d399;
+            --accent-red: #f87171;
+            --accent-orange: #fbbf24;
+            --accent-purple: #a78bfa;
+            --border-color: rgba(34, 211, 238, 0.2);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-primary); color: var(--text-primary); line-height: 1.6; position: relative; min-height: 100vh; }
+        h1, h2, h3, .logo, .stat-value, .btn { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+        
+        #aiBackground { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); }
+        .grid-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        .navbar { background: rgba(10, 14, 26, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; position: sticky; top: 0; z-index: 1000; }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; flex: 1; }
+        .nav-links a { color: var(--text-secondary); font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
+        .nav-actions { display: flex; gap: 0.75rem; align-items: center; }
+
+        .btn { padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; font-size: 0.9rem; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); background: rgba(34, 211, 238, 0.1); }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #0a0e1a; font-weight: 700; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(34, 211, 238, 0.4); }
+        .btn-danger { background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.3); }
+        .btn-success { background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; }
+        .btn-warning { background: rgba(251, 191, 36, 0.2); border: 1px solid rgba(251, 191, 36, 0.4); color: #fbbf24; }
+        .btn-small { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .dashboard { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .dashboard-header { margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .dashboard-header h1 { font-size: 2.2rem; }
+        .admin-badge { background: rgba(239, 68, 68, 0.2); color: #f87171; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; border: 1px solid rgba(239, 68, 68, 0.4); display: flex; align-items: center; gap: 0.5rem; }
+        .admin-badge::before { content: '🔴'; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(20px); transition: all 0.3s; }
+        .stat-card:hover { border-color: var(--accent-cyan); transform: translateY(-2px); }
+        .stat-card h3 { color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .stat-value { font-size: 2.2rem; font-weight: 700; }
+        .stat-value.cyan { color: var(--accent-cyan); }
+        .stat-value.green { color: var(--accent-green); }
+        .stat-value.orange { color: var(--accent-orange); }
+        .stat-value.purple { color: var(--accent-purple); }
+
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); overflow-x: auto; padding-bottom: 0.5rem; }
+        .tab { padding: 0.8rem 1.5rem; background: transparent; border: none; color: var(--text-secondary); font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; transition: all 0.3s; white-space: nowrap; font-size: 0.95rem; }
+        .tab:hover { color: var(--text-primary); }
+        .tab.active { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); }
+
+        .section { display: none; animation: fadeIn 0.4s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .table-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; backdrop-filter: blur(20px); }
+        .table-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .table-header h2 { font-size: 1.2rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+        th { background: rgba(10, 14, 26, 0.8); color: var(--text-secondary); text-transform: uppercase; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(34, 211, 238, 0.03); }
+        
+        .badge { padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .badge-admin { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .badge-seller { background: rgba(251, 191, 36, 0.2); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.4); }
+        .badge-buyer { background: rgba(96, 165, 250, 0.2); color: #60a5fa; border: 1px solid rgba(96, 165, 250, 0.4); }
+        .badge-banned { background: rgba(239, 68, 68, 0.3); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.5); }
+        .badge-active { background: rgba(52, 211, 153, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4); }
+        .badge-published { background: rgba(52, 211, 153, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4); }
+        .badge-draft { background: rgba(251, 191, 36, 0.2); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.4); }
+
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; padding: 0.8rem 1rem; background: rgba(10, 14, 26, 0.5); border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; color: var(--text-primary); transition: all 0.3s; font-family: inherit; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1); }
+        .settings-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; backdrop-filter: blur(20px); margin-bottom: 1.5rem; }
+        .settings-card h2 { font-size: 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+
+        .search-bar { padding: 0.6rem 1rem; background: rgba(10, 14, 26, 0.5); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem; width: 250px; }
+        .search-bar:focus { outline: none; border-color: var(--accent-cyan); }
+
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-secondary); }
+
+        .notification { position: fixed; top: 80px; right: 20px; padding: 1rem 1.5rem; border-radius: 8px; z-index: 9999; animation: slideIn 0.3s ease; font-weight: 600; }
+        .notification.success { background: rgba(16, 185, 129, 0.9); color: white; border: 1px solid var(--accent-green); }
+        .notification.error { background: rgba(239, 68, 68, 0.9); color: white; border: 1px solid var(--accent-red); }
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .dashboard { padding: 1rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .stat-value { font-size: 1.5rem; }
+            table { display: block; overflow-x: auto; }
+            .search-bar { width: 100%; }
+            .table-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="aiBackground"></canvas>
+    <div class="grid-overlay"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ PromptHub <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 400;">| Admin</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">🏠 Accueil</a></li>
+                <li><a href="admin.html" class="active">🛡️ Admin</a></li>
+            </ul>
+            <div class="nav-actions" id="navActions"></div>
+        </div>
+    </nav>
+
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <div>
+                <h1>🎛️ Centre de Contrôle</h1>
+                <p style="color: var(--text-secondary);">Gestion totale de la plateforme PromptHub</p>
+            </div>
+            <div class="admin-badge">SUPER ADMIN ACTIF</div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-grid">            <div class="stat-card">
+                <h3>💰 Revenus Totaux</h3>
+                <div class="stat-value green" id="statRevenue">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <h3>👥 Utilisateurs</h3>
+                <div class="stat-value cyan" id="statUsers">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>📦 Prompts Actifs</h3>
+                <div class="stat-value purple" id="statPrompts">0</div>
+            </div>
+            <div class="stat-card">
+                <h3> Ventes</h3>
+                <div class="stat-value orange" id="statSales">0</div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('users')">👥 Utilisateurs</button>
+            <button class="tab" onclick="switchTab('prompts')">📦 Prompts</button>
+            <button class="tab" onclick="switchTab('orders')">💰 Commandes</button>
+            <button class="tab" onclick="switchTab('settings')">⚙️ Paramètres</button>
+            <button class="tab" onclick="switchTab('security')"> Sécurité</button>
+        </div>
+
+        <!-- TAB UTILISATEURS -->
+        <div id="usersSection" class="section active">
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>👥 Gestion des Utilisateurs</h2>
+                    <input type="text" class="search-bar" placeholder="🔍 Rechercher un utilisateur..." oninput="filterUsers(this.value)">
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Rôle</th>
+                            <th>Inscription</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr><td colspan="6" class="empty-state">Chargement...</td></tr>
+                    </tbody>
+                </table>
+            </div>        </div>
+
+        <!-- TAB PROMPTS -->
+        <div id="promptsSection" class="section">
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>📦 Gestion des Prompts</h2>
+                    <input type="text" class="search-bar" placeholder="🔍 Rechercher un prompt..." oninput="filterPrompts(this.value)">
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Vendeur</th>
+                            <th>Catégorie</th>
+                            <th>Prix</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="promptsTableBody">
+                        <tr><td colspan="6" class="empty-state">Chargement...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB COMMANDES -->
+        <div id="ordersSection" class="section">
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>💰 Historique des Commandes</h2>
+                    <div style="color: var(--accent-green); font-weight: 700; font-size: 1.1rem;">
+                        Commission totale: <span id="totalCommission">$0.00</span>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date & Heure</th>
+                            <th>Acheteur</th>
+                            <th>Prompt</th>
+                            <th>Montant</th>
+                            <th>Commission (20%)</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <tr><td colspan="6" class="empty-state">Aucune vente pour le moment.</td></tr>
+                    </tbody>                </table>
+            </div>
+        </div>
+
+        <!-- TAB PARAMÈTRES -->
+        <div id="settingsSection" class="section">
+            <div class="settings-card">
+                <h2>🌐 Configuration Générale</h2>
+                <div class="form-group">
+                    <label>Nom du Site</label>
+                    <input type="text" id="settingSiteName" value="PromptHub">
+                </div>
+                <div class="form-group">
+                    <label>Description du Site</label>
+                    <textarea id="settingDescription" rows="3">The Ultimate Prompt Marketplace</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Email de Contact</label>
+                    <input type="email" id="settingEmail" value="contact@prompthub.com">
+                </div>
+                <button class="btn btn-primary" onclick="saveGeneralSettings()">💾 Sauvegarder</button>
+            </div>
+
+            <div class="settings-card">
+                <h2>💰 Configuration Financière</h2>
+                <div class="form-group">
+                    <label>Taux de Commission de la Plateforme (%)</label>
+                    <input type="number" id="settingCommission" value="20" min="0" max="100">
+                    <small style="color: var(--text-secondary);">Le pourcentage que tu gardes sur chaque vente</small>
+                </div>
+                <div class="form-group">
+                    <label>Devise</label>
+                    <select id="settingCurrency">
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Prix minimum pour un prompt ($)</label>
+                    <input type="number" id="settingMinPrice" value="1" min="0" step="0.01">
+                </div>
+                <button class="btn btn-primary" onclick="saveFinancialSettings()">💾 Sauvegarder</button>
+            </div>
+
+            <div class="settings-card">
+                <h2>🔧 Mode Maintenance</h2>
+                <div class="form-group">
+                    <label>État du Site</label>
+                    <select id="settingMaintenance">                        <option value="false">🟢 En ligne (Normal)</option>
+                        <option value="true">🔴 Mode Maintenance (Site bloqué)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Message de Maintenance</label>
+                    <textarea id="settingMaintenanceMessage" rows="3">Site en maintenance. Revenez bientôt !</textarea>
+                </div>
+                <button class="btn btn-warning" onclick="saveMaintenanceSettings()">🔧 Appliquer</button>
+            </div>
+        </div>
+
+        <!-- TAB SÉCURITÉ -->
+        <div id="securitySection" class="section">
+            <div class="settings-card">
+                <h2>🔒 Journal de Sécurité</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">Dernières connexions et activités suspectes</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date & Heure</th>
+                            <th>Utilisateur</th>
+                            <th>Action</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="securityTableBody">
+                        <tr><td colspan="4" class="empty-state">Aucune activité suspecte détectée.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="settings-card">
+                <h2>️ Actions de Sécurité</h2>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn btn-outline" onclick="exportData()">📥 Exporter toutes les données</button>
+                    <button class="btn btn-outline" onclick="clearCache()">🧹 Vider le cache</button>
+                    <button class="btn btn-danger" onclick="emergencyLock()">🚨 Verrouillage d'urgence</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://osewbq
