@@ -212,6 +212,10 @@
             font-size: 0.85rem;
             flex: 1;
             transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
         .btn-primary { background: var(--accent); color: white; }
         .btn-primary:hover { background: #2563eb; }
@@ -219,6 +223,8 @@
         .btn-danger:hover { background: #dc2626; }
         .btn-success { background: var(--success); color: white; }
         .btn-secondary { background: var(--bg-hover); color: var(--text-primary); }
+        .btn-export { background: var(--purple); color: white; }
+        .btn-export:hover { background: #7c3aed; }
         
         .badge {
             padding: 0.375rem 0.875rem;
@@ -237,13 +243,13 @@
             display: none;
             position: fixed;
             top: 0;
-            left: 0;
-            width: 100%;
+            left: 0;            width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.9);
             z-index: 300;
             align-items: center;
-            justify-content: center;            padding: 1rem;
+            justify-content: center;
+            padding: 1rem;
         }
         .modal.active { display: flex; }
         .modal-content {
@@ -286,13 +292,13 @@
             border-radius: 8px;
             color: var(--text-primary);
             font-size: 0.95rem;
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        }        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
             border-color: var(--accent);
         }
         .modal-actions {
-            display: flex;            gap: 0.75rem;
+            display: flex;
+            gap: 0.75rem;
             margin-top: 1.5rem;
         }
         .modal-actions button { flex: 1; }
@@ -335,13 +341,13 @@
             font-size: 0.95rem;
             margin-bottom: 1rem;
         }
-        .search-input:focus {
-            outline: none;
+        .search-input:focus {            outline: none;
             border-color: var(--accent);
         }
         
         .settings-card {
-            background: var(--bg-card);            border: 1px solid var(--border);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1rem;
@@ -372,11 +378,19 @@
         .user-profile-name { font-weight: 700; font-size: 1rem; }
         .user-profile-email { font-size: 0.8rem; color: var(--text-muted); }
         
+        .export-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .export-bar .btn {
+            flex: 1;
+        }
+        
         @media (min-width: 768px) {
             .mobile-header { display: none; }
             .content { padding: 2rem; max-width: 1200px; margin: 0 auto; }
-            .stats-grid { grid-template-columns: repeat(4, 1fr); }
-            .user-details { grid-template-columns: repeat(4, 1fr); }
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }            .user-details { grid-template-columns: repeat(4, 1fr); }
         }
     </style>
 </head>
@@ -390,7 +404,8 @@
         <div class="mobile-nav-header">
             <h1>⚡ PromptHub</h1>
             <button class="menu-btn" onclick="toggleMenu()">✕</button>
-        </div>        
+        </div>
+        
         <div class="user-profile-mobile">
             <div class="user-avatar" id="userAvatar">A</div>
             <div class="user-profile-info">
@@ -400,7 +415,7 @@
         </div>
 
         <div class="nav-section-title">Principal</div>
-        <div class="nav-item-mobile active" onclick="showSection('dashboard', this)">📊 Dashboard</div>
+        <div class="nav-item-mobile active" onclick="showSection('dashboard', this)"> Dashboard</div>
         <div class="nav-item-mobile" onclick="showSection('users', this)">👥 Utilisateurs <span id="usersBadge" style="margin-left:auto;background:#ef4444;color:white;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
         <div class="nav-item-mobile" onclick="showSection('prompts', this)">📦 Prompts <span id="promptsBadge" style="margin-left:auto;background:#ef4444;color:white;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
         <div class="nav-item-mobile" onclick="showSection('orders', this)">💰 Commandes</div>
@@ -419,15 +434,14 @@
             
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h3>👥 Utilisateurs</h3>
+                    <h3> Utilisateurs</h3>
                     <div class="stat-value" id="statUsers">0</div>
                 </div>
                 <div class="stat-card">
-                    <h3>📦 Prompts</h3>
-                    <div class="stat-value" id="statPrompts">0</div>
-                </div>
+                    <h3> Prompts</h3>
+                    <div class="stat-value" id="statPrompts">0</div>                </div>
                 <div class="stat-card">
-                    <h3>💰 Ventes</h3>
+                    <h3> Ventes</h3>
                     <div class="stat-value" id="statSales">0</div>
                 </div>
                 <div class="stat-card">
@@ -439,7 +453,8 @@
             <div class="chart-container">
                 <div class="chart-title">📈 Revenus (30 derniers jours)</div>
                 <div class="chart-wrapper">
-                    <canvas id="revenueChart"></canvas>                </div>
+                    <canvas id="revenueChart"></canvas>
+                </div>
             </div>
 
             <div class="chart-container">
@@ -456,18 +471,28 @@
             
             <input type="text" class="search-input" placeholder="🔍 Rechercher un utilisateur..." oninput="filterUsers(this.value)">
             
+            <div class="export-bar">
+                <button class="btn btn-export" onclick="exportUsersCSV()">📥 Exporter CSV</button>
+            </div>
+            
             <div id="usersList"></div>
         </div>
 
         <div id="prompts" class="section">
-            <h1 class="page-title">📦 Prompts</h1>
+            <h1 class="page-title"> Prompts</h1>
             <p class="page-subtitle">Gérer tous les prompts</p>
+            <input type="text" class="search-input" placeholder="🔍 Rechercher un prompt..." oninput="filterPrompts(this.value)">
+            <div class="export-bar">
+                <button class="btn btn-export" onclick="exportPromptsCSV()">📥 Exporter CSV</button>
+            </div>
             <div id="promptsList" class="empty-state">Chargement...</div>
         </div>
 
-        <div id="orders" class="section">
-            <h1 class="page-title">💰 Commandes</h1>
+        <div id="orders" class="section">            <h1 class="page-title">💰 Commandes</h1>
             <p class="page-subtitle">Historique des transactions</p>
+            <div class="export-bar">
+                <button class="btn btn-export" onclick="exportOrdersCSV()">📥 Exporter CSV</button>
+            </div>
             <div id="ordersList" class="empty-state">Chargement...</div>
         </div>
 
@@ -476,7 +501,7 @@
             <p class="page-subtitle">Paramètres du site</p>
             
             <div class="settings-card">
-                <h3>🌐 Configuration Générale</h3>
+                <h3> Configuration Générale</h3>
                 <div class="form-group">
                     <label>Nom du site</label>
                     <input type="text" id="settingSiteName" value="PromptHub">
@@ -488,7 +513,8 @@
                 <div class="form-group">
                     <label>Description du site</label>
                     <textarea id="settingDescription" rows="3">The Ultimate Prompt Marketplace</textarea>
-                </div>                <button class="btn btn-primary" onclick="saveConfig()" style="width:100%;">💾 Sauvegarder</button>
+                </div>
+                <button class="btn btn-primary" onclick="saveConfig()" style="width:100%;">💾 Sauvegarder</button>
             </div>
 
             <div class="settings-card">
@@ -511,8 +537,7 @@
             
             <div class="settings-card">
                 <h3>État du site</h3>
-                <div class="form-group">
-                    <label>Mode</label>
+                <div class="form-group">                    <label>Mode</label>
                     <select id="maintenanceEnabled">
                         <option value="false">🟢 Site en ligne (Normal)</option>
                         <option value="true">🔴 Mode Maintenance (Bloqué)</option>
@@ -537,7 +562,8 @@
             <div class="form-group">
                 <label>ID</label>
                 <input type="text" id="editId" readonly style="opacity:0.6;">
-            </div>            <div class="form-group">
+            </div>
+            <div class="form-group">
                 <label>Nom complet</label>
                 <input type="text" id="editName">
             </div>
@@ -548,25 +574,26 @@
             <div class="form-group">
                 <label>Rôle</label>
                 <select id="editRole">
-                    <option value="buyer">🛒 Acheteur</option>
+                    <option value="buyer"> Acheteur</option>
                     <option value="seller">💼 Vendeur</option>
                     <option value="admin">👑 Admin</option>
                 </select>
             </div>
             <div class="modal-actions">
-                <button class="btn btn-secondary" onclick="closeModal()">❌ Annuler</button>
+                <button class="btn btn-secondary" onclick="closeModal()"> Annuler</button>
                 <button class="btn btn-primary" onclick="saveEdit()">💾 Sauvegarder</button>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>    <script>
         const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let allUsers = [];
+        let allPrompts = [];
+        let allOrders = [];
         let currentEditId = null;
         let revenueChartInstance = null;
         let rolesChartInstance = null;
@@ -586,7 +613,8 @@
                 return;
             }
 
-            loadAllData();        }
+            loadAllData();
+        }
 
         async function loadAllData() {
             await Promise.all([loadUsers(), loadPrompts(), loadOrders(), loadConfig()]);
@@ -607,13 +635,12 @@
             if (users.length === 0) {
                 container.innerHTML = '<div class="empty-state">Aucun utilisateur</div>';
                 return;
-            }
-            
+            }            
             container.innerHTML = users.map(u => {
-                const roleBadge = u.role === 'admin' ? '<span class="badge badge-admin">👑 Admin</span>' :
+                const roleBadge = u.role === 'admin' ? '<span class="badge badge-admin"> Admin</span>' :
                                   u.role === 'seller' ? '<span class="badge badge-seller">💼 Vendeur</span>' :
                                   '<span class="badge badge-buyer">🛒 Acheteur</span>';
-                const statusBadge = u.is_banned ? '<span class="badge badge-banned">🚫 Banni</span>' : '<span class="badge badge-active">✅ Actif</span>';
+                const statusBadge = u.is_banned ? '<span class="badge badge-banned"> Banni</span>' : '<span class="badge badge-active">✅ Actif</span>';
                 const inscription = new Date(u.created_at).toLocaleDateString('fr-FR');
                 const lastLogin = u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : 'Jamais';
                 const initials = (u.full_name || 'U').charAt(0).toUpperCase();
@@ -635,7 +662,8 @@
                         <div class="detail-item">
                             <div class="detail-label">Dernière connexion</div>
                             <div class="detail-value">${lastLogin}</div>
-                        </div>                        <div class="detail-item">
+                        </div>
+                        <div class="detail-item">
                             <div class="detail-label">Statut</div>
                             <div class="detail-value">${statusBadge}</div>
                         </div>
@@ -656,8 +684,7 @@
             currentEditId = id;
             document.getElementById('editId').value = id;
             document.getElementById('editName').value = name;
-            document.getElementById('editEmail').value = email;
-            document.getElementById('editRole').value = role;
+            document.getElementById('editEmail').value = email;            document.getElementById('editRole').value = role;
             document.getElementById('editModal').classList.add('active');
         }
 
@@ -684,6 +711,7 @@
             if (error) { showToast('❌ Erreur: ' + error.message, 'error'); }
             else { showToast(!currentStatus ? '🚫 Utilisateur banni' : '✅ Utilisateur débanni', 'success'); loadUsers(); }
         }
+
         function filterUsers(query) {
             const filtered = allUsers.filter(u => 
                 (u.full_name || '').toLowerCase().includes(query.toLowerCase()) || 
@@ -696,14 +724,16 @@
             const { data, error } = await supabaseClient.from('prompts').select('*').order('created_at', { ascending: false });
             if (error) { console.error(error); return; }
             
-            const prompts = data || [];
-            document.getElementById('statPrompts').textContent = prompts.length;
-            document.getElementById('promptsBadge').textContent = prompts.length;
-            
+            allPrompts = data || [];
+            document.getElementById('statPrompts').textContent = allPrompts.length;
+            document.getElementById('promptsBadge').textContent = allPrompts.length;
+            renderPrompts(allPrompts);
+        }
+
+        function renderPrompts(prompts) {
             const container = document.getElementById('promptsList');
             if (prompts.length === 0) {
-                container.innerHTML = '<div class="empty-state">Aucun prompt</div>';
-                return;
+                container.innerHTML = '<div class="empty-state">Aucun prompt</div>';                return;
             }
             
             container.innerHTML = prompts.map(p => `
@@ -732,8 +762,17 @@
             `).join('');
         }
 
+        function filterPrompts(query) {
+            const filtered = allPrompts.filter(p => 
+                (p.title || '').toLowerCase().includes(query.toLowerCase()) ||
+                (p.seller_name || '').toLowerCase().includes(query.toLowerCase())
+            );
+            renderPrompts(filtered);
+        }
+
         async function deletePrompt(id) {
-            if (!confirm('⚠️ Supprimer ce prompt définitivement ?')) return;            const { error } = await supabaseClient.from('prompts').delete().eq('id', id);
+            if (!confirm('⚠️ Supprimer ce prompt définitivement ?')) return;
+            const { error } = await supabaseClient.from('prompts').delete().eq('id', id);
             if (error) { showToast('❌ Erreur: ' + error.message, 'error'); }
             else { showToast('🗑️ Prompt supprimé', 'success'); loadPrompts(); }
         }
@@ -743,8 +782,8 @@
             if (error || !data || data.length === 0) {
                 document.getElementById('ordersList').innerHTML = '<div class="empty-state">Aucune commande</div>';
                 return;
-            }
-            
+            }            
+            allOrders = data;
             document.getElementById('statSales').textContent = data.length;
             let totalCommission = 0;
             
@@ -783,6 +822,7 @@
             
             initCharts(data);
         }
+
         function initCharts(ordersData) {
             const ctx1 = document.getElementById('revenueChart');
             const ctx2 = document.getElementById('rolesChart');
@@ -791,8 +831,7 @@
             
             if (revenueChartInstance) revenueChartInstance.destroy();
             if (rolesChartInstance) rolesChartInstance.destroy();
-            
-            const labels = [];
+                        const labels = [];
             const revenueData = [];
             const now = new Date();
             for (let i = 29; i >= 0; i--) {
@@ -826,18 +865,10 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        y: {
-                            beginAtZero: true,                            grid: { color: 'rgba(55, 65, 81, 0.5)' },
-                            ticks: { color: '#9ca3af' }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#9ca3af', maxTicksLimit: 7 }
-                        }
+                        y: { beginAtZero: true, grid: { color: 'rgba(55, 65, 81, 0.5)' }, ticks: { color: '#9ca3af' } },
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af', maxTicksLimit: 7 } }
                     }
                 }
             });
@@ -849,8 +880,7 @@
             rolesChartInstance = new Chart(ctx2, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Acheteurs', 'Vendeurs', 'Admins'],
-                    datasets: [{
+                    labels: ['Acheteurs', 'Vendeurs', 'Admins'],                    datasets: [{
                         data: [buyerCount, sellerCount, adminCount],
                         backgroundColor: ['#3b82f6', '#f59e0b', '#8b5cf6'],
                         borderWidth: 0
@@ -860,17 +890,96 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#9ca3af',
-                                padding: 15,
-                                usePointStyle: true
-                            }
-                        }
+                        legend: { position: 'bottom', labels: { color: '#9ca3af', padding: 15, usePointStyle: true } }
                     }
                 }
             });
+        }
+
+        // ========== EXPORT CSV ==========
+        function downloadCSV(filename, headers, rows) {
+            let csv = headers.join(',') + '\n';
+            rows.forEach(row => {
+                const escaped = row.map(cell => {
+                    const str = String(cell || '').replace(/"/g, '""');
+                    return `"${str}"`;
+                });
+                csv += escaped.join(',') + '\n';
+            });
+            
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function exportUsersCSV() {
+            if (allUsers.length === 0) {
+                showToast('❌ Aucune donnée à exporter', 'error');
+                return;
+            }
+            
+            const headers = ['ID', 'Nom', 'Email', 'Rôle', 'Inscription', 'Dernière connexion', 'Banni'];
+            const rows = allUsers.map(u => [
+                u.id,
+                u.full_name || '',
+                u.email || '',
+                u.role || 'buyer',                new Date(u.created_at).toLocaleDateString('fr-FR'),
+                u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString('fr-FR') : 'Jamais',
+                u.is_banned ? 'Oui' : 'Non'
+            ]);
+            
+            const date = new Date().toISOString().split('T')[0];
+            downloadCSV(`utilisateurs_${date}.csv`, headers, rows);
+            showToast('✅ Export utilisateurs réussi !', 'success');
+        }
+
+        function exportPromptsCSV() {
+            if (allPrompts.length === 0) {
+                showToast('❌ Aucune donnée à exporter', 'error');
+                return;
+            }
+            
+            const headers = ['ID', 'Titre', 'Vendeur', 'Catégorie', 'Prix', 'Statut', 'Date création'];
+            const rows = allPrompts.map(p => [
+                p.id,
+                p.title || '',
+                p.seller_name || '',
+                p.category || '',
+                p.price || 0,
+                p.status || 'draft',
+                new Date(p.created_at).toLocaleDateString('fr-FR')
+            ]);
+            
+            const date = new Date().toISOString().split('T')[0];
+            downloadCSV(`prompts_${date}.csv`, headers, rows);
+            showToast('✅ Export prompts réussi !', 'success');
+        }
+
+        function exportOrdersCSV() {
+            if (allOrders.length === 0) {
+                showToast('❌ Aucune donnée à exporter', 'error');
+                return;
+            }
+            
+            const headers = ['ID', 'Date', 'Acheteur', 'Prompt', 'Montant', 'Commission (20%)', 'Statut'];
+            const rows = allOrders.map(o => [
+                o.id,
+                new Date(o.created_at).toLocaleDateString('fr-FR'),
+                o.profiles?.full_name || 'Inconnu',
+                o.prompts?.title || 'Supprimé',
+                parseFloat(o.amount).toFixed(2),
+                (o.amount * 0.20).toFixed(2),
+                'Payé'
+            ]);
+            
+            const date = new Date().toISOString().split('T')[0];            downloadCSV(`commandes_${date}.csv`, headers, rows);
+            showToast('✅ Export commandes réussi !', 'success');
         }
 
         async function loadConfig() {
@@ -880,7 +989,8 @@
             if (data && data.length > 0) {
                 data.forEach(config => {
                     if (config.key === 'general' && config.value) {
-                        document.getElementById('settingSiteName').value = config.value.site_name || 'PromptHub';                        document.getElementById('settingEmail').value = config.value.contact_email || 'contact@prompthub.com';
+                        document.getElementById('settingSiteName').value = config.value.site_name || 'PromptHub';
+                        document.getElementById('settingEmail').value = config.value.contact_email || 'contact@prompthub.com';
                         document.getElementById('settingDescription').value = config.value.description || '';
                     }
                     if (config.key === 'financial' && config.value) {
@@ -917,18 +1027,10 @@
             
             if (error1 || error2) {
                 showToast('❌ Erreur lors de la sauvegarde', 'error');
-            } else {
-                showToast('✅ Configuration sauvegardée avec succès !', 'success');
+            } else {                showToast('✅ Configuration sauvegardée avec succès !', 'success');
             }
         }
 
-        async function loadMaintenance() {
-            const { data } = await supabaseClient.from('site_config').select('value').eq('key', 'maintenance').single();
-            if (data && data.value) {
-                document.getElementById('maintenanceEnabled').value = data.value.enabled.toString();
-                document.getElementById('maintenanceMessage').value = data.value.message || 'Site en maintenance. Revenez bientôt !';
-            }
-        }
         async function saveMaintenance() {
             const enabled = document.getElementById('maintenanceEnabled').value === 'true';
             const message = document.getElementById('maintenanceMessage').value;
@@ -943,7 +1045,7 @@
             if (enabled) {
                 statusDiv.style.background = 'rgba(239, 68, 68, 0.2)';
                 statusDiv.style.color = '#ef4444';
-                statusDiv.textContent = '🔴 Mode maintenance ACTIVÉ';
+                statusDiv.textContent = ' Mode maintenance ACTIVÉ';
             } else {
                 statusDiv.style.background = 'rgba(16, 185, 129, 0.2)';
                 statusDiv.style.color = '#10b981';
@@ -974,9 +1076,9 @@
 
         async function logout() {
             await supabaseClient.auth.signOut();
-            window.location.href = 'index.html';
-        }
+            window.location.href = 'index.html';        }
 
         window.addEventListener('DOMContentLoaded', init);
-    </script></body>
+    </script>
+</body>
 </html>
