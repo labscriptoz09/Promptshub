@@ -158,6 +158,10 @@
         .section { display: none; }
         .section.active { display: block; }
         
+        .message { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: none; text-align: center; font-weight: 500; }
+        .message.success { background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; display: block; }
+        .message.error { background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; display: block; }
+        
         @media (max-width: 768px) {
             .nav-links { display: none; }
             .dashboard { padding: 1rem; }
@@ -187,20 +191,22 @@
 
     <div class="dashboard">
         <div class="dashboard-header">
-            <h1>Espace Vendeur</h1>
+            <h1>💼 Espace Vendeur</h1>
             <p>Gérez vos prompts et suivez vos ventes</p>
         </div>
+        <div id="message"></div>
 
         <div class="stats-grid">
             <div class="stat-card"><h3>Total des Ventes</h3><div class="stat-value">$0</div></div>
             <div class="stat-card"><h3>Prompts Publiés</h3><div class="stat-value" id="totalPrompts">0</div></div>
-            <div class="stat-card"><h3>Revenus ce Mois</h3><div class="stat-value">$0</div></div>            <div class="stat-card"><h3>Note Moyenne</h3><div class="stat-value">0★</div></div>
+            <div class="stat-card"><h3>Revenus ce Mois</h3><div class="stat-value">$0</div></div>
+            <div class="stat-card"><h3>Note Moyenne</h3><div class="stat-value">0★</div></div>
         </div>
 
         <div class="tabs">
             <button class="tab active" onclick="switchTab('add')">➕ Ajouter un Prompt</button>
-            <button class="tab" onclick="switchTab('list')"> Mes Prompts</button>
-            <button class="tab" onclick="switchTab('stats')"> Statistiques</button>
+            <button class="tab" onclick="switchTab('list')">📦 Mes Prompts</button>
+            <button class="tab" onclick="switchTab('stats')">📊 Statistiques</button>
         </div>
 
         <!-- FORMULAIRE D'AJOUT -->
@@ -237,13 +243,13 @@
                         </select>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Image du Prompt</label>
+                    <div class="form-group">                        <label>Image du Prompt</label>
                         <div class="image-upload-container" onclick="document.getElementById('imageFile').click()">
                             <div class="image-upload-icon">📁</div>
                             <div class="image-upload-text">Cliquez pour choisir une image</div>
                             <input type="file" id="imageFile" accept="image/*" onchange="previewImage(event)">
-                            <img id="imagePreview" class="image-preview" alt="Aperçu">                        </div>
+                            <img id="imagePreview" class="image-preview" alt="Aperçu">
+                        </div>
                         <input type="hidden" id="imageUrl">
                     </div>
                     
@@ -253,7 +259,7 @@
                     </div>
                     
                     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <button type="submit" class="btn btn-primary"> Publier</button>
+                        <button type="submit" class="btn btn-primary">🚀 Publier</button>
                         <button type="button" class="btn btn-warning" onclick="saveDraft()">💾 Sauvegarder brouillon</button>
                         <button type="button" class="btn btn-outline" onclick="resetForm()" id="cancelBtn" style="display: none;"> Annuler</button>
                     </div>
@@ -271,7 +277,7 @@
         <!-- STATISTIQUES -->
         <div id="statsSection" class="section">
             <div class="form-section">
-                <h2>Statistiques Détaillées</h2>
+                <h2>📊 Statistiques Détaillées</h2>
                 <p style="color: var(--text-secondary); margin-bottom: 2rem;">Vos performances sur les 30 derniers jours</p>
                 <div class="stats-grid">
                     <div class="stat-card"><h3>Ventes Totales</h3><div class="stat-value">0</div></div>
@@ -286,13 +292,23 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let currentUser = null;
+
+        // ✅ AFFICHER UN MESSAGE
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            if (messageEl) {
+                messageEl.textContent = text;
+                messageEl.className = `message ${type}`;
+                setTimeout(() => { messageEl.className = 'message'; }, 5000);
+            }
+        }
 
         // ✅ NAVBAR & MENU DÉROULANT
         function updateNavbar(session) {
-            const navActions = document.getElementById('navActions');            if (session) {
+            const navActions = document.getElementById('navActions');
+            if (session) {
                 const userName = session.user.user_metadata?.full_name || 'Utilisateur';
                 const avatarUrl = session.user.user_metadata?.avatar_url;
                 
@@ -325,8 +341,7 @@
             }
         }
 
-        function toggleUserMenu(event) {
-            event.stopPropagation();
+        function toggleUserMenu(event) {            event.stopPropagation();
             const dropdown = document.getElementById('userDropdown');
             if (dropdown) dropdown.classList.toggle('show');
         }
@@ -341,7 +356,9 @@
         }
 
         function deconnexion() {
-            localStorage.clear(); sessionStorage.clear();            supabaseClient.auth.signOut().catch(err => console.log('Signout:', err));
+            localStorage.clear(); 
+            sessionStorage.clear();
+            supabaseClient.auth.signOut().catch(err => console.log('Signout:', err));
             window.location.replace('index.html?logout=' + Date.now());
         }
 
@@ -352,8 +369,12 @@
 
         async function checkAuth() {
             const { data: { session } } = await supabaseClient.auth.getSession();
-            if (!session) { window.location.replace('auth.html'); return; }
+            if (!session) { 
+                window.location.replace('auth.html'); 
+                return; 
+            }
             currentUser = session.user;
+            updateNavbar(session);
         }
 
         // ✅ NAVIGATION ONGLETS
@@ -369,8 +390,7 @@
                 loadSellerPrompts(); 
             } else { 
                 document.querySelector('.tab:nth-child(3)').classList.add('active'); 
-                document.getElementById('statsSection').classList.add('active'); 
-            }
+                document.getElementById('statsSection').classList.add('active');             }
         }
 
         // ✅ UPLOAD D'IMAGE
@@ -390,7 +410,8 @@
         async function uploadImage(file) {
             const fileName = `${Date.now()}_${file.name}`;
             const { error } = await supabaseClient.storage.from('prompt-images').upload(fileName, file);
-            if (error) throw error;            const { data: { publicUrl } } = supabaseClient.storage.from('prompt-images').getPublicUrl(fileName);
+            if (error) throw error;
+            const { data: { publicUrl } } = supabaseClient.storage.from('prompt-images').getPublicUrl(fileName);
             return publicUrl;
         }
 
@@ -418,8 +439,7 @@
                     const file = new File([blob], `prompt_${Date.now()}.jpg`, { type: 'image/jpeg' });
                     imageUrl = await uploadImage(file);
                 } else if (imageBase64 && imageBase64.startsWith('http')) {
-                    imageUrl = imageBase64;
-                }
+                    imageUrl = imageBase64;                }
                 
                 const promptData = {
                     title, description, price,
@@ -439,12 +459,15 @@
                     const res = await supabaseClient.from('prompts').insert([promptData]);
                     error = res.error;
                 }
-                if (error) throw error;                
-                alert(status === 'published' ? '✅ Prompt publié !' : '💾 Brouillon sauvegardé !');
+                if (error) throw error;
+                
+                showMessage(status === 'published' ? '✅ Prompt publié avec succès !' : '💾 Brouillon sauvegardé !', 'success');
                 resetForm();
-                switchTab('list');
+                setTimeout(() => {
+                    switchTab('list');
+                }, 1000);
             } catch (error) {
-                alert('❌ Erreur: ' + error.message);
+                showMessage('❌ Erreur: ' + error.message, 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = originalText;
@@ -457,12 +480,15 @@
             handleAddPrompt(fakeEvent, 'draft');
         }
 
-        // ✅ CHARGER LES PROMPTS
+        // ✅ CHARGER LES PROMPTS DU VENDEUR
         async function loadSellerPrompts() {
             const container = document.getElementById('promptsList');
+            if (!container) return;
+            
+            container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">⏳ Chargement...</p>';
+            
             try {
-                const { data, error } = await supabaseClient
-                    .from('prompts')
+                const { data, error } = await supabaseClient                    .from('prompts')
                     .select('*')
                     .eq('seller_id', currentUser.id)
                     .order('created_at', { ascending: false });
@@ -472,7 +498,7 @@
                 document.getElementById('totalPrompts').textContent = data.filter(p => p.status === 'published').length;
                 
                 if (data.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">Aucun prompt. Créez-en un !</p>';
+                    container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 2rem;"> Aucun prompt. Créez-en un !</p>';
                     return;
                 }
                 
@@ -480,7 +506,7 @@
                 data.forEach(prompt => {
                     const statusBadge = prompt.status === 'published' 
                         ? '<span class="badge badge-published">✅ Publié</span>' 
-                        : '<span class="badge badge-draft"> Brouillon</span>';
+                        : '<span class="badge badge-draft">📝 Brouillon</span>';
                     
                     container.innerHTML += `
                         <div class="prompt-item">
@@ -488,7 +514,8 @@
                             <div class="prompt-info">
                                 <h3>${prompt.title}</h3>
                                 <p>${prompt.description}</p>
-                                <div class="prompt-meta">                                    ${statusBadge}
+                                <div class="prompt-meta">
+                                    ${statusBadge}
                                     <span class="price">$${prompt.price}</span>
                                 </div>
                             </div>
@@ -500,15 +527,17 @@
                     `;
                 });
             } catch (error) {
-                container.innerHTML = '<p style="text-align: center; color: red; padding: 2rem;">Erreur: ' + error.message + '</p>';
+                container.innerHTML = '<p style="text-align: center; color: red; padding: 2rem;"> Erreur: ' + error.message + '</p>';
             }
         }
 
         async function editPrompt(id) {
             const { data, error } = await supabaseClient.from('prompts').select('*').eq('id', id).single();
-            if (error) { alert('Erreur: ' + error.message); return; }
-            
-            document.getElementById('promptId').value = data.id;
+            if (error) { 
+                showMessage('Erreur: ' + error.message, 'error'); 
+                return; 
+            }
+                        document.getElementById('promptId').value = data.id;
             document.getElementById('title').value = data.title;
             document.getElementById('description').value = data.description;
             document.getElementById('price').value = data.price;
@@ -522,20 +551,39 @@
                 preview.classList.add('show');
             }
             
-            document.getElementById('formTitle').textContent = '️ Modifier le Prompt';
+            document.getElementById('formTitle').textContent = '✏️ Modifier le Prompt';
             document.getElementById('cancelBtn').style.display = 'inline-block';
             switchTab('add');
         }
 
+        // ✅ SUPPRIMER UN PROMPT (CORRIGÉ)
         async function deletePrompt(id) {
-            if (!confirm('️ Êtes-vous sûr de vouloir supprimer ce prompt ?')) return;
+            if (!confirm('⚠️ Êtes-vous SÛR de vouloir supprimer ce prompt ?\n\nCette action est IRREVERSIBLE.')) {
+                return;
+            }
+            
             try {
-                const { error } = await supabaseClient.from('prompts').delete().eq('id', id);
-                if (error) throw error;
-                alert('✅ Prompt supprimé !');
-                loadSellerPrompts();
+                // Supprimer de la base de données
+                const { error } = await supabaseClient
+                    .from('prompts')
+                    .delete()
+                    .eq('id', id)
+                    .eq('seller_id', currentUser.id); // Sécurité : vérifier que c'est bien son prompt
+                
+                if (error) {
+                    console.error('Erreur suppression:', error);
+                    throw error;
+                }
+                
+                // Message de succès
+                showMessage('✅ Prompt supprimé avec succès !', 'success');
+                
+                // Recharger la liste immédiatement
+                await loadSellerPrompts();
+                
             } catch (error) {
-                alert(' Erreur: ' + error.message);
+                console.error('Erreur:', error);
+                showMessage('❌ Erreur lors de la suppression: ' + error.message, 'error');
             }
         }
         function resetForm() {
@@ -550,31 +598,71 @@
         // FOND ANIMÉ IA
         function initAIBackground() {
             const canvas = document.getElementById('aiBackground');
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth; 
+            canvas.height = window.innerHeight;
             let particles = [];
             class Particle {
-                constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.vx = (Math.random() - 0.5) * 0.8; this.vy = (Math.random() - 0.5) * 0.8; this.size = Math.random() * 3 + 2; this.color = Math.random() > 0.5 ? '#22d3ee' : '#60a5fa'; }
-                update() { this.x += this.vx; this.y += this.vy; if (this.x < 0 || this.x > canvas.width) this.vx *= -1; if (this.y < 0 || this.y > canvas.height) this.vy *= -1; }
-                draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+                constructor() { 
+                    this.x = Math.random() * canvas.width; 
+                    this.y = Math.random() * canvas.height; 
+                    this.vx = (Math.random() - 0.5) * 0.8; 
+                    this.vy = (Math.random() - 0.5) * 0.8; 
+                    this.size = Math.random() * 3 + 2; 
+                    this.color = Math.random() > 0.5 ? '#22d3ee' : '#60a5fa';
+                }
+                update() { 
+                    this.x += this.vx; 
+                    this.y += this.vy; 
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1; 
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1; 
+                }
+                draw() { 
+                    ctx.fillStyle = this.color; 
+                    ctx.beginPath(); 
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
+                    ctx.fill(); 
+                }
             }
-            function init() { particles = []; for (let i = 0; i < 60; i++) particles.push(new Particle()); }
+            function init() { 
+                particles = []; 
+                for (let i = 0; i < 60; i++) particles.push(new Particle()); 
+            }
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 for (let i = 0; i < particles.length; i++) {
-                    particles[i].update(); particles[i].draw();
+                    particles[i].update(); 
+                    particles[i].draw();
                     for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x; const dy = particles[i].y - particles[j].y; const distance = Math.sqrt(dx * dx + dy * dy);
-                        if (distance < 150) { ctx.beginPath(); ctx.strokeStyle = `rgba(34, 211, 238, ${0.3 * (1 - distance / 150)})`; ctx.lineWidth = 1; ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke(); }
+                        const dx = particles[i].x - particles[j].x;                         const dy = particles[i].y - particles[j].y; 
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < 150) { 
+                            ctx.beginPath(); 
+                            ctx.strokeStyle = `rgba(34, 211, 238, ${0.3 * (1 - distance / 150)})`; 
+                            ctx.lineWidth = 1; 
+                            ctx.moveTo(particles[i].x, particles[i].y); 
+                            ctx.lineTo(particles[j].x, particles[j].y); 
+                            ctx.stroke(); 
+                        }
                     }
                 }
                 requestAnimationFrame(animate);
             }
-            init(); animate();
-            window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; init(); });
+            init(); 
+            animate();
+            window.addEventListener('resize', () => { 
+                canvas.width = window.innerWidth; 
+                canvas.height = window.innerHeight; 
+                init(); 
+            });
         }
 
-        document.addEventListener('DOMContentLoaded', () => { checkAuth(); initAIBackground(); });
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => { 
+            checkAuth(); 
+            initAIBackground(); 
+        });
     </script>
 </body>
 </html>
