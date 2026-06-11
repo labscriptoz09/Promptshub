@@ -137,27 +137,22 @@
         }
         
         @media (max-width: 768px) {
-            .navbar { padding: 0.8rem 1rem; } 
-            .nav-links { display: none; } 
-            .nav-actions { gap: 0.5rem; }
+            .navbar { padding: 0.8rem 1rem; } .nav-links { display: none; } .nav-actions { gap: 0.5rem; }
             .btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; } 
-            .hero { padding: 5rem 1.5rem 3rem; } 
-            .hero h1 { font-size: 2.5rem; }
+            .hero { padding: 5rem 1.5rem 3rem; } .hero h1 { font-size: 2.5rem; }
             .hero-buttons { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto 3rem; }
             .btn-large { width: 100%; }
-            .stats { gap: 1.5rem; padding: 1.5rem; }             .stat-value { font-size: 1.5rem; }
-            .section { padding: 4rem 1rem; } 
-            .section-header h2 { font-size: 1.8rem; }
+            .stats { gap: 1.5rem; padding: 1.5rem; } .stat-value { font-size: 1.5rem; }
+            .section { padding: 4rem 1rem; } .section-header h2 { font-size: 1.8rem; }
         }
-    </style>
-</head>
+    </style></head>
 <body>
     <canvas id="aiBackground"></canvas>
     <div class="grid-overlay"></div>
 
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo">⚡ PromptHub</a>
+            <a href="index.html" class="logo"> PromptHub</a>
             <ul class="nav-links">
                 <li><a href="index.html" class="active">🏠 Accueil</a></li>
                 <li><a href="vendeur.html">💼 Vendre</a></li>
@@ -172,7 +167,7 @@
         <p>Discover a curated marketplace of premium AI prompts crafted by industry experts.</p>
         <div class="hero-buttons">
             <button class="btn btn-primary btn-large">🔍 Discover Prompts</button>
-            <button class="btn btn-outline btn-large">🚀 Launch as Creator</button>
+            <button class="btn btn-outline btn-large"> Launch as Creator</button>
         </div>
         <div class="stats reveal delay-1">
             <div class="stat-item"><span class="stat-value" data-target="25">0</span><span class="stat-label">K+ Premium Prompts</span></div>
@@ -194,12 +189,12 @@
         </div>
     </section>
 
-    <section class="section">        <div class="section-header reveal"><h2>Trending Prompts</h2><p>Handpicked by our community</p></div>
+    <section class="section">
+        <div class="section-header reveal"><h2>Trending Prompts</h2><p>Handpicked by our community</p></div>
         <div class="prompts-grid" id="prompts-container">
             <p style="text-align: center; color: var(--text-secondary); grid-column: 1/-1;">Chargement des prompts...</p>
         </div>
     </section>
-
     <section class="section">
         <div class="section-header reveal"><h2>Why PromptHub</h2><p>The most advanced prompt marketplace</p></div>
         <div class="features-grid">
@@ -211,7 +206,7 @@
     </section>
 
     <footer class="footer">
-        <div class="footer-bottom"><p>© 2024 PromptHub. Empowering creators worldwide. ⚡</p></div>
+        <div class="footer-bottom"><p>© 2024 PromptHub. Empowering creators worldwide. </p></div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -220,6 +215,7 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        // ✅ NAVBAR AVEC MENU DÉROULANT
         function updateNavbar(session) {
             const navActions = document.getElementById('navActions');
             if (session) {
@@ -243,11 +239,11 @@
                         <div class="user-dropdown" id="userDropdown">
                             <a href="vendeur.html">💼 Dashboard Vendeur</a>
                             <a href="parametres.html">⚙️ Paramètres</a>
-                            <button onclick="deconnexion()">🚪 Déconnexion</button>                        </div>
+                            <button onclick="deconnexion()">🚪 Déconnexion</button>
+                        </div>
                     </div>
                 `;
-            } else {
-                navActions.innerHTML = `
+            } else {                navActions.innerHTML = `
                     <a href="auth.html" class="btn btn-ghost">Connexion</a>
                     <a href="auth.html" class="btn btn-primary">S'inscrire</a>
                 `;
@@ -257,18 +253,14 @@
         function toggleUserMenu(event) {
             event.stopPropagation();
             const dropdown = document.getElementById('userDropdown');
-            if (dropdown) {
-                dropdown.classList.toggle('show');
-            }
+            if (dropdown) dropdown.classList.toggle('show');
         }
 
         window.onclick = function(event) {
             if (!event.target.closest('.user-menu-container')) {
                 const dropdowns = document.getElementsByClassName("user-dropdown");
                 for (let i = 0; i < dropdowns.length; i++) {
-                    if (dropdowns[i].classList.contains('show')) {
-                        dropdowns[i].classList.remove('show');
-                    }
+                    if (dropdowns[i].classList.contains('show')) dropdowns[i].classList.remove('show');
                 }
             }
         }
@@ -284,6 +276,48 @@
             updateNavbar(session);
         });
 
+        // ✅ CHARGEMENT AUTOMATIQUE DES PROMPTS
+        async function loadPrompts() {
+            const container = document.getElementById('prompts-container');
+            if (!container) return;
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('prompts')
+                    .select('*')
+                    .eq('status', 'published')
+                    .order('created_at', { ascending: false })
+                    .limit(6);
+                
+                if (error) throw error;
+                
+                if (data.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1/-1; padding: 2rem;">Aucun prompt disponible pour le moment.</p>';                    return;
+                }
+                
+                container.innerHTML = '';
+                data.forEach(prompt => {
+                    container.innerHTML += `
+                        <div class="prompt-card">
+                            <span class="badge">POPULAIRE</span>
+                            <img src="${prompt.image_url}" alt="${prompt.title}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 1rem;">
+                            <h3 class="prompt-title">${prompt.title}</h3>
+                            <p class="prompt-desc">${prompt.description}</p>
+                            <div class="prompt-meta">
+                                <span class="rating">★★★★★</span>
+                                <span class="price">$${prompt.price}</span>
+                            </div>
+                            <button class="btn-buy">Acheter Maintenant</button>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Erreur chargement prompts:', error);
+                container.innerHTML = '<p style="text-align: center; color: red; grid-column: 1/-1; padding: 2rem;">Erreur de chargement</p>';
+            }
+        }
+
+        // Compteurs animés
         document.querySelectorAll('.stat-value').forEach(counter => {
             const target = +counter.getAttribute('data-target');
             let current = 0;
@@ -292,20 +326,22 @@
                 current += increment;
                 if (current < target) { counter.innerText = Math.ceil(current); requestAnimationFrame(update); }
                 else counter.innerText = target;
-            };            update();
+            };
+            update();
         });
 
+        // Animations au scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+        // Fond animé IA
         function initAIBackground() {
             const canvas = document.getElementById('aiBackground'); 
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth; 
-            canvas.height = window.innerHeight;
-            let particles = [];
+            canvas.height = window.innerHeight;            let particles = [];
             class Particle {
                 constructor() { 
                     this.x = Math.random() * canvas.width; 
@@ -327,10 +363,7 @@
                     ctx.fill(); 
                 }
             }
-            function init() { 
-                particles = []; 
-                for (let i = 0; i < 80; i++) particles.push(new Particle()); 
-            }
+            function init() { particles = []; for (let i = 0; i < 80; i++) particles.push(new Particle()); }
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 for (let i = 0; i < particles.length; i++) {
@@ -341,7 +374,8 @@
                         const dy = particles[i].y - particles[j].y; 
                         const distance = Math.sqrt(dx * dx + dy * dy);
                         if (distance < 150) { 
-                            ctx.beginPath();                             ctx.strokeStyle = `rgba(34, 211, 238, ${0.3 * (1 - distance / 150)})`; 
+                            ctx.beginPath(); 
+                            ctx.strokeStyle = `rgba(34, 211, 238, ${0.3 * (1 - distance / 150)})`; 
                             ctx.lineWidth = 1; 
                             ctx.moveTo(particles[i].x, particles[i].y); 
                             ctx.lineTo(particles[j].x, particles[j].y); 
@@ -356,10 +390,14 @@
             window.addEventListener('resize', () => { 
                 canvas.width = window.innerWidth; 
                 canvas.height = window.innerHeight; 
-                init(); 
-            });
+                init();             });
         }
-        initAIBackground();
+
+        // Initialisation au chargement
+        document.addEventListener('DOMContentLoaded', () => {
+            initAIBackground();
+            loadPrompts(); // ✅ Charge automatiquement les prompts
+        });
     </script>
 </body>
 </html>
