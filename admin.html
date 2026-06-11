@@ -225,6 +225,10 @@
         .btn-secondary { background: var(--bg-hover); color: var(--text-primary); }
         .btn-export { background: var(--purple); color: white; }
         .btn-export:hover { background: #7c3aed; }
+        .btn-filter { background: var(--warning); color: #000; }
+        .btn-filter:hover { background: #d97706; }
+        .btn-clear { background: var(--text-muted); color: white; }
+        .btn-clear:hover { background: #4b5563; }
         
         .badge {
             padding: 0.375rem 0.875rem;
@@ -239,11 +243,11 @@
         .badge-active { background: rgba(16, 185, 129, 0.2); color: var(--success); }
         .badge-banned { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
         
-        .modal {
-            display: none;
+        .modal {            display: none;
             position: fixed;
             top: 0;
-            left: 0;            width: 100%;
+            left: 0;
+            width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.9);
             z-index: 300;
@@ -288,11 +292,11 @@
             width: 100%;
             padding: 0.875rem;
             background: var(--bg-main);
-            border: 1px solid var(--border);
-            border-radius: 8px;
+            border: 1px solid var(--border);            border-radius: 8px;
             color: var(--text-primary);
             font-size: 0.95rem;
-        }        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
             border-color: var(--accent);
         }
@@ -337,11 +341,11 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 10px;
-            color: var(--text-primary);
-            font-size: 0.95rem;
+            color: var(--text-primary);            font-size: 0.95rem;
             margin-bottom: 1rem;
         }
-        .search-input:focus {            outline: none;
+        .search-input:focus {
+            outline: none;
             border-color: var(--accent);
         }
         
@@ -382,15 +386,75 @@
             display: flex;
             gap: 0.5rem;
             margin-bottom: 1rem;
+            flex-wrap: wrap;
         }
         .export-bar .btn {
             flex: 1;
+            min-width: 120px;        }
+        
+        .filter-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .filter-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+        }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .filter-select {
+            padding: 0.625rem;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .filter-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .active-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
+        }
+        .filter-tag {
+            background: var(--accent);
+            color: white;
+            padding: 0.375rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+        .filter-tag .remove {
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
         }
         
         @media (min-width: 768px) {
             .mobile-header { display: none; }
             .content { padding: 2rem; max-width: 1200px; margin: 0 auto; }
-            .stats-grid { grid-template-columns: repeat(4, 1fr); }            .user-details { grid-template-columns: repeat(4, 1fr); }
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }
+            .user-details { grid-template-columns: repeat(4, 1fr); }
+            .filter-grid { grid-template-columns: repeat(4, 1fr); }
         }
     </style>
 </head>
@@ -424,8 +488,7 @@
         <div class="nav-item-mobile" onclick="showSection('config', this)">⚙️ Configuration</div>
         <div class="nav-item-mobile" onclick="showSection('maintenance', this)">🔧 Maintenance</div>
         
-        <div class="nav-item-mobile" onclick="logout()" style="color: var(--danger); margin-top: 2rem;">🚪 Déconnexion</div>
-    </div>
+        <div class="nav-item-mobile" onclick="logout()" style="color: var(--danger); margin-top: 2rem;">🚪 Déconnexion</div>    </div>
 
     <div class="content">
         <div id="dashboard" class="section active">
@@ -439,7 +502,8 @@
                 </div>
                 <div class="stat-card">
                     <h3> Prompts</h3>
-                    <div class="stat-value" id="statPrompts">0</div>                </div>
+                    <div class="stat-value" id="statPrompts">0</div>
+                </div>
                 <div class="stat-card">
                     <h3> Ventes</h3>
                     <div class="stat-value" id="statSales">0</div>
@@ -471,6 +535,31 @@
             
             <input type="text" class="search-input" placeholder="🔍 Rechercher un utilisateur..." oninput="filterUsers(this.value)">
             
+            <div class="filter-bar">
+                <div class="filter-title"> Filtres avancés</div>
+                <div class="filter-grid">                    <select class="filter-select" id="filterRole" onchange="applyUserFilters()">
+                        <option value="">Tous les rôles</option>
+                        <option value="admin">👑 Admin</option>
+                        <option value="seller">💼 Vendeur</option>
+                        <option value="buyer">🛒 Acheteur</option>
+                    </select>
+                    <select class="filter-select" id="filterStatus" onchange="applyUserFilters()">
+                        <option value="">Tous les statuts</option>
+                        <option value="active">✅ Actif</option>
+                        <option value="banned">🚫 Banni</option>
+                    </select>
+                    <select class="filter-select" id="filterDate" onchange="applyUserFilters()">
+                        <option value="">Toutes dates</option>
+                        <option value="today">Aujourd'hui</option>
+                        <option value="week">Cette semaine</option>
+                        <option value="month">Ce mois</option>
+                        <option value="year">Cette année</option>
+                    </select>
+                    <button class="btn btn-clear" onclick="clearUserFilters()">✕ Effacer</button>
+                </div>
+                <div class="active-filters" id="userActiveFilters"></div>
+            </div>
+            
             <div class="export-bar">
                 <button class="btn btn-export" onclick="exportUsersCSV()">📥 Exporter CSV</button>
             </div>
@@ -479,17 +568,62 @@
         </div>
 
         <div id="prompts" class="section">
-            <h1 class="page-title"> Prompts</h1>
+            <h1 class="page-title">📦 Prompts</h1>
             <p class="page-subtitle">Gérer tous les prompts</p>
             <input type="text" class="search-input" placeholder="🔍 Rechercher un prompt..." oninput="filterPrompts(this.value)">
+            
+            <div class="filter-bar">
+                <div class="filter-title">🔽 Filtres avancés</div>
+                <div class="filter-grid">
+                    <select class="filter-select" id="filterPromptStatus" onchange="applyPromptFilters()">
+                        <option value="">Tous les statuts</option>
+                        <option value="published">✅ Publié</option>
+                        <option value="draft">📝 Brouillon</option>
+                    </select>
+                    <select class="filter-select" id="filterPromptCategory" onchange="applyPromptFilters()">
+                        <option value="">Toutes catégories</option>
+                    </select>
+                    <select class="filter-select" id="filterPromptPrice" onchange="applyPromptFilters()">
+                        <option value="">Tous prix</option>
+                        <option value="0-5">$0 - $5</option>
+                        <option value="5-10">$5 - $10</option>                        <option value="10-50">$10 - $50</option>
+                        <option value="50+">$50+</option>
+                    </select>
+                    <button class="btn btn-clear" onclick="clearPromptFilters()">✕ Effacer</button>
+                </div>
+                <div class="active-filters" id="promptActiveFilters"></div>
+            </div>
+            
             <div class="export-bar">
                 <button class="btn btn-export" onclick="exportPromptsCSV()">📥 Exporter CSV</button>
             </div>
             <div id="promptsList" class="empty-state">Chargement...</div>
         </div>
 
-        <div id="orders" class="section">            <h1 class="page-title">💰 Commandes</h1>
+        <div id="orders" class="section">
+            <h1 class="page-title">💰 Commandes</h1>
             <p class="page-subtitle">Historique des transactions</p>
+            
+            <div class="filter-bar">
+                <div class="filter-title">🔽 Filtres avancés</div>
+                <div class="filter-grid">
+                    <select class="filter-select" id="filterOrderDate" onchange="applyOrderFilters()">
+                        <option value="">Toutes dates</option>
+                        <option value="today">Aujourd'hui</option>
+                        <option value="week">Cette semaine</option>
+                        <option value="month">Ce mois</option>
+                    </select>
+                    <select class="filter-select" id="filterOrderAmount" onchange="applyOrderFilters()">
+                        <option value="">Tous montants</option>
+                        <option value="0-10">$0 - $10</option>
+                        <option value="10-50">$10 - $50</option>
+                        <option value="50+">$50+</option>
+                    </select>
+                    <button class="btn btn-clear" onclick="clearOrderFilters()">✕ Effacer</button>
+                </div>
+                <div class="active-filters" id="orderActiveFilters"></div>
+            </div>
+            
             <div class="export-bar">
                 <button class="btn btn-export" onclick="exportOrdersCSV()">📥 Exporter CSV</button>
             </div>
@@ -501,8 +635,7 @@
             <p class="page-subtitle">Paramètres du site</p>
             
             <div class="settings-card">
-                <h3> Configuration Générale</h3>
-                <div class="form-group">
+                <h3> Configuration Générale</h3>                <div class="form-group">
                     <label>Nom du site</label>
                     <input type="text" id="settingSiteName" value="PromptHub">
                 </div>
@@ -537,7 +670,8 @@
             
             <div class="settings-card">
                 <h3>État du site</h3>
-                <div class="form-group">                    <label>Mode</label>
+                <div class="form-group">
+                    <label>Mode</label>
                     <select id="maintenanceEnabled">
                         <option value="false">🟢 Site en ligne (Normal)</option>
                         <option value="true">🔴 Mode Maintenance (Bloqué)</option>
@@ -550,8 +684,7 @@
                 <button class="btn btn-primary" onclick="saveMaintenance()" style="width:100%;">💾 Sauvegarder</button>
                 <div id="maintenanceStatus" style="margin-top:1rem;padding:1rem;border-radius:8px;display:none;"></div>
             </div>
-        </div>
-    </div>
+        </div>    </div>
 
     <div id="editModal" class="modal">
         <div class="modal-content">
@@ -586,7 +719,8 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>    <script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
         const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -597,6 +731,10 @@
         let currentEditId = null;
         let revenueChartInstance = null;
         let rolesChartInstance = null;
+        
+        // Filtres actifs
+        let userFilters = { search: '', role: '', status: '', date: '' };        let promptFilters = { search: '', status: '', category: '', price: '' };
+        let orderFilters = { date: '', amount: '' };
 
         async function init() {
             const { data: { session } } = await supabaseClient.auth.getSession();
@@ -628,6 +766,7 @@
             document.getElementById('statUsers').textContent = allUsers.length;
             document.getElementById('usersBadge').textContent = allUsers.length;
             renderUsers(allUsers);
+            populateCategoryFilter();
         }
 
         function renderUsers(users) {
@@ -635,15 +774,15 @@
             if (users.length === 0) {
                 container.innerHTML = '<div class="empty-state">Aucun utilisateur</div>';
                 return;
-            }            
+            }
+            
             container.innerHTML = users.map(u => {
                 const roleBadge = u.role === 'admin' ? '<span class="badge badge-admin"> Admin</span>' :
                                   u.role === 'seller' ? '<span class="badge badge-seller">💼 Vendeur</span>' :
                                   '<span class="badge badge-buyer">🛒 Acheteur</span>';
                 const statusBadge = u.is_banned ? '<span class="badge badge-banned"> Banni</span>' : '<span class="badge badge-active">✅ Actif</span>';
                 const inscription = new Date(u.created_at).toLocaleDateString('fr-FR');
-                const lastLogin = u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : 'Jamais';
-                const initials = (u.full_name || 'U').charAt(0).toUpperCase();
+                const lastLogin = u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : 'Jamais';                const initials = (u.full_name || 'U').charAt(0).toUpperCase();
 
                 return `<div class="user-card">
                     <div class="user-card-header">
@@ -684,7 +823,8 @@
             currentEditId = id;
             document.getElementById('editId').value = id;
             document.getElementById('editName').value = name;
-            document.getElementById('editEmail').value = email;            document.getElementById('editRole').value = role;
+            document.getElementById('editEmail').value = email;
+            document.getElementById('editRole').value = role;
             document.getElementById('editModal').classList.add('active');
         }
 
@@ -692,7 +832,6 @@
             document.getElementById('editModal').classList.remove('active');
             currentEditId = null;
         }
-
         async function saveEdit() {
             if (!currentEditId) return;
             const name = document.getElementById('editName').value;
@@ -712,12 +851,188 @@
             else { showToast(!currentStatus ? '🚫 Utilisateur banni' : '✅ Utilisateur débanni', 'success'); loadUsers(); }
         }
 
+        // ========== FILTRES UTILISATEURS ==========
         function filterUsers(query) {
-            const filtered = allUsers.filter(u => 
-                (u.full_name || '').toLowerCase().includes(query.toLowerCase()) || 
-                (u.email || '').toLowerCase().includes(query.toLowerCase())
-            );
+            userFilters.search = query.toLowerCase();
+            applyUserFilters();
+        }
+
+        function applyUserFilters() {
+            userFilters.role = document.getElementById('filterRole').value;
+            userFilters.status = document.getElementById('filterStatus').value;
+            userFilters.date = document.getElementById('filterDate').value;
+            
+            let filtered = allUsers.filter(u => {
+                // Filtre recherche
+                const matchSearch = !userFilters.search || 
+                    (u.full_name || '').toLowerCase().includes(userFilters.search) ||
+                    (u.email || '').toLowerCase().includes(userFilters.search);
+                
+                // Filtre rôle
+                const matchRole = !userFilters.role || u.role === userFilters.role;
+                
+                // Filtre statut
+                const matchStatus = !userFilters.status || 
+                    (userFilters.status === 'active' && !u.is_banned) ||
+                    (userFilters.status === 'banned' && u.is_banned);
+                
+                // Filtre date
+                let matchDate = true;
+                if (userFilters.date) {
+                    const userDate = new Date(u.created_at);
+                    const now = new Date();                    if (userFilters.date === 'today') {
+                        matchDate = userDate.toDateString() === now.toDateString();
+                    } else if (userFilters.date === 'week') {
+                        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        matchDate = userDate >= weekAgo;
+                    } else if (userFilters.date === 'month') {
+                        matchDate = userDate.getMonth() === now.getMonth() && userDate.getFullYear() === now.getFullYear();
+                    } else if (userFilters.date === 'year') {
+                        matchDate = userDate.getFullYear() === now.getFullYear();
+                    }
+                }
+                
+                return matchSearch && matchRole && matchStatus && matchDate;
+            });
+            
             renderUsers(filtered);
+            updateUserActiveFilters();
+        }
+
+        function clearUserFilters() {
+            document.getElementById('filterRole').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterDate').value = '';
+            document.querySelector('.search-input').value = '';
+            userFilters = { search: '', role: '', status: '', date: '' };
+            renderUsers(allUsers);
+            updateUserActiveFilters();
+        }
+
+        function updateUserActiveFilters() {
+            const container = document.getElementById('userActiveFilters');
+            const filters = [];
+            
+            if (userFilters.role) filters.push(`<span class="filter-tag">Rôle: ${userFilters.role}<span class="remove" onclick="document.getElementById('filterRole').value='';applyUserFilters()">✕</span></span>`);
+            if (userFilters.status) filters.push(`<span class="filter-tag">Statut: ${userFilters.status}<span class="remove" onclick="document.getElementById('filterStatus').value='';applyUserFilters()">✕</span></span>`);
+            if (userFilters.date) filters.push(`<span class="filter-tag">Date: ${userFilters.date}<span class="remove" onclick="document.getElementById('filterDate').value='';applyUserFilters()">✕</span></span>`);
+            
+            container.innerHTML = filters.join('');
+        }
+
+        // ========== FILTRES PROMPTS ==========
+        function filterPrompts(query) {
+            promptFilters.search = query.toLowerCase();
+            applyPromptFilters();
+        }
+
+        function applyPromptFilters() {
+            promptFilters.status = document.getElementById('filterPromptStatus').value;
+            promptFilters.category = document.getElementById('filterPromptCategory').value;
+            promptFilters.price = document.getElementById('filterPromptPrice').value;            
+            let filtered = allPrompts.filter(p => {
+                const matchSearch = !promptFilters.search || 
+                    (p.title || '').toLowerCase().includes(promptFilters.search) ||
+                    (p.seller_name || '').toLowerCase().includes(promptFilters.search);
+                
+                const matchStatus = !promptFilters.status || p.status === promptFilters.status;
+                const matchCategory = !promptFilters.category || p.category === promptFilters.category;
+                
+                let matchPrice = true;
+                if (promptFilters.price) {
+                    const price = parseFloat(p.price) || 0;
+                    if (promptFilters.price === '0-5') matchPrice = price >= 0 && price <= 5;
+                    else if (promptFilters.price === '5-10') matchPrice = price > 5 && price <= 10;
+                    else if (promptFilters.price === '10-50') matchPrice = price > 10 && price <= 50;
+                    else if (promptFilters.price === '50+') matchPrice = price > 50;
+                }
+                
+                return matchSearch && matchStatus && matchCategory && matchPrice;
+            });
+            
+            renderPrompts(filtered);
+            updatePromptActiveFilters();
+        }
+
+        function clearPromptFilters() {
+            document.getElementById('filterPromptStatus').value = '';
+            document.getElementById('filterPromptCategory').value = '';
+            document.getElementById('filterPromptPrice').value = '';
+            document.querySelectorAll('.search-input')[1].value = '';
+            promptFilters = { search: '', status: '', category: '', price: '' };
+            renderPrompts(allPrompts);
+            updatePromptActiveFilters();
+        }
+
+        function updatePromptActiveFilters() {
+            const container = document.getElementById('promptActiveFilters');
+            const filters = [];
+            
+            if (promptFilters.status) filters.push(`<span class="filter-tag">Statut: ${promptFilters.status}<span class="remove" onclick="document.getElementById('filterPromptStatus').value='';applyPromptFilters()">✕</span></span>`);
+            if (promptFilters.category) filters.push(`<span class="filter-tag">Catégorie: ${promptFilters.category}<span class="remove" onclick="document.getElementById('filterPromptCategory').value='';applyPromptFilters()">✕</span></span>`);
+            if (promptFilters.price) filters.push(`<span class="filter-tag">Prix: ${promptFilters.price}<span class="remove" onclick="document.getElementById('filterPromptPrice').value='';applyPromptFilters()">✕</span></span>`);
+            
+            container.innerHTML = filters.join('');
+        }
+
+        function populateCategoryFilter() {
+            const categories = [...new Set(allPrompts.map(p => p.category).filter(Boolean))];
+            const select = document.getElementById('filterPromptCategory');
+            select.innerHTML = '<option value="">Toutes catégories</option>';            categories.forEach(cat => {
+                select.innerHTML += `<option value="${cat}">${cat}</option>`;
+            });
+        }
+
+        // ========== FILTRES COMMANDES ==========
+        function applyOrderFilters() {
+            orderFilters.date = document.getElementById('filterOrderDate').value;
+            orderFilters.amount = document.getElementById('filterOrderAmount').value;
+            
+            let filtered = allOrders.filter(o => {
+                let matchDate = true;
+                if (orderFilters.date) {
+                    const orderDate = new Date(o.created_at);
+                    const now = new Date();
+                    if (orderFilters.date === 'today') {
+                        matchDate = orderDate.toDateString() === now.toDateString();
+                    } else if (orderFilters.date === 'week') {
+                        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        matchDate = orderDate >= weekAgo;
+                    } else if (orderFilters.date === 'month') {
+                        matchDate = orderDate.getMonth() === now.getMonth() && orderDate.getFullYear() === now.getFullYear();
+                    }
+                }
+                
+                let matchAmount = true;
+                if (orderFilters.amount) {
+                    const amount = parseFloat(o.amount) || 0;
+                    if (orderFilters.amount === '0-10') matchAmount = amount >= 0 && amount <= 10;
+                    else if (orderFilters.amount === '10-50') matchAmount = amount > 10 && amount <= 50;
+                    else if (orderFilters.amount === '50+') matchAmount = amount > 50;
+                }
+                
+                return matchDate && matchAmount;
+            });
+            
+            renderOrders(filtered);
+            updateOrderActiveFilters();
+        }
+
+        function clearOrderFilters() {
+            document.getElementById('filterOrderDate').value = '';
+            document.getElementById('filterOrderAmount').value = '';
+            orderFilters = { date: '', amount: '' };
+            renderOrders(allOrders);
+            updateOrderActiveFilters();
+        }
+
+        function updateOrderActiveFilters() {
+            const container = document.getElementById('orderActiveFilters');            const filters = [];
+            
+            if (orderFilters.date) filters.push(`<span class="filter-tag">Date: ${orderFilters.date}<span class="remove" onclick="document.getElementById('filterOrderDate').value='';applyOrderFilters()">✕</span></span>`);
+            if (orderFilters.amount) filters.push(`<span class="filter-tag">Montant: ${orderFilters.amount}<span class="remove" onclick="document.getElementById('filterOrderAmount').value='';applyOrderFilters()">✕</span></span>`);
+            
+            container.innerHTML = filters.join('');
         }
 
         async function loadPrompts() {
@@ -728,12 +1043,14 @@
             document.getElementById('statPrompts').textContent = allPrompts.length;
             document.getElementById('promptsBadge').textContent = allPrompts.length;
             renderPrompts(allPrompts);
+            populateCategoryFilter();
         }
 
         function renderPrompts(prompts) {
             const container = document.getElementById('promptsList');
             if (prompts.length === 0) {
-                container.innerHTML = '<div class="empty-state">Aucun prompt</div>';                return;
+                container.innerHTML = '<div class="empty-state">Aucun prompt</div>';
+                return;
             }
             
             container.innerHTML = prompts.map(p => `
@@ -759,16 +1076,7 @@
                         <button class="btn btn-danger" onclick="deletePrompt('${p.id}')">🗑️ Supprimer</button>
                     </div>
                 </div>
-            `).join('');
-        }
-
-        function filterPrompts(query) {
-            const filtered = allPrompts.filter(p => 
-                (p.title || '').toLowerCase().includes(query.toLowerCase()) ||
-                (p.seller_name || '').toLowerCase().includes(query.toLowerCase())
-            );
-            renderPrompts(filtered);
-        }
+            `).join('');        }
 
         async function deletePrompt(id) {
             if (!confirm('⚠️ Supprimer ce prompt définitivement ?')) return;
@@ -782,43 +1090,49 @@
             if (error || !data || data.length === 0) {
                 document.getElementById('ordersList').innerHTML = '<div class="empty-state">Aucune commande</div>';
                 return;
-            }            
+            }
+            
             allOrders = data;
             document.getElementById('statSales').textContent = data.length;
             let totalCommission = 0;
             
-            const container = document.getElementById('ordersList');
-            container.innerHTML = data.map(o => {
-                const commission = o.amount * 0.20;
-                totalCommission += commission;
-                return `
-                    <div class="user-card">
-                        <div class="user-card-header">
-                            <div class="user-info">
-                                <div class="user-name">${o.prompts?.title || 'Prompt supprimé'}</div>
-                                <div class="user-email">Acheteur: ${o.profiles?.full_name || 'Inconnu'}</div>
-                            </div>
-                            <span class="badge badge-active">✅ Payé</span>
-                        </div>
-                        <div class="user-details">
-                            <div class="detail-item">
-                                <div class="detail-label">Date</div>
-                                <div class="detail-value">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Montant</div>
-                                <div class="detail-value" style="color:var(--accent);font-weight:700;">$${parseFloat(o.amount).toFixed(2)}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Commission (20%)</div>
-                                <div class="detail-value" style="color:var(--success);font-weight:700;">+$${commission.toFixed(2)}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            renderOrders(data);
             
-            document.getElementById('statRevenue').textContent = '$' + totalCommission.toFixed(2);
+            function renderOrders(orders) {
+                const container = document.getElementById('ordersList');
+                totalCommission = 0;
+                
+                container.innerHTML = orders.map(o => {
+                    const commission = o.amount * 0.20;
+                    totalCommission += commission;
+                    return `
+                        <div class="user-card">
+                            <div class="user-card-header">
+                                <div class="user-info">
+                                    <div class="user-name">${o.prompts?.title || 'Prompt supprimé'}</div>
+                                    <div class="user-email">Acheteur: ${o.profiles?.full_name || 'Inconnu'}</div>
+                                </div>
+                                <span class="badge badge-active">✅ Payé</span>
+                            </div>
+                            <div class="user-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Date</div>
+                                    <div class="detail-value">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Montant</div>
+                                    <div class="detail-value" style="color:var(--accent);font-weight:700;">$${parseFloat(o.amount).toFixed(2)}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Commission (20%)</div>
+                                    <div class="detail-value" style="color:var(--success);font-weight:700;">+$${commission.toFixed(2)}</div>                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                document.getElementById('statRevenue').textContent = '$' + totalCommission.toFixed(2);
+            }
             
             initCharts(data);
         }
@@ -831,7 +1145,8 @@
             
             if (revenueChartInstance) revenueChartInstance.destroy();
             if (rolesChartInstance) rolesChartInstance.destroy();
-                        const labels = [];
+            
+            const labels = [];
             const revenueData = [];
             const now = new Date();
             for (let i = 29; i >= 0; i--) {
@@ -859,8 +1174,7 @@
                         borderColor: '#3b82f6',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         tension: 0.4,
-                        fill: true
-                    }]
+                        fill: true                    }]
                 },
                 options: {
                     responsive: true,
@@ -880,7 +1194,8 @@
             rolesChartInstance = new Chart(ctx2, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Acheteurs', 'Vendeurs', 'Admins'],                    datasets: [{
+                    labels: ['Acheteurs', 'Vendeurs', 'Admins'],
+                    datasets: [{
                         data: [buyerCount, sellerCount, adminCount],
                         backgroundColor: ['#3b82f6', '#f59e0b', '#8b5cf6'],
                         borderWidth: 0
@@ -896,7 +1211,6 @@
             });
         }
 
-        // ========== EXPORT CSV ==========
         function downloadCSV(filename, headers, rows) {
             let csv = headers.join(',') + '\n';
             rows.forEach(row => {
@@ -909,8 +1223,7 @@
             
             const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.setAttribute('href', url);
+            const link = document.createElement('a');            link.setAttribute('href', url);
             link.setAttribute('download', filename);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
@@ -929,7 +1242,8 @@
                 u.id,
                 u.full_name || '',
                 u.email || '',
-                u.role || 'buyer',                new Date(u.created_at).toLocaleDateString('fr-FR'),
+                u.role || 'buyer',
+                new Date(u.created_at).toLocaleDateString('fr-FR'),
                 u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString('fr-FR') : 'Jamais',
                 u.is_banned ? 'Oui' : 'Non'
             ]);
@@ -958,8 +1272,7 @@
             
             const date = new Date().toISOString().split('T')[0];
             downloadCSV(`prompts_${date}.csv`, headers, rows);
-            showToast('✅ Export prompts réussi !', 'success');
-        }
+            showToast('✅ Export prompts réussi !', 'success');        }
 
         function exportOrdersCSV() {
             if (allOrders.length === 0) {
@@ -978,7 +1291,8 @@
                 'Payé'
             ]);
             
-            const date = new Date().toISOString().split('T')[0];            downloadCSV(`commandes_${date}.csv`, headers, rows);
+            const date = new Date().toISOString().split('T')[0];
+            downloadCSV(`commandes_${date}.csv`, headers, rows);
             showToast('✅ Export commandes réussi !', 'success');
         }
 
@@ -1007,8 +1321,7 @@
                 contact_email: document.getElementById('settingEmail').value,
                 description: document.getElementById('settingDescription').value
             };
-            
-            const financial = {
+                        const financial = {
                 commission_rate: parseInt(document.getElementById('settingCommission').value),
                 min_price: parseFloat(document.getElementById('settingMinPrice').value)
             };
@@ -1027,7 +1340,8 @@
             
             if (error1 || error2) {
                 showToast('❌ Erreur lors de la sauvegarde', 'error');
-            } else {                showToast('✅ Configuration sauvegardée avec succès !', 'success');
+            } else {
+                showToast('✅ Configuration sauvegardée avec succès !', 'success');
             }
         }
 
@@ -1056,8 +1370,7 @@
 
         function showSection(sectionId, navItem) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item-mobile').forEach(n => n.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('.nav-item-mobile').forEach(n => n.classList.remove('active'));            document.getElementById(sectionId).classList.add('active');
             if (navItem) navItem.classList.add('active');
             toggleMenu();
         }
@@ -1076,7 +1389,8 @@
 
         async function logout() {
             await supabaseClient.auth.signOut();
-            window.location.href = 'index.html';        }
+            window.location.href = 'index.html';
+        }
 
         window.addEventListener('DOMContentLoaded', init);
     </script>
