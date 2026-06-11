@@ -156,6 +156,7 @@
             border-radius: 12px;
             padding: 1.25rem;
             margin-bottom: 1rem;
+            position: relative;
         }
         .user-card-header {
             display: flex;
@@ -193,8 +194,8 @@
             font-size: 0.7rem;
             color: var(--text-muted);
             text-transform: uppercase;
-            margin-bottom: 0.25rem;
-        }        .detail-value {
+            margin-bottom: 0.25rem;        }
+        .detail-value {
             font-size: 0.85rem;
             font-weight: 600;
         }
@@ -229,28 +230,33 @@
         .btn-secondary:hover { background: #4b5563; }
         .btn-export { background: var(--purple); color: white; }
         .btn-export:hover { background: #7c3aed; }
-        .btn-filter { background: var(--warning); color: #000; }
-        .btn-filter:hover { background: #d97706; }
         .btn-clear { background: var(--text-muted); color: white; }
         .btn-clear:hover { background: #4b5563; }
         .btn-approve { background: var(--success); color: white; }
         .btn-approve:hover { background: #059669; }
         .btn-reject { background: var(--danger); color: white; }
         .btn-reject:hover { background: #dc2626; }
-        
-        .badge {
+        .btn-contact { background: var(--warning); color: #000; }
+        .btn-contact:hover { background: #d97706; }
+        .btn-details { background: var(--accent); color: white; }
+        .btn-details:hover { background: #2563eb; }
+        .btn-featured { background: var(--purple); color: white; }
+        .btn-featured:hover { background: #7c3aed; }
+        .btn-featured.active { background: var(--warning); color: #000; }
+                .badge {
             padding: 0.375rem 0.875rem;
             border-radius: 999px;
             font-size: 0.75rem;
             font-weight: 700;
-            display: inline-block;        }
+            display: inline-block;
+        }
         .badge-admin { background: rgba(139, 92, 246, 0.2); color: var(--purple); }
         .badge-seller { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
         .badge-buyer { background: rgba(59, 130, 246, 0.2); color: var(--accent); }
         .badge-active { background: rgba(16, 185, 129, 0.2); color: var(--success); }
         .badge-banned { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
         .badge-pending { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-        .badge-featured { background: rgba(139, 92, 246, 0.2); color: var(--purple); }
+        .badge-featured { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
         
         .modal {
             display: none;
@@ -286,13 +292,13 @@
         .modal-close {
             background: none;
             border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
+            color: var(--text-muted);            font-size: 1.5rem;
             cursor: pointer;
         }
         .form-group { margin-bottom: 1rem; }
         .form-group label {
-            display: block;            font-size: 0.85rem;
+            display: block;
+            font-size: 0.85rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: var(--text-secondary);
@@ -335,13 +341,13 @@
             from { transform: translateY(-100px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-        
-        .section { display: none; }
+                .section { display: none; }
         .section.active { display: block; }
         
         .empty-state {
             text-align: center;
-            padding: 3rem 1rem;            color: var(--text-muted);
+            padding: 3rem 1rem;
+            color: var(--text-muted);
         }
         
         .search-input {
@@ -384,13 +390,13 @@
             margin-bottom: 1rem;
         }
         .user-profile-mobile .user-avatar {
-            width: 45px;
-            height: 45px;
+            width: 45px;            height: 45px;
             font-size: 1.1rem;
         }
         .user-profile-info { flex: 1; }
         .user-profile-name { font-weight: 700; font-size: 1rem; }
-        .user-profile-email { font-size: 0.8rem; color: var(--text-muted); }        
+        .user-profile-email { font-size: 0.8rem; color: var(--text-muted); }
+        
         .export-bar {
             display: flex;
             gap: 0.5rem;
@@ -433,13 +439,9 @@
             outline: none;
             border-color: var(--accent);
         }
-        .filter-actions {
-            display: flex;
+        .active-filters {            display: flex;
             gap: 0.5rem;
-        }
-        .active-filters {
-            display: flex;
-            gap: 0.5rem;            flex-wrap: wrap;
+            flex-wrap: wrap;
             margin-top: 0.75rem;
         }
         .filter-tag {
@@ -459,25 +461,56 @@
             line-height: 1;
         }
         
-        .moderation-badge {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            padding: 0.375rem 0.75rem;
-            border-radius: 999px;
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-        .user-card {
-            position: relative;
-        }
-        
         .prompt-description {
             font-size: 0.85rem;
             color: var(--text-muted);
             margin-top: 0.5rem;
             line-height: 1.5;
         }
+        
+        .featured-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: var(--warning);
+            color: #000;
+            padding: 0.25rem 0.625rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        
+        .detail-user-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+        .detail-user-avatar {            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .detail-user-info { flex: 1; }
+        .detail-user-name { font-size: 1.25rem; font-weight: 700; }
+        .detail-user-email { font-size: 0.875rem; color: var(--text-muted); }
+        
+        .purchase-item {
+            background: var(--bg-main);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .purchase-title { font-weight: 600; font-size: 0.9rem; }
+        .purchase-date { font-size: 0.75rem; color: var(--text-muted); }
+        .purchase-price { color: var(--accent); font-weight: 700; }
         
         @media (min-width: 768px) {
             .mobile-header { display: none; }
@@ -488,7 +521,8 @@
         }
     </style>
 </head>
-<body>    <div class="mobile-header">
+<body>
+    <div class="mobile-header">
         <h1>⚡ PromptHub Admin</h1>
         <button class="menu-btn" onclick="toggleMenu()">☰</button>
     </div>
@@ -503,8 +537,7 @@
             <div class="user-avatar" id="userAvatar">A</div>
             <div class="user-profile-info">
                 <div class="user-profile-name" id="userName">Admin</div>
-                <div class="user-profile-email" id="userEmail">admin@prompthub.com</div>
-            </div>
+                <div class="user-profile-email" id="userEmail">admin@prompthub.com</div>            </div>
         </div>
 
         <div class="nav-section-title">Principal</div>
@@ -512,7 +545,7 @@
         <div class="nav-item-mobile" onclick="showSection('users', this)">👥 Utilisateurs <span id="usersBadge" style="margin-left:auto;background:#ef4444;color:white;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
         <div class="nav-item-mobile" onclick="showSection('prompts', this)">📦 Prompts <span id="promptsBadge" style="margin-left:auto;background:#ef4444;color:white;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
         <div class="nav-item-mobile" onclick="showSection('moderation', this)">🔍 Modération <span id="moderationBadge" style="margin-left:auto;background:#f59e0b;color:#000;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
-        <div class="nav-item-mobile" onclick="showSection('orders', this)">💰 Commandes</div>
+        <div class="nav-item-mobile" onclick="showSection('orders', this)"> Commandes</div>
         
         <div class="nav-section-title">Paramètres</div>
         <div class="nav-item-mobile" onclick="showSection('config', this)">⚙️ Configuration</div>
@@ -537,7 +570,8 @@
                 </div>
                 <div class="stat-card">
                     <h3>⏳ En attente</h3>
-                    <div class="stat-value" id="statPending" style="color: var(--warning);">0</div>                </div>
+                    <div class="stat-value" id="statPending" style="color: var(--warning);">0</div>
+                </div>
                 <div class="stat-card">
                     <h3>💵 Revenus</h3>
                     <div class="stat-value" id="statRevenue">$0</div>
@@ -545,15 +579,14 @@
             </div>
 
             <div class="chart-container">
-                <div class="chart-title">📈 Revenus (30 derniers jours)</div>
+                <div class="chart-title"> Revenus (30 derniers jours)</div>
                 <div class="chart-wrapper">
                     <canvas id="revenueChart"></canvas>
                 </div>
             </div>
 
             <div class="chart-container">
-                <div class="chart-title">📊 Répartition des rôles</div>
-                <div class="chart-wrapper">
+                <div class="chart-title">📊 Répartition des rôles</div>                <div class="chart-wrapper">
                     <canvas id="rolesChart"></canvas>
                 </div>
             </div>
@@ -577,7 +610,7 @@
                     <select class="filter-select" id="filterStatus" onchange="applyUserFilters()">
                         <option value="">Tous les statuts</option>
                         <option value="active">✅ Actif</option>
-                        <option value="banned">🚫 Banni</option>
+                        <option value="banned"> Banni</option>
                     </select>
                     <select class="filter-select" id="filterDate" onchange="applyUserFilters()">
                         <option value="">Toutes dates</option>
@@ -586,12 +619,13 @@
                         <option value="month">Ce mois</option>
                         <option value="year">Cette année</option>
                     </select>
-                    <button class="btn btn-clear" onclick="clearUserFilters()">✕ Effacer</button>                </div>
+                    <button class="btn btn-clear" onclick="clearUserFilters()">✕ Effacer</button>
+                </div>
                 <div class="active-filters" id="userActiveFilters"></div>
             </div>
             
             <div class="export-bar">
-                <button class="btn btn-export" onclick="exportUsersCSV()">📥 Exporter CSV</button>
+                <button class="btn btn-export" onclick="exportUsersCSV()"> Exporter CSV</button>
             </div>
             
             <div id="usersList"></div>
@@ -600,10 +634,9 @@
         <div id="prompts" class="section">
             <h1 class="page-title">📦 Prompts</h1>
             <p class="page-subtitle">Gérer tous les prompts</p>
-            <input type="text" class="search-input" placeholder="🔍 Rechercher un prompt..." oninput="filterPrompts(this.value)">
-            
-            <div class="filter-bar">
-                <div class="filter-title">🔽 Filtres avancés</div>
+            <input type="text" class="search-input" placeholder=" Rechercher un prompt..." oninput="filterPrompts(this.value)">
+                        <div class="filter-bar">
+                <div class="filter-title"> Filtres avancés</div>
                 <div class="filter-grid">
                     <select class="filter-select" id="filterPromptStatus" onchange="applyPromptFilters()">
                         <option value="">Tous les statuts</option>
@@ -633,9 +666,10 @@
         </div>
 
         <div id="moderation" class="section">
-            <h1 class="page-title">🔍 Modération</h1>
+            <h1 class="page-title"> Modération</h1>
             <p class="page-subtitle">Approuver ou rejeter les prompts en attente</p>
-                        <div class="filter-bar">
+            
+            <div class="filter-bar">
                 <div class="filter-title">🔽 Filtres</div>
                 <div class="filter-grid">
                     <select class="filter-select" id="filterModerationType" onchange="applyModerationFilters()">
@@ -650,8 +684,7 @@
                     </select>
                     <button class="btn btn-clear" onclick="clearModerationFilters()">✕ Effacer</button>
                 </div>
-            </div>
-            
+            </div>            
             <div id="moderationList" class="empty-state">Chargement...</div>
         </div>
 
@@ -684,12 +717,13 @@
             </div>
             <div id="ordersList" class="empty-state">Chargement...</div>
         </div>
+
         <div id="config" class="section">
             <h1 class="page-title">⚙️ Configuration</h1>
             <p class="page-subtitle">Paramètres du site</p>
             
             <div class="settings-card">
-                <h3>🌐 Configuration Générale</h3>
+                <h3> Configuration Générale</h3>
                 <div class="form-group">
                     <label>Nom du site</label>
                     <input type="text" id="settingSiteName" value="PromptHub">
@@ -699,8 +733,7 @@
                     <input type="email" id="settingEmail" value="contact@prompthub.com">
                 </div>
                 <div class="form-group">
-                    <label>Description du site</label>
-                    <textarea id="settingDescription" rows="3">The Ultimate Prompt Marketplace</textarea>
+                    <label>Description du site</label>                    <textarea id="settingDescription" rows="3">The Ultimate Prompt Marketplace</textarea>
                 </div>
                 <button class="btn btn-primary" onclick="saveConfig()" style="width:100%;">💾 Sauvegarder</button>
             </div>
@@ -729,11 +762,12 @@
                     <label>Mode</label>
                     <select id="maintenanceEnabled">
                         <option value="false">🟢 Site en ligne (Normal)</option>
-                        <option value="true">🔴 Mode Maintenance (Bloqué)</option>
+                        <option value="true"> Mode Maintenance (Bloqué)</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Message aux visiteurs</label>                    <textarea id="maintenanceMessage" rows="4">Site en maintenance. Revenez bientôt !</textarea>
+                    <label>Message aux visiteurs</label>
+                    <textarea id="maintenanceMessage" rows="4">Site en maintenance. Revenez bientôt !</textarea>
                 </div>
                 <button class="btn btn-primary" onclick="saveMaintenance()" style="width:100%;">💾 Sauvegarder</button>
                 <div id="maintenanceStatus" style="margin-top:1rem;padding:1rem;border-radius:8px;display:none;"></div>
@@ -741,14 +775,14 @@
         </div>
     </div>
 
+    <!-- MODAL ÉDITION UTILISATEUR -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">✏️ Modifier l'utilisateur</h3>
                 <button class="modal-close" onclick="closeModal()">✕</button>
             </div>
-            <div class="form-group">
-                <label>ID</label>
+            <div class="form-group">                <label>ID</label>
                 <input type="text" id="editId" readonly style="opacity:0.6;">
             </div>
             <div class="form-group">
@@ -762,18 +796,19 @@
             <div class="form-group">
                 <label>Rôle</label>
                 <select id="editRole">
-                    <option value="buyer">🛒 Acheteur</option>
+                    <option value="buyer"> Acheteur</option>
                     <option value="seller">💼 Vendeur</option>
                     <option value="admin">👑 Admin</option>
                 </select>
             </div>
             <div class="modal-actions">
-                <button class="btn btn-secondary" onclick="closeModal()">❌ Annuler</button>
+                <button class="btn btn-secondary" onclick="closeModal()"> Annuler</button>
                 <button class="btn btn-primary" onclick="saveEdit()">💾 Sauvegarder</button>
             </div>
         </div>
     </div>
 
+    <!-- MODAL MODÉRATION -->
     <div id="moderationModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -782,7 +817,8 @@
             </div>
             <div class="form-group">
                 <label>Titre</label>
-                <input type="text" id="modTitle" readonly style="opacity:0.6;">            </div>
+                <input type="text" id="modTitle" readonly style="opacity:0.6;">
+            </div>
             <div class="form-group">
                 <label>Description</label>
                 <textarea id="modDescription" readonly style="opacity:0.6;" rows="3"></textarea>
@@ -795,13 +831,76 @@
                 <label>Prix</label>
                 <input type="text" id="modPrice" readonly style="opacity:0.6;">
             </div>
-            <div class="form-group">
-                <label>Raison du rejet (si applicable)</label>
+            <div class="form-group">                <label>Raison du rejet (si applicable)</label>
                 <textarea id="modRejectionReason" rows="3" placeholder="Expliquez pourquoi ce prompt est rejeté..."></textarea>
             </div>
             <div class="modal-actions">
                 <button class="btn btn-reject" onclick="rejectPrompt()">❌ Rejeter</button>
                 <button class="btn btn-approve" onclick="approvePrompt()">✅ Approuver</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CONTACT -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">📧 Contacter l'utilisateur</h3>
+                <button class="modal-close" onclick="closeContactModal()">✕</button>
+            </div>
+            <div class="form-group">
+                <label>Destinataire</label>
+                <input type="text" id="contactTo" readonly style="opacity:0.6;">
+            </div>
+            <div class="form-group">
+                <label>Sujet</label>
+                <input type="text" id="contactSubject" placeholder="Sujet du message...">
+            </div>
+            <div class="form-group">
+                <label>Message</label>
+                <textarea id="contactMessage" rows="5" placeholder="Votre message..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeContactModal()">❌ Annuler</button>
+                <button class="btn btn-primary" onclick="sendContact()">📤 Envoyer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DÉTAILS UTILISATEUR -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"> Détails de l'utilisateur</h3>
+                <button class="modal-close" onclick="closeDetailsModal()">✕</button>
+            </div>
+            <div class="detail-user-header">
+                <div class="detail-user-avatar" id="detailAvatar">A</div>
+                <div class="detail-user-info">
+                    <div class="detail-user-name" id="detailName">Nom</div>
+                    <div class="detail-user-email" id="detailEmail">email@example.com</div>
+                </div>
+            </div>            <div class="user-details" style="margin-bottom: 1rem;">
+                <div class="detail-item">
+                    <div class="detail-label">Rôle</div>
+                    <div class="detail-value" id="detailRole">-</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Inscription</div>
+                    <div class="detail-value" id="detailJoined">-</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Statut</div>
+                    <div class="detail-value" id="detailStatus">-</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Total achats</div>
+                    <div class="detail-value" id="detailPurchases">0</div>
+                </div>
+            </div>
+            <h4 style="margin-bottom: 0.75rem; font-size: 1rem;">🛒 Historique des achats</h4>
+            <div id="detailPurchasesList">
+                <div class="empty-state" style="padding: 1rem;">Aucun achat</div>
             </div>
         </div>
     </div>
@@ -818,6 +917,8 @@
         let pendingPrompts = [];
         let currentEditId = null;
         let currentModerationId = null;
+        let currentContactEmail = null;
+        let currentDetailUserId = null;
         let revenueChartInstance = null;
         let rolesChartInstance = null;
         
@@ -829,9 +930,9 @@
         async function init() {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (!session) { window.location.href = 'auth.html'; return; }
-
             document.getElementById('userName').textContent = session.user.user_metadata.full_name || 'Admin';
-            document.getElementById('userEmail').textContent = session.user.email;            document.getElementById('userAvatar').textContent = (session.user.user_metadata.full_name || 'A').charAt(0).toUpperCase();
+            document.getElementById('userEmail').textContent = session.user.email;
+            document.getElementById('userAvatar').textContent = (session.user.user_metadata.full_name || 'A').charAt(0).toUpperCase();
 
             const { data: profile } = await supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
             if (!profile || profile.role !== 'admin') {
@@ -866,7 +967,7 @@
             }
             
             container.innerHTML = users.map(u => {
-                const roleBadge = u.role === 'admin' ? '<span class="badge badge-admin">👑 Admin</span>' :
+                const roleBadge = u.role === 'admin' ? '<span class="badge badge-admin"> Admin</span>' :
                                   u.role === 'seller' ? '<span class="badge badge-seller">💼 Vendeur</span>' :
                                   '<span class="badge badge-buyer">🛒 Acheteur</span>';
                 const statusBadge = u.is_banned ? '<span class="badge badge-banned">🚫 Banni</span>' : '<span class="badge badge-active">✅ Actif</span>';
@@ -877,10 +978,10 @@
                 return `<div class="user-card">
                     <div class="user-card-header">
                         <div class="user-avatar">${initials}</div>
-                        <div class="user-info">
-                            <div class="user-name">${u.full_name || 'Utilisateur'}</div>
+                        <div class="user-info">                            <div class="user-name">${u.full_name || 'Utilisateur'}</div>
                             <div class="user-email">${u.email || 'N/A'}</div>
-                        </div>                        ${roleBadge}
+                        </div>
+                        ${roleBadge}
                     </div>
                     <div class="user-details">
                         <div class="detail-item">
@@ -901,6 +1002,8 @@
                         </div>
                     </div>
                     <div class="user-actions">
+                        <button class="btn btn-details" onclick="openDetails('${u.id}')">📊 Détails</button>
+                        <button class="btn btn-contact" onclick="openContact('${u.email || ''}', '${u.full_name || ''}')">📧 Contacter</button>
                         <button class="btn btn-primary" onclick="openEdit('${u.id}', '${u.full_name || ''}', '${u.email || ''}', '${u.role}')">✏️ Modifier</button>
                         <button class="btn ${u.is_banned ? 'btn-success' : 'btn-danger'}" onclick="toggleBan('${u.id}', ${u.is_banned})">${u.is_banned ? '✅ Débannir' : '🚫 Bannir'}</button>
                     </div>
@@ -924,12 +1027,12 @@
 
         async function saveEdit() {
             if (!currentEditId) return;
-            const name = document.getElementById('editName').value;
-            const role = document.getElementById('editRole').value;
+            const name = document.getElementById('editName').value;            const role = document.getElementById('editRole').value;
             
             const { error } = await supabaseClient.from('profiles').update({ 
                 full_name: name, role: role 
-            }).eq('id', currentEditId);            
+            }).eq('id', currentEditId);
+            
             if (error) { showToast('❌ Erreur: ' + error.message, 'error'); }
             else { showToast('✅ Utilisateur modifié !', 'success'); closeModal(); loadUsers(); }
         }
@@ -940,7 +1043,89 @@
             else { showToast(!currentStatus ? '🚫 Utilisateur banni' : '✅ Utilisateur débanni', 'success'); loadUsers(); }
         }
 
-        function filterUsers(query) {
+        // ========== CONTACT ==========
+        function openContact(email, name) {
+            if (!email) {
+                showToast(' Aucun email disponible', 'error');
+                return;
+            }
+            currentContactEmail = email;
+            document.getElementById('contactTo').value = `${name} <${email}>`;
+            document.getElementById('contactSubject').value = '';
+            document.getElementById('contactMessage').value = '';
+            document.getElementById('contactModal').classList.add('active');
+        }
+
+        function closeContactModal() {
+            document.getElementById('contactModal').classList.remove('active');
+            currentContactEmail = null;
+        }
+
+        async function sendContact() {
+            const subject = document.getElementById('contactSubject').value;
+            const message = document.getElementById('contactMessage').value;
+            
+            if (!subject || !message) {
+                showToast('❌ Veuillez remplir le sujet et le message', 'error');
+                return;
+            }
+            
+            // Simuler l'envoi (à remplacer par un vrai service email)
+            console.log('📧 Envoi email à:', currentContactEmail);
+            console.log('Sujet:', subject);
+            console.log('Message:', message);
+            
+            showToast('✅ Message envoyé à ' + currentContactEmail, 'success');
+            closeContactModal();        }
+
+        // ========== DÉTAILS UTILISATEUR ==========
+        async function openDetails(userId) {
+            currentDetailUserId = userId;
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+            
+            document.getElementById('detailAvatar').textContent = (user.full_name || 'U').charAt(0).toUpperCase();
+            document.getElementById('detailName').textContent = user.full_name || 'Utilisateur';
+            document.getElementById('detailEmail').textContent = user.email || 'N/A';
+            document.getElementById('detailRole').innerHTML = user.role === 'admin' ? '<span class="badge badge-admin">👑 Admin</span>' :
+                                                             user.role === 'seller' ? '<span class="badge badge-seller">💼 Vendeur</span>' :
+                                                             '<span class="badge badge-buyer"> Acheteur</span>';
+            document.getElementById('detailJoined').textContent = new Date(user.created_at).toLocaleDateString('fr-FR');
+            document.getElementById('detailStatus').innerHTML = user.is_banned ? '<span class="badge badge-banned">🚫 Banni</span>' : '<span class="badge badge-active">✅ Actif</span>';
+            
+            // Charger les achats de l'utilisateur
+            const { data: purchases, error } = await supabaseClient
+                .from('orders')
+                .select('*, prompts(title, price)')
+                .eq('buyer_id', userId)
+                .order('created_at', { ascending: false });
+            
+            const purchasesList = document.getElementById('detailPurchasesList');
+            if (error || !purchases || purchases.length === 0) {
+                document.getElementById('detailPurchases').textContent = '0';
+                purchasesList.innerHTML = '<div class="empty-state" style="padding: 1rem;">Aucun achat</div>';
+            } else {
+                document.getElementById('detailPurchases').textContent = purchases.length;
+                purchasesList.innerHTML = purchases.map(p => `
+                    <div class="purchase-item">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="purchase-title">${p.prompts?.title || 'Prompt supprimé'}</div>
+                            <div class="purchase-price">$${parseFloat(p.amount).toFixed(2)}</div>
+                        </div>
+                        <div class="purchase-date">${new Date(p.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}</div>
+                    </div>
+                `).join('');
+            }
+            
+            document.getElementById('detailsModal').classList.add('active');
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').classList.remove('active');
+            currentDetailUserId = null;
+        }
+
+        // ========== FILTRES UTILISATEURS ==========        function filterUsers(query) {
             userFilters.search = query.toLowerCase();
             applyUserFilters();
         }
@@ -978,7 +1163,8 @@
                 }
                 
                 return matchSearch && matchRole && matchStatus && matchDate;
-            });            
+            });
+            
             renderUsers(filtered);
             updateUserActiveFilters();
         }
@@ -988,8 +1174,7 @@
             document.getElementById('filterStatus').value = '';
             document.getElementById('filterDate').value = '';
             document.querySelector('.search-input').value = '';
-            userFilters = { search: '', role: '', status: '', date: '' };
-            renderUsers(allUsers);
+            userFilters = { search: '', role: '', status: '', date: '' };            renderUsers(allUsers);
             updateUserActiveFilters();
         }
 
@@ -1004,6 +1189,7 @@
             container.innerHTML = filters.join('');
         }
 
+        // ========== PROMPTS ==========
         async function loadPrompts() {
             const { data, error } = await supabaseClient.from('prompts').select('*').order('created_at', { ascending: false });
             if (error) { console.error(error); return; }
@@ -1027,15 +1213,17 @@
                 container.innerHTML = '<div class="empty-state">Aucun prompt</div>';
                 return;
             }
-                        container.innerHTML = prompts.map(p => {
+            
+            container.innerHTML = prompts.map(p => {
                 const statusBadge = p.status === 'published' ? '<span class="badge badge-active">✅ Publié</span>' : 
-                                   p.status === 'pending' ? '<span class="badge badge-pending">⏳ En attente</span>' :
+                                   p.status === 'pending' ? '<span class="badge badge-pending"> En attente</span>' :
                                    '<span class="badge badge-banned">📝 Brouillon</span>';
+                const featuredBadge = p.is_featured ? '<span class="featured-badge">⭐ Vedette</span>' : '';
                 
                 return `<div class="user-card">
+                    ${featuredBadge}
                     <div class="user-card-header">
-                        <div class="user-info">
-                            <div class="user-name">${p.title}</div>
+                        <div class="user-info">                            <div class="user-name">${p.title}</div>
                             <div class="user-email">${p.seller_name || 'Vendeur inconnu'}</div>
                             <div class="prompt-description">${p.description || 'Pas de description'}</div>
                         </div>
@@ -1052,6 +1240,9 @@
                         </div>
                     </div>
                     <div class="user-actions">
+                        <button class="btn ${p.is_featured ? 'btn-featured active' : 'btn-featured'}" onclick="toggleFeatured('${p.id}', ${p.is_featured})">
+                            ${p.is_featured ? '⭐ Retirer vedette' : '🌟 Mettre en vedette'}
+                        </button>
                         ${p.status === 'pending' ? `
                             <button class="btn btn-approve" onclick="openModeration('${p.id}')">🔍 Modérer</button>
                         ` : ''}
@@ -1061,6 +1252,19 @@
             }).join('');
         }
 
+        async function toggleFeatured(promptId, currentStatus) {
+            const { error } = await supabaseClient.from('prompts').update({ 
+                is_featured: !currentStatus 
+            }).eq('id', promptId);
+            
+            if (error) {
+                showToast('❌ Erreur: ' + error.message, 'error');
+            } else {
+                showToast(!currentStatus ? '⭐ Prompt mis en vedette !' : '⭐ Vedette retirée', 'success');
+                loadPrompts();
+            }
+        }
+
         function renderModeration(prompts) {
             const container = document.getElementById('moderationList');
             if (prompts.length === 0) {
@@ -1068,15 +1272,14 @@
                 return;
             }
             
-            container.innerHTML = prompts.map(p => `
-                <div class="user-card">
-                    <div class="moderation-badge badge badge-pending">⏳ En attente</div>
+            container.innerHTML = prompts.map(p => `                <div class="user-card">
                     <div class="user-card-header">
                         <div class="user-info">
                             <div class="user-name">${p.title}</div>
                             <div class="user-email">${p.seller_name || 'Vendeur inconnu'}</div>
                             <div class="prompt-description">${p.description || 'Pas de description'}</div>
-                        </div>                        <span class="badge badge-buyer">${p.category || 'Général'}</span>
+                        </div>
+                        <span class="badge badge-buyer">${p.category || 'Général'}</span>
                     </div>
                     <div class="user-details">
                         <div class="detail-item">
@@ -1118,14 +1321,14 @@
             if (!currentModerationId) return;
             
             const { error } = await supabaseClient.from('prompts').update({ 
-                status: 'published'
-            }).eq('id', currentModerationId);
+                status: 'published'            }).eq('id', currentModerationId);
             
             if (error) {
-                showToast('❌ Erreur: ' + error.message, 'error');
+                showToast(' Erreur: ' + error.message, 'error');
             } else {
                 showToast('✅ Prompt approuvé et publié !', 'success');
-                closeModerationModal();                loadPrompts();
+                closeModerationModal();
+                loadPrompts();
             }
         }
 
@@ -1167,14 +1370,14 @@
                 const matchCategory = !promptFilters.category || p.category === promptFilters.category;
                 
                 let matchPrice = true;
-                if (promptFilters.price) {
-                    const price = parseFloat(p.price) || 0;
+                if (promptFilters.price) {                    const price = parseFloat(p.price) || 0;
                     if (promptFilters.price === '0-5') matchPrice = price >= 0 && price <= 5;
                     else if (promptFilters.price === '5-10') matchPrice = price > 5 && price <= 10;
                     else if (promptFilters.price === '10-50') matchPrice = price > 10 && price <= 50;
                     else if (promptFilters.price === '50+') matchPrice = price > 50;
                 }
-                                return matchSearch && matchStatus && matchCategory && matchPrice;
+                
+                return matchSearch && matchStatus && matchCategory && matchPrice;
             });
             
             renderPrompts(filtered);
@@ -1195,7 +1398,7 @@
             const container = document.getElementById('promptActiveFilters');
             const filters = [];
             
-            if (promptFilters.status) filters.push(`<span class="filter-tag">Statut: ${promptFilters.status}<span class="remove" onclick="document.getElementById('filterPromptStatus').value='';applyPromptFilters()">✕</span></span>`);
+            if (promptFilters.status) filters.push(`<span class="filter-tag">Statut: ${promptFilters.status}<span class="remove" onclick="document.getElementById('filterPromptStatus').value='';applyPromptFilters()"></span></span>`);
             if (promptFilters.category) filters.push(`<span class="filter-tag">Catégorie: ${promptFilters.category}<span class="remove" onclick="document.getElementById('filterPromptCategory').value='';applyPromptFilters()">✕</span></span>`);
             if (promptFilters.price) filters.push(`<span class="filter-tag">Prix: ${promptFilters.price}<span class="remove" onclick="document.getElementById('filterPromptPrice').value='';applyPromptFilters()">✕</span></span>`);
             
@@ -1216,14 +1419,14 @@
                 }
                 
                 let matchDate = true;
-                if (moderationFilters.date) {
-                    const promptDate = new Date(p.created_at);
+                if (moderationFilters.date) {                    const promptDate = new Date(p.created_at);
                     const now = new Date();
                     if (moderationFilters.date === 'today') {
                         matchDate = promptDate.toDateString() === now.toDateString();
                     } else if (moderationFilters.date === 'week') {
                         const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-                        matchDate = promptDate >= weekAgo;                    }
+                        matchDate = promptDate >= weekAgo;
+                    }
                 }
                 
                 return matchType && matchDate;
@@ -1255,6 +1458,7 @@
             else { showToast('🗑️ Prompt supprimé', 'success'); loadPrompts(); }
         }
 
+        // ========== COMMANDES ==========
         async function loadOrders() {
             const { data, error } = await supabaseClient.from('orders').select('*, prompts(title), profiles:buyer_id(full_name)').order('created_at', { ascending: false });
             if (error || !data || data.length === 0) {
@@ -1264,15 +1468,15 @@
             
             allOrders = data;
             document.getElementById('statSales').textContent = data.length;
-            let totalCommission = 0;
-            
+            let totalCommission = 0;            
             renderOrders(data);
             
             function renderOrders(orders) {
                 const container = document.getElementById('ordersList');
                 totalCommission = 0;
                 
-                container.innerHTML = orders.map(o => {                    const commission = o.amount * 0.20;
+                container.innerHTML = orders.map(o => {
+                    const commission = o.amount * 0.20;
                     totalCommission += commission;
                     return `
                         <div class="user-card">
@@ -1313,15 +1517,15 @@
             
             if (!ctx1 || !ctx2) return;
             
-            if (revenueChartInstance) revenueChartInstance.destroy();
-            if (rolesChartInstance) rolesChartInstance.destroy();
+            if (revenueChartInstance) revenueChartInstance.destroy();            if (rolesChartInstance) rolesChartInstance.destroy();
             
             const labels = [];
             const revenueData = [];
             const now = new Date();
             for (let i = 29; i >= 0; i--) {
                 const date = new Date(now);
-                date.setDate(date.getDate() - i);                const dateStr = date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
                 labels.push(dateStr);
                 
                 const dayOrders = ordersData.filter(o => {
@@ -1362,15 +1566,15 @@
             const buyerCount = allUsers.filter(u => u.role === 'buyer').length;
             
             rolesChartInstance = new Chart(ctx2, {
-                type: 'doughnut',
-                data: {
+                type: 'doughnut',                data: {
                     labels: ['Acheteurs', 'Vendeurs', 'Admins'],
                     datasets: [{
                         data: [buyerCount, sellerCount, adminCount],
                         backgroundColor: ['#3b82f6', '#f59e0b', '#8b5cf6'],
                         borderWidth: 0
                     }]
-                },                options: {
+                },
+                options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
@@ -1380,6 +1584,7 @@
             });
         }
 
+        // ========== EXPORT CSV ==========
         function downloadCSV(filename, headers, rows) {
             let csv = headers.join(',') + '\n';
             rows.forEach(row => {
@@ -1410,8 +1615,7 @@
             const headers = ['ID', 'Nom', 'Email', 'Rôle', 'Inscription', 'Dernière connexion', 'Banni'];
             const rows = allUsers.map(u => [
                 u.id,
-                u.full_name || '',
-                u.email || '',
+                u.full_name || '',                u.email || '',
                 u.role || 'buyer',
                 new Date(u.created_at).toLocaleDateString('fr-FR'),
                 u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString('fr-FR') : 'Jamais',
@@ -1419,7 +1623,8 @@
             ]);
             
             const date = new Date().toISOString().split('T')[0];
-            downloadCSV(`utilisateurs_${date}.csv`, headers, rows);            showToast('✅ Export utilisateurs réussi !', 'success');
+            downloadCSV(`utilisateurs_${date}.csv`, headers, rows);
+            showToast('✅ Export utilisateurs réussi !', 'success');
         }
 
         function exportPromptsCSV() {
@@ -1428,7 +1633,7 @@
                 return;
             }
             
-            const headers = ['ID', 'Titre', 'Vendeur', 'Catégorie', 'Prix', 'Statut', 'Date création'];
+            const headers = ['ID', 'Titre', 'Vendeur', 'Catégorie', 'Prix', 'Statut', 'Vedette', 'Date création'];
             const rows = allPrompts.map(p => [
                 p.id,
                 p.title || '',
@@ -1436,6 +1641,7 @@
                 p.category || '',
                 p.price || 0,
                 p.status || 'draft',
+                p.is_featured ? 'Oui' : 'Non',
                 new Date(p.created_at).toLocaleDateString('fr-FR')
             ]);
             
@@ -1458,17 +1664,18 @@
                 o.prompts?.title || 'Supprimé',
                 parseFloat(o.amount).toFixed(2),
                 (o.amount * 0.20).toFixed(2),
-                'Payé'
-            ]);
+                'Payé'            ]);
             
             const date = new Date().toISOString().split('T')[0];
             downloadCSV(`commandes_${date}.csv`, headers, rows);
             showToast('✅ Export commandes réussi !', 'success');
         }
 
+        // ========== CONFIG ==========
         async function loadConfig() {
             const { data, error } = await supabaseClient.from('site_config').select('value').in('key', ['general', 'financial']);
-            if (error) { console.error(error); return; }            
+            if (error) { console.error(error); return; }
+            
             if (data && data.length > 0) {
                 data.forEach(config => {
                     if (config.key === 'general' && config.value) {
@@ -1506,8 +1713,7 @@
                 key: 'financial',
                 value: financial,
                 updated_at: new Date().toISOString()
-            });
-            
+            });            
             if (error1 || error2) {
                 showToast('❌ Erreur lors de la sauvegarde', 'error');
             } else {
@@ -1517,7 +1723,8 @@
 
         async function saveMaintenance() {
             const enabled = document.getElementById('maintenanceEnabled').value === 'true';
-            const message = document.getElementById('maintenanceMessage').value;            const { error } = await supabaseClient.from('site_config').upsert({ 
+            const message = document.getElementById('maintenanceMessage').value;
+            const { error } = await supabaseClient.from('site_config').upsert({ 
                 key: 'maintenance', 
                 value: { enabled, message },
                 updated_at: new Date().toISOString() 
@@ -1537,6 +1744,7 @@
             showToast(enabled ? 'Mode maintenance activé' : 'Mode maintenance désactivé', 'success');
         }
 
+        // ========== NAVIGATION ==========
         function showSection(sectionId, navItem) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item-mobile').forEach(n => n.classList.remove('active'));
@@ -1554,8 +1762,7 @@
             toast.className = `toast toast-${type}`;
             toast.textContent = message;
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
+            setTimeout(() => toast.remove(), 3000);        }
 
         async function logout() {
             await supabaseClient.auth.signOut();
