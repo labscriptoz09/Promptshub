@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptHub - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --accent-cyan: #22d3ee;
+            --accent-blue: #60a5fa;
+            --accent-green: #34d399;
+            --accent-red: #f87171;
+            --accent-orange: #fbbf24;
+            --accent-purple: #a78bfa;
+            --border-color: rgba(34, 211, 238, 0.2);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; }
+        h1, h2, h3, .logo, .stat-value, .btn { font-family: 'Space Grotesk', sans-serif; }
+        
+        .navbar { background: rgba(10, 14, 26, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .header { margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .admin-badge { background: rgba(239, 68, 68, 0.2); color: #f87171; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; border: 1px solid rgba(239, 68, 68, 0.4); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(20px); }
+        .stat-card h3 { color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.5rem; }
+        .stat-value { font-size: 2.2rem; font-weight: 700; }
+        .stat-value.cyan { color: var(--accent-cyan); }
+        .stat-value.green { color: var(--accent-green); }
+        .stat-value.orange { color: var(--accent-orange); }
+        .stat-value.purple { color: var(--accent-purple); }
+
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); overflow-x: auto; padding-bottom: 0.5rem; }
+        .tab { padding: 0.8rem 1.5rem; background: transparent; border: none; color: var(--text-secondary); font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; }
+        .tab.active { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .table-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; backdrop-filter: blur(20px); }        .table-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .table-header h2 { font-size: 1.2rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+        th { background: rgba(10, 14, 26, 0.8); color: var(--text-secondary); text-transform: uppercase; font-size: 0.75rem; }
+        
+        .btn { padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; font-size: 0.85rem; transition: all 0.2s; }
+        .btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.4); }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #0a0e1a; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .btn-warning { background: rgba(251, 191, 36, 0.2); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.4); }
+        .btn-small { padding: 0.35rem 0.7rem; font-size: 0.75rem; }
+
+        .badge { padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .badge-admin { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .badge-seller { background: rgba(251, 191, 36, 0.2); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.4); }
+        .badge-buyer { background: rgba(96, 165, 250, 0.2); color: #60a5fa; border: 1px solid rgba(96, 165, 250, 0.4); }
+        .badge-banned { background: rgba(239, 68, 68, 0.3); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.5); }
+        .badge-active { background: rgba(52, 211, 153, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4); }
+        .badge-published { background: rgba(52, 211, 153, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4); }
+        .badge-draft { background: rgba(251, 191, 36, 0.2); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.4); }
+
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; padding: 0.8rem 1rem; background: rgba(10, 14, 26, 0.5); border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; color: var(--text-primary); font-family: inherit; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent-cyan); }
+
+        .settings-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; backdrop-filter: blur(20px); margin-bottom: 1.5rem; }
+        .settings-card h2 { font-size: 1.2rem; margin-bottom: 1.5rem; }
+
+        .search-bar { padding: 0.6rem 1rem; background: rgba(10, 14, 26, 0.5); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem; width: 100%; max-width: 300px; }
+        .search-bar:focus { outline: none; border-color: var(--accent-cyan); }
+
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-secondary); }
+
+        .notification { position: fixed; top: 80px; right: 20px; padding: 1rem 1.5rem; border-radius: 8px; z-index: 9999; animation: slideIn 0.3s ease; font-weight: 600; max-width: 300px; }
+        .notification.success { background: rgba(16, 185, 129, 0.95); color: white; }
+        .notification.error { background: rgba(239, 68, 68, 0.95); color: white; }
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .stat-value { font-size: 1.5rem; }
+            table { display: block; overflow-x: auto; }
+            th, td { padding: 0.7rem; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">⚡ PromptHub | Admin</div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <span id="adminName" style="color: var(--text-secondary); font-size: 0.9rem;"></span>
+                <button id="btn-logout" class="btn btn-danger btn-small">🚪 Déconnexion</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>🎛️ Centre de Contrôle</h1>
+                <p style="color: var(--text-secondary);">Gestion totale de la plateforme</p>
+            </div>
+            <div class="admin-badge">🔴 SUPER ADMIN ACTIF</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card"><h3> Utilisateurs</h3><div class="stat-value cyan" id="statUsers">0</div></div>
+            <div class="stat-card"><h3>📦 Prompts</h3><div class="stat-value purple" id="statPrompts">0</div></div>
+            <div class="stat-card"><h3>💰 Ventes</h3><div class="stat-value orange" id="statSales">0</div></div>
+            <div class="stat-card"><h3>💵 Revenus</h3><div class="stat-value green" id="statRevenue">$0</div></div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('users', this)"> Utilisateurs</button>
+            <button class="tab" onclick="switchTab('prompts', this)">📦 Prompts</button>
+            <button class="tab" onclick="switchTab('orders', this)">💰 Commandes</button>
+            <button class="tab" onclick="switchTab('settings', this)">⚙️ Paramètres</button>
+        </div>
+
+        <!-- UTILISATEURS -->
+        <div id="usersSection" class="section active">
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>👥 Gestion des Utilisateurs</h2>
+                    <input type="text" class="search-bar" placeholder="🔍 Rechercher..." oninput="filterUsers(this.value)">
+                </div>
+                <table>
+                    <thead><tr><th>Nom</th><th>ID</th><th>Rôle</th><th>Inscription</th><th>Statut</th><th>Actions</th></tr></thead>
+                    <tbody id="usersTableBody"><tr><td colspan="6" class="empty-state">Chargement...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PROMPTS -->
+        <div id="promptsSection" class="section">
+            <div class="table-container">                <div class="table-header">
+                    <h2>📦 Gestion des Prompts</h2>
+                    <input type="text" class="search-bar" placeholder="🔍 Rechercher..." oninput="filterPrompts(this.value)">
+                </div>
+                <table>
+                    <thead><tr><th>Titre</th><th>Vendeur</th><th>Catégorie</th><th>Prix</th><th>Statut</th><th>Actions</th></tr></thead>
+                    <tbody id="promptsTableBody"><tr><td colspan="6" class="empty-state">Chargement...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- COMMANDES -->
+        <div id="ordersSection" class="section">
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>💰 Historique des Commandes</h2>
+                    <div style="color: var(--accent-green); font-weight: 700;">Commission: <span id="totalCommission">$0</span></div>
+                </div>
+                <table>
+                    <thead><tr><th>Date</th><th>Acheteur</th><th>Prompt</th><th>Montant</th><th>Commission</th></tr></thead>
+                    <tbody id="ordersTableBody"><tr><td colspan="5" class="empty-state">Aucune vente pour le moment.</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PARAMÈTRES -->
+        <div id="settingsSection" class="section">
+            <div class="settings-card">
+                <h2>🌐 Configuration Générale</h2>
+                <div class="form-group"><label>Nom du Site</label><input type="text" id="settingSiteName" value="PromptHub"></div>
+                <div class="form-group"><label>Email de Contact</label><input type="email" id="settingEmail" value="contact@prompthub.com"></div>
+                <button class="btn btn-primary" onclick="saveSettings('general')">💾 Sauvegarder</button>
+            </div>
+
+            <div class="settings-card">
+                <h2>💰 Configuration Financière</h2>
+                <div class="form-group"><label>Commission Plateforme (%)</label><input type="number" id="settingCommission" value="20" min="0" max="100"></div>
+                <div class="form-group"><label>Prix Minimum ($)</label><input type="number" id="settingMinPrice" value="1" min="0" step="0.01"></div>
+                <button class="btn btn-primary" onclick="saveSettings('financial')">💾 Sauvegarder</button>
+            </div>
+
+            <div class="settings-card">
+                <h2> Mode Maintenance</h2>
+                <div class="form-group">
+                    <label>État du Site</label>
+                    <select id="settingMaintenance">
+                        <option value="false">🟢 En ligne</option>
+                        <option value="true">🔴 Mode Maintenance</option>
+                    </select>
+                </div>                <button class="btn btn-warning" onclick="saveSettings('maintenance')">🔧 Appliquer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // ✅ CLIENT SUPABASE (créé en premier, comme dans le test qui a marché)
+        const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentUser = null;
+        let allUsers = [];
+        let allPrompts = [];
+
+        // ✅ VÉRIFICATION ADMIN
+        async function init() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            
+            if (!session) {
+                showNotification('❌ Non connecté', 'error');
+                setTimeout(() => window.location.href = 'auth.html', 2000);
+                return;
+            }
+
+            currentUser = session.user;
+            document.getElementById('adminName').textContent = '👑 ' + (session.user.email || 'Admin');
+
+            const { data: profile } = await supabaseClient
+                .from('profiles')
+                .select('role, full_name')
+                .eq('id', session.user.id)
+                .single();
+
+            if (!profile || profile.role !== 'admin') {
+                showNotification('❌ Accès refusé', 'error');
+                setTimeout(() => window.location.href = 'index.html', 2000);
+                return;
+            }
+
+            document.getElementById('btn-logout').onclick = async () => {
+                await supabaseClient.auth.signOut();
+                window.location.href = 'index.html';
+            };
+
+            loadAllData();
+        }
+
+        async function loadAllData() {            await Promise.all([loadUsers(), loadPrompts(), loadOrders(), loadSettings()]);
+        }
+
+        async function loadUsers() {
+            const { data, error } = await supabaseClient
+                .from('profiles')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                document.getElementById('usersTableBody').innerHTML = `<tr><td colspan="6" class="empty-state">Erreur: ${error.message}</td></tr>`;
+                return;
+            }
+
+            allUsers = data || [];
+            document.getElementById('statUsers').textContent = allUsers.length;
+            renderUsers(allUsers);
+        }
+
+        function renderUsers(users) {
+            const tbody = document.getElementById('usersTableBody');
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Aucun utilisateur</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = users.map(u => {
+                const roleBadge = u.role === 'admin' ? '<span class="badge badge-admin">👑 Admin</span>' :
+                                  u.role === 'seller' ? '<span class="badge badge-seller">💼 Vendeur</span>' :
+                                  '<span class="badge badge-buyer">🛒 Acheteur</span>';
+                const statusBadge = u.is_banned ? '<span class="badge badge-banned">🚫 Banni</span>' : '<span class="badge badge-active">✅ Actif</span>';
+                const date = new Date(u.created_at).toLocaleDateString('fr-FR');
+
+                return `<tr>
+                    <td><strong>${u.full_name || 'Utilisateur'}</strong></td>
+                    <td style="font-size: 0.8rem; color: var(--text-secondary);">${u.id.substring(0, 8)}...</td>
+                    <td>${roleBadge}</td>
+                    <td style="font-size: 0.85rem;">${date}</td>
+                    <td>${statusBadge}</td>
+                    <td>
+                        <select onchange="changeRole('${u.id}', this.value)" style="padding: 0.3rem; font-size: 0.75rem; margin-right: 0.3rem;">
+                            <option value="buyer" ${u.role === 'buyer' ? 'selected' : ''}>Acheteur</option>
+                            <option value="seller" ${u.role === 'seller' ? 'selected' : ''}>Vendeur</option>
+                            <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Admin</option>
+                        </select>
+                        <button class="btn ${u.is_banned ? 'btn-primary' : 'btn-danger'} btn-small" onclick="toggleBan('${u.id}', ${u.is_banned})">
+                            ${u.is_banned ? '✅ Débannir' : '🚫 Bannir'}
+                        </button>
+                    </td>
+                </tr>`;            }).join('');
+        }
+
+        function filterUsers(query) {
+            const filtered = allUsers.filter(u =>
+                (u.full_name || '').toLowerCase().includes(query.toLowerCase())
+            );
+            renderUsers(filtered);
+        }
+
+        async function loadPrompts() {
+            const { data, error } = await supabaseClient
+                .from('prompts')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                document.getElementById('promptsTableBody').innerHTML = `<tr><td colspan="6" class="empty-state">Erreur: ${error.message}</td></tr>`;
+                return;
+            }
+
+            allPrompts = data || [];
+            document.getElementById('statPrompts').textContent = allPrompts.length;
+            renderPrompts(allPrompts);
+        }
+
+        function renderPrompts(prompts) {
+            const tbody = document.getElementById('promptsTableBody');
+            if (prompts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Aucun prompt</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = prompts.map(p => {
+                const statusBadge = p.status === 'published' ? '<span class="badge badge-published">✅ Publié</span>' : '<span class="badge badge-draft">📝 Brouillon</span>';
+                return `<tr>
+                    <td><strong>${p.title}</strong></td>
+                    <td>${p.seller_name || 'Inconnu'}</td>
+                    <td>${p.category || '-'}</td>
+                    <td style="color: var(--accent-cyan); font-weight: 700;">$${p.price}</td>
+                    <td>${statusBadge}</td>
+                    <td><button class="btn btn-danger btn-small" onclick="deletePrompt('${p.id}')">🗑️ Supprimer</button></td>
+                </tr>`;
+            }).join('');
+        }
+
+        function filterPrompts(query) {
+            const filtered = allPrompts.filter(p =>
+                (p.title || '').toLowerCase().includes(query.toLowerCase())
+            );            renderPrompts(filtered);
+        }
+
+        async function loadOrders() {
+            const { data, error } = await supabaseClient
+                .from('orders')
+                .select('*, prompts(title), profiles:buyer_id(full_name)')
+                .order('created_at', { ascending: false });
+
+            const tbody = document.getElementById('ordersTableBody');
+            let totalCommission = 0;
+
+            if (error || !data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucune vente</td></tr>';
+                return;
+            }
+
+            document.getElementById('statSales').textContent = data.length;
+            tbody.innerHTML = data.map(o => {
+                const commission = o.amount * 0.20;
+                totalCommission += commission;
+                return `<tr>
+                    <td style="font-size: 0.85rem;">${new Date(o.created_at).toLocaleDateString('fr-FR')}</td>
+                    <td>${o.profiles?.full_name || 'Utilisateur'}</td>
+                    <td>${o.prompts?.title || 'Prompt supprimé'}</td>
+                    <td style="font-weight: 700;">$${parseFloat(o.amount).toFixed(2)}</td>
+                    <td style="color: var(--accent-green); font-weight: 700;">+$${commission.toFixed(2)}</td>
+                </tr>`;
+            }).join('');
+
+            document.getElementById('totalCommission').textContent = '$' + totalCommission.toFixed(2);
+        }
+
+        async function loadSettings() {
+            const { data } = await supabaseClient.from('site_settings').select('*');
+            if (data) {
+                data.forEach(s => {
+                    if (s.key === 'site_name') document.getElementById('settingSiteName').value = s.value;
+                    if (s.key === 'commission_rate') document.getElementById('settingCommission').value = s.value;
+                    if (s.key === 'maintenance_mode') document.getElementById('settingMaintenance').value = s.value;
+                });
+            }
+        }
+
+        async function changeRole(userId, newRole) {
+            const { error } = await supabaseClient.from('profiles').update({ role: newRole }).eq('id', userId);
+            if (error) showNotification('Erreur: ' + error.message, 'error');
+            else { showNotification('✅ Rôle modifié', 'success'); loadUsers(); }
+        }
+        async function toggleBan(userId, currentStatus) {
+            const { error } = await supabaseClient.from('profiles').update({ is_banned: !currentStatus }).eq('id', userId);
+            if (error) showNotification('Erreur: ' + error.message, 'error');
+            else { showNotification(!currentStatus ? '🚫 Banni' : '✅ Débanni', 'success'); loadUsers(); }
+        }
+
+        async function deletePrompt(id) {
+            if (!confirm('⚠️ Supprimer ce prompt ?')) return;
+            const { error } = await supabaseClient.from('prompts').delete().eq('id', id);
+            if (error) showNotification('Erreur: ' + error.message, 'error');
+            else { showNotification('🗑️ Prompt supprimé', 'success'); loadPrompts(); }
+        }
+
+        async function saveSettings(type) {
+            let settings = [];
+            if (type === 'general') {
+                settings = [
+                    { key: 'site_name', value: document.getElementById('settingSiteName').value },
+                    { key: 'contact_email', value: document.getElementById('settingEmail').value }
+                ];
+            } else if (type === 'financial') {
+                settings = [
+                    { key: 'commission_rate', value: document.getElementById('settingCommission').value },
+                    { key: 'min_price', value: document.getElementById('settingMinPrice').value }
+                ];
+            } else if (type === 'maintenance') {
+                settings = [{ key: 'maintenance_mode', value: document.getElementById('settingMaintenance').value }];
+            }
+
+            for (let s of settings) {
+                await supabaseClient.from('site_settings').upsert(s);
+            }
+            showNotification('✅ Paramètres sauvegardés', 'success');
+        }
+
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(tab + 'Section').classList.add('active');
+        }
+
+        function showNotification(message, type) {
+            const notif = document.createElement('div');
+            notif.className = `notification ${type}`;
+            notif.textContent = message;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
