@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Test Admin</title>
+    <title>Test Admin - Corrigé</title>
     <style>
         body { background: #0a0e1a; color: white; padding: 20px; font-family: Arial; }
         .box { background: #1e293b; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #22d3ee; }
@@ -10,11 +10,17 @@
     </style>
 </head>
 <body>
-    <h1>🔍 Test Admin - Diagnostic</h1>
+    <h1>🔍 Test Admin - Version Corrigée</h1>
     <div id="output"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // ✅ CRÉER LE CLIENT SUPABASE EN PREMIER
+        const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
+        
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
         const output = document.getElementById('output');
         
         function log(msg, type = 'info') {
@@ -24,17 +30,11 @@
 
         async function test() {
             log('🚀 ÉTAPE 1: Initialisation...', 'info');
+            log('✅ Client Supabase prêt', 'success');
             
             try {
-                const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
-                const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
-                
-                log('✅ ÉTAPE 2: Client Supabase créé', 'success');
-                
-                const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                
-                log('🔄 ÉTAPE 3: Vérification session...', 'info');
-                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                log('🔄 ÉTAPE 2: Vérification session...', 'info');
+                const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
                 
                 if (sessionError) {
                     log('❌ Erreur session: ' + sessionError.message, 'error');
@@ -47,11 +47,11 @@
                     return;
                 }
                 
-                log('✅ ÉTAPE 4: Connecté en tant que: ' + session.user.email, 'success');
+                log('✅ ÉTAPE 3: Connecté en tant que: ' + session.user.email, 'success');
                 log('User ID: ' + session.user.id, 'info');
                 
-                log('🔄 ÉTAPE 5: Test table profiles...', 'info');
-                const { data: profiles, error: profilesError } = await supabase
+                log('🔄 ÉTAPE 4: Test table profiles...', 'info');
+                const { data: profiles, error: profilesError } = await supabaseClient
                     .from('profiles')
                     .select('*');
                 
@@ -61,9 +61,8 @@
                     return;
                 }
                 
-                log('✅ ÉTAPE 6: Profiles chargés: ' + profiles.length + ' utilisateurs', 'success');
+                log('✅ ÉTAPE 5: Profiles chargés: ' + profiles.length + ' utilisateurs', 'success');
                 
-                // Trouver ton profil
                 const myProfile = profiles.find(p => p.id === session.user.id);
                 if (!myProfile) {
                     log('❌ Ton profil n\'existe pas dans la table profiles!', 'error');
@@ -71,22 +70,25 @@
                     return;
                 }
                 
-                log('✅ Ton profil trouvé!', 'success');
+                log('✅ ÉTAPE 6: Ton profil trouvé!', 'success');
                 log('Rôle: ' + (myProfile.role || 'NON DÉFINI'), myProfile.role === 'admin' ? 'success' : 'error');
                 
                 if (myProfile.role !== 'admin') {
                     log('❌ Tu n\'es PAS admin! Ton rôle est: ' + myProfile.role, 'error');
-                    log('👉 Va dans Supabase → Table Editor → profiles et change ton rôle en "admin"', 'error');
+                    log('👉 Va dans Supabase → Table Editor → profiles', 'error');
+                    log('👉 Trouve ta ligne et change "role" de "buyer" à "admin"', 'error');
                 } else {
                     log('🎉 TOUT FONCTIONNE! Tu es admin!', 'success');
+                    log('👉 Tu peux maintenant utiliser admin.html', 'success');
                 }
                 
             } catch (err) {
-                log('❌ ERREUR GLOBALE: ' + err.message, 'error');
+                log('❌ ERREUR: ' + err.message, 'error');
             }
         }
 
-        test();
+        // Attendre que la page soit chargée
+        window.addEventListener('DOMContentLoaded', test);
     </script>
 </body>
 </html>
