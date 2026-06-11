@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PromptHub - Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -28,7 +29,6 @@
             min-height: 100vh;
         }
         
-        /* HEADER MOBILE */
         .mobile-header {
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
@@ -55,7 +55,6 @@
             padding: 0.5rem;
         }
         
-        /* NAVIGATION MOBILE */
         .mobile-nav {
             display: none;
             position: fixed;
@@ -96,11 +95,10 @@
         .nav-section-title {
             font-size: 0.75rem;
             text-transform: uppercase;
-            color: var(--text-muted);            margin: 1.5rem 0 0.75rem 1rem;
-            font-weight: 700;
+            color: var(--text-muted);
+            margin: 1.5rem 0 0.75rem 1rem;            font-weight: 700;
         }
         
-        /* CONTENU */
         .content { padding: 1rem; }
         .page-title {
             font-size: 1.5rem;
@@ -112,7 +110,6 @@
         }
         .page-subtitle { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem; }
         
-        /* STATS */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -137,7 +134,22 @@
             color: var(--accent);
         }
         
-        /* CARTES UTILISATEURS */
+        .chart-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }        .chart-wrapper {
+            position: relative;
+            height: 250px;
+        }
+        
         .user-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -145,7 +157,8 @@
             padding: 1.25rem;
             margin-bottom: 1rem;
         }
-        .user-card-header {            display: flex;
+        .user-card-header {
+            display: flex;
             align-items: center;
             gap: 1rem;
             margin-bottom: 1rem;
@@ -181,8 +194,7 @@
             color: var(--text-muted);
             text-transform: uppercase;
             margin-bottom: 0.25rem;
-        }
-        .detail-value {
+        }        .detail-value {
             font-size: 0.85rem;
             font-weight: 600;
         }
@@ -194,7 +206,8 @@
         .btn {
             padding: 0.75rem 1rem;
             border-radius: 8px;
-            border: none;            cursor: pointer;
+            border: none;
+            cursor: pointer;
             font-weight: 600;
             font-size: 0.85rem;
             flex: 1;
@@ -220,7 +233,6 @@
         .badge-active { background: rgba(16, 185, 129, 0.2); color: var(--success); }
         .badge-banned { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
         
-        /* MODAL */
         .modal {
             display: none;
             position: fixed;
@@ -231,8 +243,7 @@
             background: rgba(0,0,0,0.9);
             z-index: 300;
             align-items: center;
-            justify-content: center;
-            padding: 1rem;
+            justify-content: center;            padding: 1rem;
         }
         .modal.active { display: flex; }
         .modal-content {
@@ -243,7 +254,8 @@
             width: 100%;
             max-width: 500px;
             max-height: 90vh;
-            overflow-y: auto;        }
+            overflow-y: auto;
+        }
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -280,19 +292,18 @@
             border-color: var(--accent);
         }
         .modal-actions {
-            display: flex;
-            gap: 0.75rem;
+            display: flex;            gap: 0.75rem;
             margin-top: 1.5rem;
         }
         .modal-actions button { flex: 1; }
         
-        /* TOAST */
         .toast {
             position: fixed;
             top: 80px;
             right: 1rem;
             left: 1rem;
-            padding: 1rem;            border-radius: 10px;
+            padding: 1rem;
+            border-radius: 10px;
             font-weight: 600;
             z-index: 400;
             animation: slideIn 0.3s ease;
@@ -330,8 +341,7 @@
         }
         
         .settings-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: var(--bg-card);            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1rem;
@@ -341,7 +351,8 @@
             font-weight: 700;
             margin-bottom: 1.25rem;
             padding-bottom: 0.75rem;
-            border-bottom: 1px solid var(--border);        }
+            border-bottom: 1px solid var(--border);
+        }
         
         .user-profile-mobile {
             display: flex;
@@ -370,19 +381,16 @@
     </style>
 </head>
 <body>
-    <!-- HEADER MOBILE -->
     <div class="mobile-header">
         <h1>⚡ PromptHub Admin</h1>
         <button class="menu-btn" onclick="toggleMenu()">☰</button>
     </div>
 
-    <!-- NAVIGATION MOBILE -->
     <div id="mobileNav" class="mobile-nav">
         <div class="mobile-nav-header">
             <h1>⚡ PromptHub</h1>
             <button class="menu-btn" onclick="toggleMenu()">✕</button>
-        </div>
-        
+        </div>        
         <div class="user-profile-mobile">
             <div class="user-avatar" id="userAvatar">A</div>
             <div class="user-profile-info">
@@ -390,6 +398,7 @@
                 <div class="user-profile-email" id="userEmail">admin@prompthub.com</div>
             </div>
         </div>
+
         <div class="nav-section-title">Principal</div>
         <div class="nav-item-mobile active" onclick="showSection('dashboard', this)">📊 Dashboard</div>
         <div class="nav-item-mobile" onclick="showSection('users', this)">👥 Utilisateurs <span id="usersBadge" style="margin-left:auto;background:#ef4444;color:white;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
@@ -403,9 +412,7 @@
         <div class="nav-item-mobile" onclick="logout()" style="color: var(--danger); margin-top: 2rem;">🚪 Déconnexion</div>
     </div>
 
-    <!-- CONTENU -->
     <div class="content">
-        <!-- DASHBOARD -->
         <div id="dashboard" class="section active">
             <h1 class="page-title">Dashboard</h1>
             <p class="page-subtitle">Vue d'ensemble de votre plateforme</p>
@@ -428,9 +435,21 @@
                     <div class="stat-value" id="statRevenue">$0</div>
                 </div>
             </div>
+
+            <div class="chart-container">
+                <div class="chart-title">📈 Revenus (30 derniers jours)</div>
+                <div class="chart-wrapper">
+                    <canvas id="revenueChart"></canvas>                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">📊 Répartition des rôles</div>
+                <div class="chart-wrapper">
+                    <canvas id="rolesChart"></canvas>
+                </div>
+            </div>
         </div>
 
-        <!-- UTILISATEURS -->
         <div id="users" class="section">
             <h1 class="page-title">👥 Utilisateurs</h1>
             <p class="page-subtitle">Gérer tous les utilisateurs</p>
@@ -439,21 +458,19 @@
             
             <div id="usersList"></div>
         </div>
-        <!-- PROMPTS -->
+
         <div id="prompts" class="section">
             <h1 class="page-title">📦 Prompts</h1>
             <p class="page-subtitle">Gérer tous les prompts</p>
             <div id="promptsList" class="empty-state">Chargement...</div>
         </div>
 
-        <!-- COMMANDES -->
         <div id="orders" class="section">
             <h1 class="page-title">💰 Commandes</h1>
             <p class="page-subtitle">Historique des transactions</p>
             <div id="ordersList" class="empty-state">Chargement...</div>
         </div>
 
-        <!-- CONFIGURATION -->
         <div id="config" class="section">
             <h1 class="page-title">⚙️ Configuration</h1>
             <p class="page-subtitle">Paramètres du site</p>
@@ -471,8 +488,7 @@
                 <div class="form-group">
                     <label>Description du site</label>
                     <textarea id="settingDescription" rows="3">The Ultimate Prompt Marketplace</textarea>
-                </div>
-                <button class="btn btn-primary" onclick="saveConfig()" style="width:100%;">💾 Sauvegarder</button>
+                </div>                <button class="btn btn-primary" onclick="saveConfig()" style="width:100%;">💾 Sauvegarder</button>
             </div>
 
             <div class="settings-card">
@@ -488,7 +504,7 @@
                 <button class="btn btn-primary" onclick="saveConfig()" style="width:100%;">💾 Sauvegarder</button>
             </div>
         </div>
-        <!-- MAINTENANCE -->
+
         <div id="maintenance" class="section">
             <h1 class="page-title">🔧 Maintenance</h1>
             <p class="page-subtitle">Mode maintenance du site</p>
@@ -512,7 +528,6 @@
         </div>
     </div>
 
-    <!-- MODAL ÉDITION -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -522,8 +537,7 @@
             <div class="form-group">
                 <label>ID</label>
                 <input type="text" id="editId" readonly style="opacity:0.6;">
-            </div>
-            <div class="form-group">
+            </div>            <div class="form-group">
                 <label>Nom complet</label>
                 <input type="text" id="editName">
             </div>
@@ -537,7 +551,8 @@
                     <option value="buyer">🛒 Acheteur</option>
                     <option value="seller">💼 Vendeur</option>
                     <option value="admin">👑 Admin</option>
-                </select>            </div>
+                </select>
+            </div>
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeModal()">❌ Annuler</button>
                 <button class="btn btn-primary" onclick="saveEdit()">💾 Sauvegarder</button>
@@ -553,6 +568,8 @@
 
         let allUsers = [];
         let currentEditId = null;
+        let revenueChartInstance = null;
+        let rolesChartInstance = null;
 
         async function init() {
             const { data: { session } } = await supabaseClient.auth.getSession();
@@ -569,8 +586,7 @@
                 return;
             }
 
-            loadAllData();
-        }
+            loadAllData();        }
 
         async function loadAllData() {
             await Promise.all([loadUsers(), loadPrompts(), loadOrders(), loadConfig()]);
@@ -586,7 +602,8 @@
             renderUsers(allUsers);
         }
 
-        function renderUsers(users) {            const container = document.getElementById('usersList');
+        function renderUsers(users) {
+            const container = document.getElementById('usersList');
             if (users.length === 0) {
                 container.innerHTML = '<div class="empty-state">Aucun utilisateur</div>';
                 return;
@@ -618,8 +635,7 @@
                         <div class="detail-item">
                             <div class="detail-label">Dernière connexion</div>
                             <div class="detail-value">${lastLogin}</div>
-                        </div>
-                        <div class="detail-item">
+                        </div>                        <div class="detail-item">
                             <div class="detail-label">Statut</div>
                             <div class="detail-value">${statusBadge}</div>
                         </div>
@@ -635,6 +651,7 @@
                 </div>`;
             }).join('');
         }
+
         function openEdit(id, name, email, role) {
             currentEditId = id;
             document.getElementById('editId').value = id;
@@ -667,7 +684,6 @@
             if (error) { showToast('❌ Erreur: ' + error.message, 'error'); }
             else { showToast(!currentStatus ? '🚫 Utilisateur banni' : '✅ Utilisateur débanni', 'success'); loadUsers(); }
         }
-
         function filterUsers(query) {
             const filtered = allUsers.filter(u => 
                 (u.full_name || '').toLowerCase().includes(query.toLowerCase()) || 
@@ -684,7 +700,8 @@
             document.getElementById('statPrompts').textContent = prompts.length;
             document.getElementById('promptsBadge').textContent = prompts.length;
             
-            const container = document.getElementById('promptsList');            if (prompts.length === 0) {
+            const container = document.getElementById('promptsList');
+            if (prompts.length === 0) {
                 container.innerHTML = '<div class="empty-state">Aucun prompt</div>';
                 return;
             }
@@ -716,8 +733,7 @@
         }
 
         async function deletePrompt(id) {
-            if (!confirm('⚠️ Supprimer ce prompt définitivement ?')) return;
-            const { error } = await supabaseClient.from('prompts').delete().eq('id', id);
+            if (!confirm('⚠️ Supprimer ce prompt définitivement ?')) return;            const { error } = await supabaseClient.from('prompts').delete().eq('id', id);
             if (error) { showToast('❌ Erreur: ' + error.message, 'error'); }
             else { showToast('🗑️ Prompt supprimé', 'success'); loadPrompts(); }
         }
@@ -733,7 +749,8 @@
             let totalCommission = 0;
             
             const container = document.getElementById('ordersList');
-            container.innerHTML = data.map(o => {                const commission = o.amount * 0.20;
+            container.innerHTML = data.map(o => {
+                const commission = o.amount * 0.20;
                 totalCommission += commission;
                 return `
                     <div class="user-card">
@@ -763,6 +780,97 @@
             }).join('');
             
             document.getElementById('statRevenue').textContent = '$' + totalCommission.toFixed(2);
+            
+            initCharts(data);
+        }
+        function initCharts(ordersData) {
+            const ctx1 = document.getElementById('revenueChart');
+            const ctx2 = document.getElementById('rolesChart');
+            
+            if (!ctx1 || !ctx2) return;
+            
+            if (revenueChartInstance) revenueChartInstance.destroy();
+            if (rolesChartInstance) rolesChartInstance.destroy();
+            
+            const labels = [];
+            const revenueData = [];
+            const now = new Date();
+            for (let i = 29; i >= 0; i--) {
+                const date = new Date(now);
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+                labels.push(dateStr);
+                
+                const dayOrders = ordersData.filter(o => {
+                    const orderDate = new Date(o.created_at);
+                    return orderDate.toDateString() === date.toDateString();
+                });
+                
+                const dayRevenue = dayOrders.reduce((sum, o) => sum + (o.amount * 0.20), 0);
+                revenueData.push(dayRevenue.toFixed(2));
+            }
+            
+            revenueChartInstance = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Revenus ($)',
+                        data: revenueData,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,                            grid: { color: 'rgba(55, 65, 81, 0.5)' },
+                            ticks: { color: '#9ca3af' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#9ca3af', maxTicksLimit: 7 }
+                        }
+                    }
+                }
+            });
+            
+            const adminCount = allUsers.filter(u => u.role === 'admin').length;
+            const sellerCount = allUsers.filter(u => u.role === 'seller').length;
+            const buyerCount = allUsers.filter(u => u.role === 'buyer').length;
+            
+            rolesChartInstance = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Acheteurs', 'Vendeurs', 'Admins'],
+                    datasets: [{
+                        data: [buyerCount, sellerCount, adminCount],
+                        backgroundColor: ['#3b82f6', '#f59e0b', '#8b5cf6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#9ca3af',
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         async function loadConfig() {
@@ -772,8 +880,7 @@
             if (data && data.length > 0) {
                 data.forEach(config => {
                     if (config.key === 'general' && config.value) {
-                        document.getElementById('settingSiteName').value = config.value.site_name || 'PromptHub';
-                        document.getElementById('settingEmail').value = config.value.contact_email || 'contact@prompthub.com';
+                        document.getElementById('settingSiteName').value = config.value.site_name || 'PromptHub';                        document.getElementById('settingEmail').value = config.value.contact_email || 'contact@prompthub.com';
                         document.getElementById('settingDescription').value = config.value.description || '';
                     }
                     if (config.key === 'financial' && config.value) {
@@ -783,6 +890,7 @@
                 });
             }
         }
+
         async function saveConfig() {
             const general = {
                 site_name: document.getElementById('settingSiteName').value,
@@ -821,7 +929,6 @@
                 document.getElementById('maintenanceMessage').value = data.value.message || 'Site en maintenance. Revenez bientôt !';
             }
         }
-
         async function saveMaintenance() {
             const enabled = document.getElementById('maintenanceEnabled').value === 'true';
             const message = document.getElementById('maintenanceMessage').value;
@@ -831,7 +938,8 @@
                 updated_at: new Date().toISOString() 
             });
             if (error) { showToast('❌ Erreur: ' + error.message, 'error'); return; }
-            const statusDiv = document.getElementById('maintenanceStatus');            statusDiv.style.display = 'block';
+            const statusDiv = document.getElementById('maintenanceStatus');
+            statusDiv.style.display = 'block';
             if (enabled) {
                 statusDiv.style.background = 'rgba(239, 68, 68, 0.2)';
                 statusDiv.style.color = '#ef4444';
@@ -870,6 +978,5 @@
         }
 
         window.addEventListener('DOMContentLoaded', init);
-    </script>
-</body>
+    </script></body>
 </html>
