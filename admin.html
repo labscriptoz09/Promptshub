@@ -137,7 +137,7 @@
             color: var(--accent);
         }
         
-        /* CARTES UTILISATEURS (MOBILE) */
+        /* CARTES UTILISATEURS */
         .user-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -380,7 +380,7 @@
     <div id="mobileNav" class="mobile-nav">
         <div class="mobile-nav-header">
             <h1>⚡ PromptHub</h1>
-            <button class="menu-btn" onclick="toggleMenu()"></button>
+            <button class="menu-btn" onclick="toggleMenu()">✕</button>
         </div>
         
         <div class="user-profile-mobile">
@@ -393,14 +393,14 @@
         <div class="nav-section-title">Principal</div>
         <div class="nav-item-mobile active" onclick="showSection('dashboard', this)">📊 Dashboard</div>
         <div class="nav-item-mobile" onclick="showSection('users', this)">👥 Utilisateurs <span id="usersBadge" style="margin-left:auto;background:#ef4444;color:white;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
-        <div class="nav-item-mobile" onclick="showSection('prompts', this)"> Prompts <span id="promptsBadge" style="margin-left:auto;background:#ef4444;color:white;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
+        <div class="nav-item-mobile" onclick="showSection('prompts', this)">📦 Prompts <span id="promptsBadge" style="margin-left:auto;background:#ef4444;color:white;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
         <div class="nav-item-mobile" onclick="showSection('orders', this)">💰 Commandes</div>
         
         <div class="nav-section-title">Paramètres</div>
-        <div class="nav-item-mobile" onclick="showSection('maintenance', this)">🔧 Maintenance</div>
         <div class="nav-item-mobile" onclick="showSection('config', this)">⚙️ Configuration</div>
+        <div class="nav-item-mobile" onclick="showSection('maintenance', this)">🔧 Maintenance</div>
         
-        <div class="nav-item-mobile" onclick="logout()" style="color: var(--danger); margin-top: 2rem;"> Déconnexion</div>
+        <div class="nav-item-mobile" onclick="logout()" style="color: var(--danger); margin-top: 2rem;">🚪 Déconnexion</div>
     </div>
 
     <!-- CONTENU -->
@@ -443,37 +443,14 @@
         <div id="prompts" class="section">
             <h1 class="page-title">📦 Prompts</h1>
             <p class="page-subtitle">Gérer tous les prompts</p>
-            <div id="promptsList"></div>
+            <div id="promptsList" class="empty-state">Chargement...</div>
         </div>
 
         <!-- COMMANDES -->
         <div id="orders" class="section">
             <h1 class="page-title">💰 Commandes</h1>
             <p class="page-subtitle">Historique des transactions</p>
-            <div id="ordersList"></div>
-        </div>
-
-        <!-- MAINTENANCE -->
-        <div id="maintenance" class="section">
-            <h1 class="page-title">🔧 Maintenance</h1>
-            <p class="page-subtitle">Mode maintenance du site</p>
-            
-            <div class="settings-card">
-                <h3>État du site</h3>
-                <div class="form-group">
-                    <label>Mode</label>
-                    <select id="maintenanceEnabled">
-                        <option value="false"> Site en ligne (Normal)</option>
-                        <option value="true">🔴 Mode Maintenance (Bloqué)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Message aux visiteurs</label>
-                    <textarea id="maintenanceMessage" rows="4">Site en maintenance. Revenez bientôt !</textarea>
-                </div>
-                <button class="btn btn-primary" onclick="saveMaintenance()" style="width:100%;"> Sauvegarder</button>
-                <div id="maintenanceStatus" style="margin-top:1rem;padding:1rem;border-radius:8px;display:none;"></div>
-            </div>
+            <div id="ordersList" class="empty-state">Chargement...</div>
         </div>
 
         <!-- CONFIGURATION -->
@@ -488,9 +465,49 @@
                     <input type="text" id="settingSiteName" value="PromptHub">
                 </div>
                 <div class="form-group">
-                    <label>Email de contact</label>                    <input type="email" id="settingEmail" value="contact@prompthub.com">
+                    <label>Email de contact</label>
+                    <input type="email" id="settingEmail" value="contact@prompthub.com">
+                </div>
+                <div class="form-group">
+                    <label>Description du site</label>
+                    <textarea id="settingDescription" rows="3">The Ultimate Prompt Marketplace</textarea>
                 </div>
                 <button class="btn btn-primary" onclick="saveConfig()" style="width:100%;">💾 Sauvegarder</button>
+            </div>
+
+            <div class="settings-card">
+                <h3>💰 Configuration Financière</h3>
+                <div class="form-group">
+                    <label>Commission plateforme (%)</label>
+                    <input type="number" id="settingCommission" value="20" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label>Prix minimum pour un prompt ($)</label>
+                    <input type="number" id="settingMinPrice" value="1" min="0" step="0.01">
+                </div>
+                <button class="btn btn-primary" onclick="saveConfig()" style="width:100%;">💾 Sauvegarder</button>
+            </div>
+        </div>
+        <!-- MAINTENANCE -->
+        <div id="maintenance" class="section">
+            <h1 class="page-title">🔧 Maintenance</h1>
+            <p class="page-subtitle">Mode maintenance du site</p>
+            
+            <div class="settings-card">
+                <h3>État du site</h3>
+                <div class="form-group">
+                    <label>Mode</label>
+                    <select id="maintenanceEnabled">
+                        <option value="false">🟢 Site en ligne (Normal)</option>
+                        <option value="true">🔴 Mode Maintenance (Bloqué)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Message aux visiteurs</label>
+                    <textarea id="maintenanceMessage" rows="4">Site en maintenance. Revenez bientôt !</textarea>
+                </div>
+                <button class="btn btn-primary" onclick="saveMaintenance()" style="width:100%;">💾 Sauvegarder</button>
+                <div id="maintenanceStatus" style="margin-top:1rem;padding:1rem;border-radius:8px;display:none;"></div>
             </div>
         </div>
     </div>
@@ -520,8 +537,7 @@
                     <option value="buyer">🛒 Acheteur</option>
                     <option value="seller">💼 Vendeur</option>
                     <option value="admin">👑 Admin</option>
-                </select>
-            </div>
+                </select>            </div>
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeModal()">❌ Annuler</button>
                 <button class="btn btn-primary" onclick="saveEdit()">💾 Sauvegarder</button>
@@ -537,6 +553,7 @@
 
         let allUsers = [];
         let currentEditId = null;
+
         async function init() {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (!session) { window.location.href = 'auth.html'; return; }
@@ -552,7 +569,11 @@
                 return;
             }
 
-            loadUsers();
+            loadAllData();
+        }
+
+        async function loadAllData() {
+            await Promise.all([loadUsers(), loadPrompts(), loadOrders(), loadConfig()]);
         }
 
         async function loadUsers() {
@@ -565,8 +586,7 @@
             renderUsers(allUsers);
         }
 
-        function renderUsers(users) {
-            const container = document.getElementById('usersList');
+        function renderUsers(users) {            const container = document.getElementById('usersList');
             if (users.length === 0) {
                 container.innerHTML = '<div class="empty-state">Aucun utilisateur</div>';
                 return;
@@ -586,7 +606,8 @@
                         <div class="user-avatar">${initials}</div>
                         <div class="user-info">
                             <div class="user-name">${u.full_name || 'Utilisateur'}</div>
-                            <div class="user-email">${u.email || 'N/A'}</div>                        </div>
+                            <div class="user-email">${u.email || 'N/A'}</div>
+                        </div>
                         ${roleBadge}
                     </div>
                     <div class="user-details">
@@ -614,7 +635,6 @@
                 </div>`;
             }).join('');
         }
-
         function openEdit(id, name, email, role) {
             currentEditId = id;
             document.getElementById('editId').value = id;
@@ -635,7 +655,8 @@
             const role = document.getElementById('editRole').value;
             
             const { error } = await supabaseClient.from('profiles').update({ 
-                full_name: name, role: role             }).eq('id', currentEditId);
+                full_name: name, role: role 
+            }).eq('id', currentEditId);
             
             if (error) { showToast('❌ Erreur: ' + error.message, 'error'); }
             else { showToast('✅ Utilisateur modifié !', 'success'); closeModal(); loadUsers(); }
@@ -655,6 +676,152 @@
             renderUsers(filtered);
         }
 
+        async function loadPrompts() {
+            const { data, error } = await supabaseClient.from('prompts').select('*').order('created_at', { ascending: false });
+            if (error) { console.error(error); return; }
+            
+            const prompts = data || [];
+            document.getElementById('statPrompts').textContent = prompts.length;
+            document.getElementById('promptsBadge').textContent = prompts.length;
+            
+            const container = document.getElementById('promptsList');            if (prompts.length === 0) {
+                container.innerHTML = '<div class="empty-state">Aucun prompt</div>';
+                return;
+            }
+            
+            container.innerHTML = prompts.map(p => `
+                <div class="user-card">
+                    <div class="user-card-header">
+                        <div class="user-info">
+                            <div class="user-name">${p.title}</div>
+                            <div class="user-email">${p.seller_name || 'Vendeur inconnu'}</div>
+                        </div>
+                        <span class="badge badge-buyer">${p.category || 'Général'}</span>
+                    </div>
+                    <div class="user-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Prix</div>
+                            <div class="detail-value" style="color:var(--accent);font-weight:700;">$${p.price}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Statut</div>
+                            <div class="detail-value">${p.status === 'published' ? '<span class="badge badge-active">✅ Publié</span>' : '<span class="badge badge-banned">📝 Brouillon</span>'}</div>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn btn-danger" onclick="deletePrompt('${p.id}')">🗑️ Supprimer</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function deletePrompt(id) {
+            if (!confirm('⚠️ Supprimer ce prompt définitivement ?')) return;
+            const { error } = await supabaseClient.from('prompts').delete().eq('id', id);
+            if (error) { showToast('❌ Erreur: ' + error.message, 'error'); }
+            else { showToast('🗑️ Prompt supprimé', 'success'); loadPrompts(); }
+        }
+
+        async function loadOrders() {
+            const { data, error } = await supabaseClient.from('orders').select('*, prompts(title), profiles:buyer_id(full_name)').order('created_at', { ascending: false });
+            if (error || !data || data.length === 0) {
+                document.getElementById('ordersList').innerHTML = '<div class="empty-state">Aucune commande</div>';
+                return;
+            }
+            
+            document.getElementById('statSales').textContent = data.length;
+            let totalCommission = 0;
+            
+            const container = document.getElementById('ordersList');
+            container.innerHTML = data.map(o => {                const commission = o.amount * 0.20;
+                totalCommission += commission;
+                return `
+                    <div class="user-card">
+                        <div class="user-card-header">
+                            <div class="user-info">
+                                <div class="user-name">${o.prompts?.title || 'Prompt supprimé'}</div>
+                                <div class="user-email">Acheteur: ${o.profiles?.full_name || 'Inconnu'}</div>
+                            </div>
+                            <span class="badge badge-active">✅ Payé</span>
+                        </div>
+                        <div class="user-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Date</div>
+                                <div class="detail-value">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Montant</div>
+                                <div class="detail-value" style="color:var(--accent);font-weight:700;">$${parseFloat(o.amount).toFixed(2)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Commission (20%)</div>
+                                <div class="detail-value" style="color:var(--success);font-weight:700;">+$${commission.toFixed(2)}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('statRevenue').textContent = '$' + totalCommission.toFixed(2);
+        }
+
+        async function loadConfig() {
+            const { data, error } = await supabaseClient.from('site_config').select('value').in('key', ['general', 'financial']);
+            if (error) { console.error(error); return; }
+            
+            if (data && data.length > 0) {
+                data.forEach(config => {
+                    if (config.key === 'general' && config.value) {
+                        document.getElementById('settingSiteName').value = config.value.site_name || 'PromptHub';
+                        document.getElementById('settingEmail').value = config.value.contact_email || 'contact@prompthub.com';
+                        document.getElementById('settingDescription').value = config.value.description || '';
+                    }
+                    if (config.key === 'financial' && config.value) {
+                        document.getElementById('settingCommission').value = config.value.commission_rate || 20;
+                        document.getElementById('settingMinPrice').value = config.value.min_price || 1;
+                    }
+                });
+            }
+        }
+        async function saveConfig() {
+            const general = {
+                site_name: document.getElementById('settingSiteName').value,
+                contact_email: document.getElementById('settingEmail').value,
+                description: document.getElementById('settingDescription').value
+            };
+            
+            const financial = {
+                commission_rate: parseInt(document.getElementById('settingCommission').value),
+                min_price: parseFloat(document.getElementById('settingMinPrice').value)
+            };
+            
+            const { error: error1 } = await supabaseClient.from('site_config').upsert({
+                key: 'general',
+                value: general,
+                updated_at: new Date().toISOString()
+            });
+            
+            const { error: error2 } = await supabaseClient.from('site_config').upsert({
+                key: 'financial',
+                value: financial,
+                updated_at: new Date().toISOString()
+            });
+            
+            if (error1 || error2) {
+                showToast('❌ Erreur lors de la sauvegarde', 'error');
+            } else {
+                showToast('✅ Configuration sauvegardée avec succès !', 'success');
+            }
+        }
+
+        async function loadMaintenance() {
+            const { data } = await supabaseClient.from('site_config').select('value').eq('key', 'maintenance').single();
+            if (data && data.value) {
+                document.getElementById('maintenanceEnabled').value = data.value.enabled.toString();
+                document.getElementById('maintenanceMessage').value = data.value.message || 'Site en maintenance. Revenez bientôt !';
+            }
+        }
+
         async function saveMaintenance() {
             const enabled = document.getElementById('maintenanceEnabled').value === 'true';
             const message = document.getElementById('maintenanceMessage').value;
@@ -663,9 +830,8 @@
                 value: { enabled, message },
                 updated_at: new Date().toISOString() 
             });
-            if (error) { showToast(' Erreur: ' + error.message, 'error'); return; }
-            const statusDiv = document.getElementById('maintenanceStatus');
-            statusDiv.style.display = 'block';
+            if (error) { showToast('❌ Erreur: ' + error.message, 'error'); return; }
+            const statusDiv = document.getElementById('maintenanceStatus');            statusDiv.style.display = 'block';
             if (enabled) {
                 statusDiv.style.background = 'rgba(239, 68, 68, 0.2)';
                 statusDiv.style.color = '#ef4444';
@@ -678,13 +844,10 @@
             showToast(enabled ? 'Mode maintenance activé' : 'Mode maintenance désactivé', 'success');
         }
 
-        async function saveConfig() {
-            showToast('✅ Configuration sauvegardée', 'success');
-        }
-
         function showSection(sectionId, navItem) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item-mobile').forEach(n => n.classList.remove('active'));            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('.nav-item-mobile').forEach(n => n.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
             if (navItem) navItem.classList.add('active');
             toggleMenu();
         }
