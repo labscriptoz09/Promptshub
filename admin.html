@@ -4,248 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PromptHub - Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-primary: #0a0e1a;
-            --bg-card: rgba(17, 24, 39, 0.7);
-            --text-primary: #ffffff;
-            --text-secondary: #cbd5e1;
-            --accent-cyan: #22d3ee;
-            --accent-blue: #60a5fa;
-            --accent-green: #34d399;
-            --accent-red: #f87171;
-            --border-color: rgba(34, 211, 238, 0.2);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-primary); }
-        
-        .navbar { background: rgba(10, 14, 26, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; }
-        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .stat-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; }
-        .stat-card h3 { color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 0.5rem; }
-        .stat-value { font-size: 2rem; font-weight: 700; color: var(--accent-cyan); }
-        
-        .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); }
-        .tab { padding: 0.8rem 1.5rem; background: transparent; border: none; color: var(--text-secondary); font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; }
-        .tab.active { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); }
-        
-        .section { display: none; }
-        .section.active { display: block; }
-        
-        table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: 12px; overflow: hidden; }
-        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
-        th { background: rgba(10, 14, 26, 0.8); color: var(--text-secondary); text-transform: uppercase; font-size: 0.75rem; }
-        
-        .btn { padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; }
-        .btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.4); }
-        .btn-primary { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #0a0e1a; }
-        
-        .badge { padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; }
-        .badge-admin { background: rgba(239, 68, 68, 0.2); color: #f87171; }
-        .badge-buyer { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }        
-        .error { background: rgba(239, 68, 68, 0.2); border: 1px solid var(--accent-red); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
-        .loading { text-align: center; padding: 2rem; color: var(--text-secondary); }
+        body { font-family: Arial, sans-serif; background: #0a0e1a; color: white; padding: 20px; }
+        .error { background: #ef4444; color: white; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        .success { background: #10b981; color: white; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #334155; text-align: left; }
+        th { background: #1e293b; }
+        .btn { padding: 8px 16px; background: #22d3ee; color: #0a0e1a; border: none; border-radius: 6px; cursor: pointer; }
+        .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
+        .stat-card { background: #1e293b; padding: 20px; border-radius: 12px; text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: bold; color: #22d3ee; }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">⚡ PromptHub | Admin</div>
-            <button id="btn-logout" class="btn btn-danger">Déconnexion</button>
-        </div>
-    </nav>
+    <h1>🎛️ PromptHub Admin</h1>
+    <div id="messages"></div>
+    
+    <div class="stats" id="stats" style="display:none;">
+        <div class="stat-card"><div>Utilisateurs</div><div class="stat-value" id="statUsers">0</div></div>
+        <div class="stat-card"><div>Prompts</div><div class="stat-value" id="statPrompts">0</div></div>
+    </div>
 
-    <div class="container">
-        <h1 style="margin-bottom: 2rem;">🎛️ Panneau d'Administration</h1>
-        
-        <div id="errorContainer"></div>
-        
-        <div class="stats-grid">
-            <div class="stat-card"><h3>Utilisateurs</h3><div class="stat-value" id="statUsers">0</div></div>
-            <div class="stat-card"><h3>Prompts</h3><div class="stat-value" id="statPrompts">0</div></div>
-            <div class="stat-card"><h3>Ventes</h3><div class="stat-value" id="statSales">0</div></div>
-            <div class="stat-card"><h3>Revenus</h3><div class="stat-value" id="statRevenue">$0</div></div>
-        </div>
-
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('users')">Utilisateurs</button>
-            <button class="tab" onclick="switchTab('prompts')">Prompts</button>
-            <button class="tab" onclick="switchTab('settings')">Paramètres</button>
-        </div>
-
-        <div id="usersSection" class="section active">
-            <h2 style="margin-bottom: 1rem;">Gestion des Utilisateurs</h2>
-            <div id="usersContent" class="loading">Chargement...</div>
-        </div>
-
-        <div id="promptsSection" class="section">
-            <h2 style="margin-bottom: 1rem;">Gestion des Prompts</h2>
-            <div id="promptsContent" class="loading">Chargement...</div>
-        </div>
-
-        <div id="settingsSection" class="section">
-            <h2 style="margin-bottom: 1rem;">Paramètres du Site</h2>
-            <div id="settingsContent" class="loading">Chargement...</div>
-        </div>
+    <div id="usersSection" style="display:none;">
+        <h2>Utilisateurs</h2>
+        <table id="usersTable">
+            <thead><tr><th>Nom</th><th>Rôle</th><th>Actions</th></tr></thead>
+            <tbody id="usersBody"></tbody>
+        </table>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
+        const SUPABASE_URL = 'https://osewbqnjhokpwmoalxcd.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zZXdicW5qaG9rcHdtb2FseGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcyMTQsImV4cCI6MjA5NjU5MzIxNH0.knlpmVwUa2gd_ft3AptsUpl5gih4rCjTBYqGSRK5p38';
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function init() {
-            console.log('🔍 Vérification de la session...');
+            console.log('🚀 Démarrage...');
             
-            const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+            // Test connexion
+            const { data: { session }, error } = await supabase.auth.getSession();
+            console.log('Session:', session);
+            console.log('Error:', error);
             
-            if (sessionError || !session) {
-                showError('❌ Non connecté. Redirection...');
-                setTimeout(() => window.location.href = 'auth.html', 2000);
+            if (!session) {
+                showMessage('❌ Non connecté. Connecte-toi d\'abord sur auth.html', 'error');
                 return;
             }
-            
-            console.log('✅ Connecté:', session.user.email);
-            
-            // Vérifier si admin
-            const { data: profile, error: profileError } = await supabase
+
+            // Test table profiles
+            const { data: profiles, error: profilesError } = await supabase
                 .from('profiles')
-                .select('role')
-                .eq('id', session.user.id)
-                .single();
+                .select('*');
             
-            if (profileError || !profile || profile.role !== 'admin') {
-                showError('❌ Accès refusé. Vous n\'êtes pas admin.');
-                console.error('Erreur profile:', profileError);
+            console.log('Profiles:', profiles);
+            console.log('Error profiles:', profilesError);
+            
+            if (profilesError) {
+                showMessage('❌ Erreur profiles: ' + profilesError.message, 'error');
                 return;
             }
+
+            // Afficher stats
+            document.getElementById('stats').style.display = 'grid';
+            document.getElementById('statUsers').textContent = profiles?.length || 0;
             
-            console.log('✅ Admin confirmé');
-            loadAllData();
+            // Afficher utilisateurs
+            const tbody = document.getElementById('usersBody');
+            tbody.innerHTML = profiles.map(p => `
+                <tr>
+                    <td>${p.full_name || 'N/A'}</td>
+                    <td>${p.role || 'buyer'}</td>
+                    <td><button class="btn" onclick="alert('ID: ${p.id}')">Voir ID</button></td>
+                </tr>
+            `).join('');
             
-            document.getElementById('btn-logout').onclick = async () => {
-                await supabase.auth.signOut();
-                window.location.href = 'index.html';
-            };
+            document.getElementById('usersSection').style.display = 'block';
+            showMessage('✅ Tout fonctionne !', 'success');
         }
 
-        async function loadAllData() {
-            console.log('📊 Chargement des données...');
-            await Promise.all([
-                loadUsers(),
-                loadPrompts(),
-                loadSettings()
-            ]);
-        }
-
-        async function loadUsers() {
-            console.log('👥 Chargement utilisateurs...');
-            const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });            
-            if (error) {
-                console.error('Erreur utilisateurs:', error);
-                document.getElementById('usersContent').innerHTML = `<div class="error">Erreur: ${error.message}</div>`;
-                return;
-            }
-            
-            console.log('✅ Utilisateurs chargés:', data?.length);
-            document.getElementById('statUsers').textContent = data?.length || 0;
-            
-            const html = `
-                <table>
-                    <thead><tr><th>Nom</th><th>Email (ID)</th><th>Rôle</th><th>Actions</th></tr></thead>
-                    <tbody>
-                        ${data.map(u => `
-                            <tr>
-                                <td>${u.full_name || 'N/A'}</td>
-                                <td>${u.id.substring(0, 8)}...</td>
-                                <td><span class="badge ${u.role === 'admin' ? 'badge-admin' : 'badge-buyer'}">${u.role}</span></td>
-                                <td>
-                                    <select onchange="changeRole('${u.id}', this.value)" style="padding: 0.3rem;">
-                                        <option value="buyer" ${u.role === 'buyer' ? 'selected' : ''}>Buyer</option>
-                                        <option value="seller" ${u.role === 'seller' ? 'selected' : ''}>Seller</option>
-                                        <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Admin</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-            document.getElementById('usersContent').innerHTML = html;
-        }
-
-        async function loadPrompts() {
-            console.log('📦 Chargement prompts...');
-            const { data, error } = await supabase.from('prompts').select('*').order('created_at', { ascending: false });
-            
-            if (error) {
-                console.error('Erreur prompts:', error);
-                document.getElementById('promptsContent').innerHTML = `<div class="error">Erreur: ${error.message}</div>`;
-                return;
-            }
-            
-            console.log('✅ Prompts chargés:', data?.length);
-            document.getElementById('statPrompts').textContent = data?.length || 0;
-            
-            const html = `
-                <table>
-                    <thead><tr><th>Titre</th><th>Prix</th><th>Statut</th></tr></thead>                    <tbody>
-                        ${data.map(p => `
-                            <tr>
-                                <td>${p.title}</td>
-                                <td>$${p.price}</td>
-                                <td>${p.status || 'published'}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-            document.getElementById('promptsContent').innerHTML = html;
-        }
-
-        async function loadSettings() {
-            console.log('⚙️ Chargement paramètres...');
-            const { data, error } = await supabase.from('site_settings').select('*');
-            
-            if (error) {
-                console.error('Erreur settings:', error);
-                document.getElementById('settingsContent').innerHTML = `<div class="error">Erreur: ${error.message}</div>`;
-                return;
-            }
-            
-            console.log('✅ Paramètres chargés');
-            const html = `
-                <div style="background: var(--bg-card); padding: 1.5rem; border-radius: 12px;">
-                    ${data.map(s => `<div style="margin-bottom: 1rem;"><strong>${s.key}:</strong> ${s.value}</div>`).join('')}
-                </div>
-            `;
-            document.getElementById('settingsContent').innerHTML = html;
-        }
-
-        async function changeRole(userId, newRole) {
-            const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', userId);
-            if (error) {
-                alert('Erreur: ' + error.message);
-            } else {
-                alert('✅ Rôle mis à jour');
-                loadUsers();
-            }
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById(tab + 'Section').classList.add('active');
-        }
-        function showError(msg) {
-            document.getElementById('errorContainer').innerHTML = `<div class="error">${msg}</div>`;
-            console.error(msg);
+        function showMessage(msg, type) {
+            document.getElementById('messages').innerHTML = `<div class="${type}">${msg}</div>`;
         }
 
         window.addEventListener('DOMContentLoaded', init);
