@@ -202,6 +202,7 @@
         .user-actions {
             display: flex;
             gap: 0.5rem;
+            flex-wrap: wrap;
         }
         .btn {
             padding: 0.75rem 1rem;
@@ -211,6 +212,7 @@
             font-weight: 600;
             font-size: 0.85rem;
             flex: 1;
+            min-width: 100px;
             transition: all 0.2s;
             display: inline-flex;
             align-items: center;
@@ -222,28 +224,36 @@
         .btn-danger { background: var(--danger); color: white; }
         .btn-danger:hover { background: #dc2626; }
         .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #059669; }
         .btn-secondary { background: var(--bg-hover); color: var(--text-primary); }
+        .btn-secondary:hover { background: #4b5563; }
         .btn-export { background: var(--purple); color: white; }
         .btn-export:hover { background: #7c3aed; }
         .btn-filter { background: var(--warning); color: #000; }
         .btn-filter:hover { background: #d97706; }
         .btn-clear { background: var(--text-muted); color: white; }
         .btn-clear:hover { background: #4b5563; }
+        .btn-approve { background: var(--success); color: white; }
+        .btn-approve:hover { background: #059669; }
+        .btn-reject { background: var(--danger); color: white; }
+        .btn-reject:hover { background: #dc2626; }
         
         .badge {
             padding: 0.375rem 0.875rem;
             border-radius: 999px;
             font-size: 0.75rem;
             font-weight: 700;
-            display: inline-block;
-        }
+            display: inline-block;        }
         .badge-admin { background: rgba(139, 92, 246, 0.2); color: var(--purple); }
         .badge-seller { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
         .badge-buyer { background: rgba(59, 130, 246, 0.2); color: var(--accent); }
         .badge-active { background: rgba(16, 185, 129, 0.2); color: var(--success); }
         .badge-banned { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .badge-pending { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .badge-featured { background: rgba(139, 92, 246, 0.2); color: var(--purple); }
         
-        .modal {            display: none;
+        .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -282,8 +292,7 @@
         }
         .form-group { margin-bottom: 1rem; }
         .form-group label {
-            display: block;
-            font-size: 0.85rem;
+            display: block;            font-size: 0.85rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: var(--text-secondary);
@@ -292,7 +301,8 @@
             width: 100%;
             padding: 0.875rem;
             background: var(--bg-main);
-            border: 1px solid var(--border);            border-radius: 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
             color: var(--text-primary);
             font-size: 0.95rem;
         }
@@ -331,8 +341,7 @@
         
         .empty-state {
             text-align: center;
-            padding: 3rem 1rem;
-            color: var(--text-muted);
+            padding: 3rem 1rem;            color: var(--text-muted);
         }
         
         .search-input {
@@ -341,7 +350,8 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 10px;
-            color: var(--text-primary);            font-size: 0.95rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
             margin-bottom: 1rem;
         }
         .search-input:focus {
@@ -380,8 +390,7 @@
         }
         .user-profile-info { flex: 1; }
         .user-profile-name { font-weight: 700; font-size: 1rem; }
-        .user-profile-email { font-size: 0.8rem; color: var(--text-muted); }
-        
+        .user-profile-email { font-size: 0.8rem; color: var(--text-muted); }        
         .export-bar {
             display: flex;
             gap: 0.5rem;
@@ -390,7 +399,8 @@
         }
         .export-bar .btn {
             flex: 1;
-            min-width: 120px;        }
+            min-width: 120px;
+        }
         
         .filter-bar {
             background: var(--bg-card);
@@ -429,8 +439,7 @@
         }
         .active-filters {
             display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
+            gap: 0.5rem;            flex-wrap: wrap;
             margin-top: 0.75rem;
         }
         .filter-tag {
@@ -439,7 +448,8 @@
             padding: 0.375rem 0.75rem;
             border-radius: 999px;
             font-size: 0.75rem;
-            font-weight: 600;            display: flex;
+            font-weight: 600;
+            display: flex;
             align-items: center;
             gap: 0.375rem;
         }
@@ -447,6 +457,26 @@
             cursor: pointer;
             font-size: 1rem;
             line-height: 1;
+        }
+        
+        .moderation-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .user-card {
+            position: relative;
+        }
+        
+        .prompt-description {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            line-height: 1.5;
         }
         
         @media (min-width: 768px) {
@@ -458,8 +488,7 @@
         }
     </style>
 </head>
-<body>
-    <div class="mobile-header">
+<body>    <div class="mobile-header">
         <h1>⚡ PromptHub Admin</h1>
         <button class="menu-btn" onclick="toggleMenu()">☰</button>
     </div>
@@ -479,16 +508,18 @@
         </div>
 
         <div class="nav-section-title">Principal</div>
-        <div class="nav-item-mobile active" onclick="showSection('dashboard', this)"> Dashboard</div>
+        <div class="nav-item-mobile active" onclick="showSection('dashboard', this)">📊 Dashboard</div>
         <div class="nav-item-mobile" onclick="showSection('users', this)">👥 Utilisateurs <span id="usersBadge" style="margin-left:auto;background:#ef4444;color:white;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
         <div class="nav-item-mobile" onclick="showSection('prompts', this)">📦 Prompts <span id="promptsBadge" style="margin-left:auto;background:#ef4444;color:white;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
+        <div class="nav-item-mobile" onclick="showSection('moderation', this)">🔍 Modération <span id="moderationBadge" style="margin-left:auto;background:#f59e0b;color:#000;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;">0</span></div>
         <div class="nav-item-mobile" onclick="showSection('orders', this)">💰 Commandes</div>
         
         <div class="nav-section-title">Paramètres</div>
         <div class="nav-item-mobile" onclick="showSection('config', this)">⚙️ Configuration</div>
         <div class="nav-item-mobile" onclick="showSection('maintenance', this)">🔧 Maintenance</div>
         
-        <div class="nav-item-mobile" onclick="logout()" style="color: var(--danger); margin-top: 2rem;">🚪 Déconnexion</div>    </div>
+        <div class="nav-item-mobile" onclick="logout()" style="color: var(--danger); margin-top: 2rem;">🚪 Déconnexion</div>
+    </div>
 
     <div class="content">
         <div id="dashboard" class="section active">
@@ -497,17 +528,16 @@
             
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h3> Utilisateurs</h3>
+                    <h3>👥 Utilisateurs</h3>
                     <div class="stat-value" id="statUsers">0</div>
                 </div>
                 <div class="stat-card">
-                    <h3> Prompts</h3>
+                    <h3>📦 Prompts</h3>
                     <div class="stat-value" id="statPrompts">0</div>
                 </div>
                 <div class="stat-card">
-                    <h3> Ventes</h3>
-                    <div class="stat-value" id="statSales">0</div>
-                </div>
+                    <h3>⏳ En attente</h3>
+                    <div class="stat-value" id="statPending" style="color: var(--warning);">0</div>                </div>
                 <div class="stat-card">
                     <h3>💵 Revenus</h3>
                     <div class="stat-value" id="statRevenue">$0</div>
@@ -536,8 +566,9 @@
             <input type="text" class="search-input" placeholder="🔍 Rechercher un utilisateur..." oninput="filterUsers(this.value)">
             
             <div class="filter-bar">
-                <div class="filter-title"> Filtres avancés</div>
-                <div class="filter-grid">                    <select class="filter-select" id="filterRole" onchange="applyUserFilters()">
+                <div class="filter-title">🔽 Filtres avancés</div>
+                <div class="filter-grid">
+                    <select class="filter-select" id="filterRole" onchange="applyUserFilters()">
                         <option value="">Tous les rôles</option>
                         <option value="admin">👑 Admin</option>
                         <option value="seller">💼 Vendeur</option>
@@ -555,8 +586,7 @@
                         <option value="month">Ce mois</option>
                         <option value="year">Cette année</option>
                     </select>
-                    <button class="btn btn-clear" onclick="clearUserFilters()">✕ Effacer</button>
-                </div>
+                    <button class="btn btn-clear" onclick="clearUserFilters()">✕ Effacer</button>                </div>
                 <div class="active-filters" id="userActiveFilters"></div>
             </div>
             
@@ -579,6 +609,7 @@
                         <option value="">Tous les statuts</option>
                         <option value="published">✅ Publié</option>
                         <option value="draft">📝 Brouillon</option>
+                        <option value="pending">⏳ En attente</option>
                     </select>
                     <select class="filter-select" id="filterPromptCategory" onchange="applyPromptFilters()">
                         <option value="">Toutes catégories</option>
@@ -586,7 +617,8 @@
                     <select class="filter-select" id="filterPromptPrice" onchange="applyPromptFilters()">
                         <option value="">Tous prix</option>
                         <option value="0-5">$0 - $5</option>
-                        <option value="5-10">$5 - $10</option>                        <option value="10-50">$10 - $50</option>
+                        <option value="5-10">$5 - $10</option>
+                        <option value="10-50">$10 - $50</option>
                         <option value="50+">$50+</option>
                     </select>
                     <button class="btn btn-clear" onclick="clearPromptFilters()">✕ Effacer</button>
@@ -598,6 +630,29 @@
                 <button class="btn btn-export" onclick="exportPromptsCSV()">📥 Exporter CSV</button>
             </div>
             <div id="promptsList" class="empty-state">Chargement...</div>
+        </div>
+
+        <div id="moderation" class="section">
+            <h1 class="page-title">🔍 Modération</h1>
+            <p class="page-subtitle">Approuver ou rejeter les prompts en attente</p>
+                        <div class="filter-bar">
+                <div class="filter-title">🔽 Filtres</div>
+                <div class="filter-grid">
+                    <select class="filter-select" id="filterModerationType" onchange="applyModerationFilters()">
+                        <option value="">Tous les types</option>
+                        <option value="new">Nouveaux prompts</option>
+                        <option value="update">Mises à jour</option>
+                    </select>
+                    <select class="filter-select" id="filterModerationDate" onchange="applyModerationFilters()">
+                        <option value="">Toutes dates</option>
+                        <option value="today">Aujourd'hui</option>
+                        <option value="week">Cette semaine</option>
+                    </select>
+                    <button class="btn btn-clear" onclick="clearModerationFilters()">✕ Effacer</button>
+                </div>
+            </div>
+            
+            <div id="moderationList" class="empty-state">Chargement...</div>
         </div>
 
         <div id="orders" class="section">
@@ -629,13 +684,13 @@
             </div>
             <div id="ordersList" class="empty-state">Chargement...</div>
         </div>
-
         <div id="config" class="section">
             <h1 class="page-title">⚙️ Configuration</h1>
             <p class="page-subtitle">Paramètres du site</p>
             
             <div class="settings-card">
-                <h3> Configuration Générale</h3>                <div class="form-group">
+                <h3>🌐 Configuration Générale</h3>
+                <div class="form-group">
                     <label>Nom du site</label>
                     <input type="text" id="settingSiteName" value="PromptHub">
                 </div>
@@ -678,13 +733,13 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Message aux visiteurs</label>
-                    <textarea id="maintenanceMessage" rows="4">Site en maintenance. Revenez bientôt !</textarea>
+                    <label>Message aux visiteurs</label>                    <textarea id="maintenanceMessage" rows="4">Site en maintenance. Revenez bientôt !</textarea>
                 </div>
                 <button class="btn btn-primary" onclick="saveMaintenance()" style="width:100%;">💾 Sauvegarder</button>
                 <div id="maintenanceStatus" style="margin-top:1rem;padding:1rem;border-radius:8px;display:none;"></div>
             </div>
-        </div>    </div>
+        </div>
+    </div>
 
     <div id="editModal" class="modal">
         <div class="modal-content">
@@ -707,14 +762,46 @@
             <div class="form-group">
                 <label>Rôle</label>
                 <select id="editRole">
-                    <option value="buyer"> Acheteur</option>
+                    <option value="buyer">🛒 Acheteur</option>
                     <option value="seller">💼 Vendeur</option>
                     <option value="admin">👑 Admin</option>
                 </select>
             </div>
             <div class="modal-actions">
-                <button class="btn btn-secondary" onclick="closeModal()"> Annuler</button>
+                <button class="btn btn-secondary" onclick="closeModal()">❌ Annuler</button>
                 <button class="btn btn-primary" onclick="saveEdit()">💾 Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="moderationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">🔍 Modérer le prompt</h3>
+                <button class="modal-close" onclick="closeModerationModal()">✕</button>
+            </div>
+            <div class="form-group">
+                <label>Titre</label>
+                <input type="text" id="modTitle" readonly style="opacity:0.6;">            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="modDescription" readonly style="opacity:0.6;" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Vendeur</label>
+                <input type="text" id="modSeller" readonly style="opacity:0.6;">
+            </div>
+            <div class="form-group">
+                <label>Prix</label>
+                <input type="text" id="modPrice" readonly style="opacity:0.6;">
+            </div>
+            <div class="form-group">
+                <label>Raison du rejet (si applicable)</label>
+                <textarea id="modRejectionReason" rows="3" placeholder="Expliquez pourquoi ce prompt est rejeté..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-reject" onclick="rejectPrompt()">❌ Rejeter</button>
+                <button class="btn btn-approve" onclick="approvePrompt()">✅ Approuver</button>
             </div>
         </div>
     </div>
@@ -728,21 +815,23 @@
         let allUsers = [];
         let allPrompts = [];
         let allOrders = [];
+        let pendingPrompts = [];
         let currentEditId = null;
+        let currentModerationId = null;
         let revenueChartInstance = null;
         let rolesChartInstance = null;
         
-        // Filtres actifs
-        let userFilters = { search: '', role: '', status: '', date: '' };        let promptFilters = { search: '', status: '', category: '', price: '' };
+        let userFilters = { search: '', role: '', status: '', date: '' };
+        let promptFilters = { search: '', status: '', category: '', price: '' };
         let orderFilters = { date: '', amount: '' };
+        let moderationFilters = { type: '', date: '' };
 
         async function init() {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (!session) { window.location.href = 'auth.html'; return; }
 
             document.getElementById('userName').textContent = session.user.user_metadata.full_name || 'Admin';
-            document.getElementById('userEmail').textContent = session.user.email;
-            document.getElementById('userAvatar').textContent = (session.user.user_metadata.full_name || 'A').charAt(0).toUpperCase();
+            document.getElementById('userEmail').textContent = session.user.email;            document.getElementById('userAvatar').textContent = (session.user.user_metadata.full_name || 'A').charAt(0).toUpperCase();
 
             const { data: profile } = await supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
             if (!profile || profile.role !== 'admin') {
@@ -777,12 +866,13 @@
             }
             
             container.innerHTML = users.map(u => {
-                const roleBadge = u.role === 'admin' ? '<span class="badge badge-admin"> Admin</span>' :
+                const roleBadge = u.role === 'admin' ? '<span class="badge badge-admin">👑 Admin</span>' :
                                   u.role === 'seller' ? '<span class="badge badge-seller">💼 Vendeur</span>' :
                                   '<span class="badge badge-buyer">🛒 Acheteur</span>';
-                const statusBadge = u.is_banned ? '<span class="badge badge-banned"> Banni</span>' : '<span class="badge badge-active">✅ Actif</span>';
+                const statusBadge = u.is_banned ? '<span class="badge badge-banned">🚫 Banni</span>' : '<span class="badge badge-active">✅ Actif</span>';
                 const inscription = new Date(u.created_at).toLocaleDateString('fr-FR');
-                const lastLogin = u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : 'Jamais';                const initials = (u.full_name || 'U').charAt(0).toUpperCase();
+                const lastLogin = u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : 'Jamais';
+                const initials = (u.full_name || 'U').charAt(0).toUpperCase();
 
                 return `<div class="user-card">
                     <div class="user-card-header">
@@ -790,8 +880,7 @@
                         <div class="user-info">
                             <div class="user-name">${u.full_name || 'Utilisateur'}</div>
                             <div class="user-email">${u.email || 'N/A'}</div>
-                        </div>
-                        ${roleBadge}
+                        </div>                        ${roleBadge}
                     </div>
                     <div class="user-details">
                         <div class="detail-item">
@@ -832,6 +921,7 @@
             document.getElementById('editModal').classList.remove('active');
             currentEditId = null;
         }
+
         async function saveEdit() {
             if (!currentEditId) return;
             const name = document.getElementById('editName').value;
@@ -839,8 +929,7 @@
             
             const { error } = await supabaseClient.from('profiles').update({ 
                 full_name: name, role: role 
-            }).eq('id', currentEditId);
-            
+            }).eq('id', currentEditId);            
             if (error) { showToast('❌ Erreur: ' + error.message, 'error'); }
             else { showToast('✅ Utilisateur modifié !', 'success'); closeModal(); loadUsers(); }
         }
@@ -851,7 +940,6 @@
             else { showToast(!currentStatus ? '🚫 Utilisateur banni' : '✅ Utilisateur débanni', 'success'); loadUsers(); }
         }
 
-        // ========== FILTRES UTILISATEURS ==========
         function filterUsers(query) {
             userFilters.search = query.toLowerCase();
             applyUserFilters();
@@ -863,24 +951,21 @@
             userFilters.date = document.getElementById('filterDate').value;
             
             let filtered = allUsers.filter(u => {
-                // Filtre recherche
                 const matchSearch = !userFilters.search || 
                     (u.full_name || '').toLowerCase().includes(userFilters.search) ||
                     (u.email || '').toLowerCase().includes(userFilters.search);
                 
-                // Filtre rôle
                 const matchRole = !userFilters.role || u.role === userFilters.role;
                 
-                // Filtre statut
                 const matchStatus = !userFilters.status || 
                     (userFilters.status === 'active' && !u.is_banned) ||
                     (userFilters.status === 'banned' && u.is_banned);
                 
-                // Filtre date
                 let matchDate = true;
                 if (userFilters.date) {
                     const userDate = new Date(u.created_at);
-                    const now = new Date();                    if (userFilters.date === 'today') {
+                    const now = new Date();
+                    if (userFilters.date === 'today') {
                         matchDate = userDate.toDateString() === now.toDateString();
                     } else if (userFilters.date === 'week') {
                         const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -893,8 +978,7 @@
                 }
                 
                 return matchSearch && matchRole && matchStatus && matchDate;
-            });
-            
+            });            
             renderUsers(filtered);
             updateUserActiveFilters();
         }
@@ -920,7 +1004,150 @@
             container.innerHTML = filters.join('');
         }
 
-        // ========== FILTRES PROMPTS ==========
+        async function loadPrompts() {
+            const { data, error } = await supabaseClient.from('prompts').select('*').order('created_at', { ascending: false });
+            if (error) { console.error(error); return; }
+            
+            allPrompts = data || [];
+            pendingPrompts = allPrompts.filter(p => p.status === 'pending');
+            
+            document.getElementById('statPrompts').textContent = allPrompts.length;
+            document.getElementById('promptsBadge').textContent = allPrompts.length;
+            document.getElementById('statPending').textContent = pendingPrompts.length;
+            document.getElementById('moderationBadge').textContent = pendingPrompts.length;
+            
+            renderPrompts(allPrompts);
+            renderModeration(pendingPrompts);
+            populateCategoryFilter();
+        }
+
+        function renderPrompts(prompts) {
+            const container = document.getElementById('promptsList');
+            if (prompts.length === 0) {
+                container.innerHTML = '<div class="empty-state">Aucun prompt</div>';
+                return;
+            }
+                        container.innerHTML = prompts.map(p => {
+                const statusBadge = p.status === 'published' ? '<span class="badge badge-active">✅ Publié</span>' : 
+                                   p.status === 'pending' ? '<span class="badge badge-pending">⏳ En attente</span>' :
+                                   '<span class="badge badge-banned">📝 Brouillon</span>';
+                
+                return `<div class="user-card">
+                    <div class="user-card-header">
+                        <div class="user-info">
+                            <div class="user-name">${p.title}</div>
+                            <div class="user-email">${p.seller_name || 'Vendeur inconnu'}</div>
+                            <div class="prompt-description">${p.description || 'Pas de description'}</div>
+                        </div>
+                        <span class="badge badge-buyer">${p.category || 'Général'}</span>
+                    </div>
+                    <div class="user-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Prix</div>
+                            <div class="detail-value" style="color:var(--accent);font-weight:700;">$${p.price}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Statut</div>
+                            <div class="detail-value">${statusBadge}</div>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        ${p.status === 'pending' ? `
+                            <button class="btn btn-approve" onclick="openModeration('${p.id}')">🔍 Modérer</button>
+                        ` : ''}
+                        <button class="btn btn-danger" onclick="deletePrompt('${p.id}')">🗑️ Supprimer</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderModeration(prompts) {
+            const container = document.getElementById('moderationList');
+            if (prompts.length === 0) {
+                container.innerHTML = '<div class="empty-state">✅ Aucun prompt en attente de modération</div>';
+                return;
+            }
+            
+            container.innerHTML = prompts.map(p => `
+                <div class="user-card">
+                    <div class="moderation-badge badge badge-pending">⏳ En attente</div>
+                    <div class="user-card-header">
+                        <div class="user-info">
+                            <div class="user-name">${p.title}</div>
+                            <div class="user-email">${p.seller_name || 'Vendeur inconnu'}</div>
+                            <div class="prompt-description">${p.description || 'Pas de description'}</div>
+                        </div>                        <span class="badge badge-buyer">${p.category || 'Général'}</span>
+                    </div>
+                    <div class="user-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Prix</div>
+                            <div class="detail-value" style="color:var(--accent);font-weight:700;">$${p.price}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Soumis le</div>
+                            <div class="detail-value">${new Date(p.created_at).toLocaleDateString('fr-FR')}</div>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn btn-approve" onclick="openModeration('${p.id}')">🔍 Voir & Modérer</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openModeration(promptId) {
+            currentModerationId = promptId;
+            const prompt = allPrompts.find(p => p.id === promptId);
+            if (!prompt) return;
+            
+            document.getElementById('modTitle').value = prompt.title;
+            document.getElementById('modDescription').value = prompt.description || '';
+            document.getElementById('modSeller').value = prompt.seller_name || 'Inconnu';
+            document.getElementById('modPrice').value = `$${prompt.price}`;
+            document.getElementById('modRejectionReason').value = '';
+            
+            document.getElementById('moderationModal').classList.add('active');
+        }
+
+        function closeModerationModal() {
+            document.getElementById('moderationModal').classList.remove('active');
+            currentModerationId = null;
+        }
+
+        async function approvePrompt() {
+            if (!currentModerationId) return;
+            
+            const { error } = await supabaseClient.from('prompts').update({ 
+                status: 'published'
+            }).eq('id', currentModerationId);
+            
+            if (error) {
+                showToast('❌ Erreur: ' + error.message, 'error');
+            } else {
+                showToast('✅ Prompt approuvé et publié !', 'success');
+                closeModerationModal();                loadPrompts();
+            }
+        }
+
+        async function rejectPrompt() {
+            if (!currentModerationId) return;
+            
+            const reason = document.getElementById('modRejectionReason').value;
+            
+            const { error } = await supabaseClient.from('prompts').update({ 
+                status: 'draft',
+                rejection_reason: reason || 'Non spécifié'
+            }).eq('id', currentModerationId);
+            
+            if (error) {
+                showToast('❌ Erreur: ' + error.message, 'error');
+            } else {
+                showToast('❌ Prompt rejeté', 'success');
+                closeModerationModal();
+                loadPrompts();
+            }
+        }
+
         function filterPrompts(query) {
             promptFilters.search = query.toLowerCase();
             applyPromptFilters();
@@ -929,7 +1156,8 @@
         function applyPromptFilters() {
             promptFilters.status = document.getElementById('filterPromptStatus').value;
             promptFilters.category = document.getElementById('filterPromptCategory').value;
-            promptFilters.price = document.getElementById('filterPromptPrice').value;            
+            promptFilters.price = document.getElementById('filterPromptPrice').value;
+            
             let filtered = allPrompts.filter(p => {
                 const matchSearch = !promptFilters.search || 
                     (p.title || '').toLowerCase().includes(promptFilters.search) ||
@@ -946,8 +1174,7 @@
                     else if (promptFilters.price === '10-50') matchPrice = price > 10 && price <= 50;
                     else if (promptFilters.price === '50+') matchPrice = price > 50;
                 }
-                
-                return matchSearch && matchStatus && matchCategory && matchPrice;
+                                return matchSearch && matchStatus && matchCategory && matchPrice;
             });
             
             renderPrompts(filtered);
@@ -975,108 +1202,51 @@
             container.innerHTML = filters.join('');
         }
 
+        function applyModerationFilters() {
+            moderationFilters.type = document.getElementById('filterModerationType').value;
+            moderationFilters.date = document.getElementById('filterModerationDate').value;
+            
+            let filtered = pendingPrompts.filter(p => {
+                let matchType = true;
+                if (moderationFilters.type === 'new') {
+                    const promptDate = new Date(p.created_at);
+                    const now = new Date();
+                    const daysDiff = (now - promptDate) / (1000 * 60 * 60 * 24);
+                    matchType = daysDiff <= 1;
+                }
+                
+                let matchDate = true;
+                if (moderationFilters.date) {
+                    const promptDate = new Date(p.created_at);
+                    const now = new Date();
+                    if (moderationFilters.date === 'today') {
+                        matchDate = promptDate.toDateString() === now.toDateString();
+                    } else if (moderationFilters.date === 'week') {
+                        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        matchDate = promptDate >= weekAgo;                    }
+                }
+                
+                return matchType && matchDate;
+            });
+            
+            renderModeration(filtered);
+        }
+
+        function clearModerationFilters() {
+            document.getElementById('filterModerationType').value = '';
+            document.getElementById('filterModerationDate').value = '';
+            moderationFilters = { type: '', date: '' };
+            renderModeration(pendingPrompts);
+        }
+
         function populateCategoryFilter() {
             const categories = [...new Set(allPrompts.map(p => p.category).filter(Boolean))];
             const select = document.getElementById('filterPromptCategory');
-            select.innerHTML = '<option value="">Toutes catégories</option>';            categories.forEach(cat => {
+            select.innerHTML = '<option value="">Toutes catégories</option>';
+            categories.forEach(cat => {
                 select.innerHTML += `<option value="${cat}">${cat}</option>`;
             });
         }
-
-        // ========== FILTRES COMMANDES ==========
-        function applyOrderFilters() {
-            orderFilters.date = document.getElementById('filterOrderDate').value;
-            orderFilters.amount = document.getElementById('filterOrderAmount').value;
-            
-            let filtered = allOrders.filter(o => {
-                let matchDate = true;
-                if (orderFilters.date) {
-                    const orderDate = new Date(o.created_at);
-                    const now = new Date();
-                    if (orderFilters.date === 'today') {
-                        matchDate = orderDate.toDateString() === now.toDateString();
-                    } else if (orderFilters.date === 'week') {
-                        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-                        matchDate = orderDate >= weekAgo;
-                    } else if (orderFilters.date === 'month') {
-                        matchDate = orderDate.getMonth() === now.getMonth() && orderDate.getFullYear() === now.getFullYear();
-                    }
-                }
-                
-                let matchAmount = true;
-                if (orderFilters.amount) {
-                    const amount = parseFloat(o.amount) || 0;
-                    if (orderFilters.amount === '0-10') matchAmount = amount >= 0 && amount <= 10;
-                    else if (orderFilters.amount === '10-50') matchAmount = amount > 10 && amount <= 50;
-                    else if (orderFilters.amount === '50+') matchAmount = amount > 50;
-                }
-                
-                return matchDate && matchAmount;
-            });
-            
-            renderOrders(filtered);
-            updateOrderActiveFilters();
-        }
-
-        function clearOrderFilters() {
-            document.getElementById('filterOrderDate').value = '';
-            document.getElementById('filterOrderAmount').value = '';
-            orderFilters = { date: '', amount: '' };
-            renderOrders(allOrders);
-            updateOrderActiveFilters();
-        }
-
-        function updateOrderActiveFilters() {
-            const container = document.getElementById('orderActiveFilters');            const filters = [];
-            
-            if (orderFilters.date) filters.push(`<span class="filter-tag">Date: ${orderFilters.date}<span class="remove" onclick="document.getElementById('filterOrderDate').value='';applyOrderFilters()">✕</span></span>`);
-            if (orderFilters.amount) filters.push(`<span class="filter-tag">Montant: ${orderFilters.amount}<span class="remove" onclick="document.getElementById('filterOrderAmount').value='';applyOrderFilters()">✕</span></span>`);
-            
-            container.innerHTML = filters.join('');
-        }
-
-        async function loadPrompts() {
-            const { data, error } = await supabaseClient.from('prompts').select('*').order('created_at', { ascending: false });
-            if (error) { console.error(error); return; }
-            
-            allPrompts = data || [];
-            document.getElementById('statPrompts').textContent = allPrompts.length;
-            document.getElementById('promptsBadge').textContent = allPrompts.length;
-            renderPrompts(allPrompts);
-            populateCategoryFilter();
-        }
-
-        function renderPrompts(prompts) {
-            const container = document.getElementById('promptsList');
-            if (prompts.length === 0) {
-                container.innerHTML = '<div class="empty-state">Aucun prompt</div>';
-                return;
-            }
-            
-            container.innerHTML = prompts.map(p => `
-                <div class="user-card">
-                    <div class="user-card-header">
-                        <div class="user-info">
-                            <div class="user-name">${p.title}</div>
-                            <div class="user-email">${p.seller_name || 'Vendeur inconnu'}</div>
-                        </div>
-                        <span class="badge badge-buyer">${p.category || 'Général'}</span>
-                    </div>
-                    <div class="user-details">
-                        <div class="detail-item">
-                            <div class="detail-label">Prix</div>
-                            <div class="detail-value" style="color:var(--accent);font-weight:700;">$${p.price}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Statut</div>
-                            <div class="detail-value">${p.status === 'published' ? '<span class="badge badge-active">✅ Publié</span>' : '<span class="badge badge-banned">📝 Brouillon</span>'}</div>
-                        </div>
-                    </div>
-                    <div class="user-actions">
-                        <button class="btn btn-danger" onclick="deletePrompt('${p.id}')">🗑️ Supprimer</button>
-                    </div>
-                </div>
-            `).join('');        }
 
         async function deletePrompt(id) {
             if (!confirm('⚠️ Supprimer ce prompt définitivement ?')) return;
@@ -1102,8 +1272,7 @@
                 const container = document.getElementById('ordersList');
                 totalCommission = 0;
                 
-                container.innerHTML = orders.map(o => {
-                    const commission = o.amount * 0.20;
+                container.innerHTML = orders.map(o => {                    const commission = o.amount * 0.20;
                     totalCommission += commission;
                     return `
                         <div class="user-card">
@@ -1125,7 +1294,8 @@
                                 </div>
                                 <div class="detail-item">
                                     <div class="detail-label">Commission (20%)</div>
-                                    <div class="detail-value" style="color:var(--success);font-weight:700;">+$${commission.toFixed(2)}</div>                                </div>
+                                    <div class="detail-value" style="color:var(--success);font-weight:700;">+$${commission.toFixed(2)}</div>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -1151,8 +1321,7 @@
             const now = new Date();
             for (let i = 29; i >= 0; i--) {
                 const date = new Date(now);
-                date.setDate(date.getDate() - i);
-                const dateStr = date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+                date.setDate(date.getDate() - i);                const dateStr = date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
                 labels.push(dateStr);
                 
                 const dayOrders = ordersData.filter(o => {
@@ -1174,7 +1343,8 @@
                         borderColor: '#3b82f6',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         tension: 0.4,
-                        fill: true                    }]
+                        fill: true
+                    }]
                 },
                 options: {
                     responsive: true,
@@ -1200,8 +1370,7 @@
                         backgroundColor: ['#3b82f6', '#f59e0b', '#8b5cf6'],
                         borderWidth: 0
                     }]
-                },
-                options: {
+                },                options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
@@ -1223,7 +1392,8 @@
             
             const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');            link.setAttribute('href', url);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
             link.setAttribute('download', filename);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
@@ -1249,8 +1419,7 @@
             ]);
             
             const date = new Date().toISOString().split('T')[0];
-            downloadCSV(`utilisateurs_${date}.csv`, headers, rows);
-            showToast('✅ Export utilisateurs réussi !', 'success');
+            downloadCSV(`utilisateurs_${date}.csv`, headers, rows);            showToast('✅ Export utilisateurs réussi !', 'success');
         }
 
         function exportPromptsCSV() {
@@ -1272,7 +1441,8 @@
             
             const date = new Date().toISOString().split('T')[0];
             downloadCSV(`prompts_${date}.csv`, headers, rows);
-            showToast('✅ Export prompts réussi !', 'success');        }
+            showToast('✅ Export prompts réussi !', 'success');
+        }
 
         function exportOrdersCSV() {
             if (allOrders.length === 0) {
@@ -1298,8 +1468,7 @@
 
         async function loadConfig() {
             const { data, error } = await supabaseClient.from('site_config').select('value').in('key', ['general', 'financial']);
-            if (error) { console.error(error); return; }
-            
+            if (error) { console.error(error); return; }            
             if (data && data.length > 0) {
                 data.forEach(config => {
                     if (config.key === 'general' && config.value) {
@@ -1321,7 +1490,8 @@
                 contact_email: document.getElementById('settingEmail').value,
                 description: document.getElementById('settingDescription').value
             };
-                        const financial = {
+            
+            const financial = {
                 commission_rate: parseInt(document.getElementById('settingCommission').value),
                 min_price: parseFloat(document.getElementById('settingMinPrice').value)
             };
@@ -1347,8 +1517,7 @@
 
         async function saveMaintenance() {
             const enabled = document.getElementById('maintenanceEnabled').value === 'true';
-            const message = document.getElementById('maintenanceMessage').value;
-            const { error } = await supabaseClient.from('site_config').upsert({ 
+            const message = document.getElementById('maintenanceMessage').value;            const { error } = await supabaseClient.from('site_config').upsert({ 
                 key: 'maintenance', 
                 value: { enabled, message },
                 updated_at: new Date().toISOString() 
@@ -1359,7 +1528,7 @@
             if (enabled) {
                 statusDiv.style.background = 'rgba(239, 68, 68, 0.2)';
                 statusDiv.style.color = '#ef4444';
-                statusDiv.textContent = ' Mode maintenance ACTIVÉ';
+                statusDiv.textContent = '🔴 Mode maintenance ACTIVÉ';
             } else {
                 statusDiv.style.background = 'rgba(16, 185, 129, 0.2)';
                 statusDiv.style.color = '#10b981';
@@ -1370,7 +1539,8 @@
 
         function showSection(sectionId, navItem) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item-mobile').forEach(n => n.classList.remove('active'));            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('.nav-item-mobile').forEach(n => n.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
             if (navItem) navItem.classList.add('active');
             toggleMenu();
         }
